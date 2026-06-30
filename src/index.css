@@ -1,0 +1,35 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--g-font-family-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--g-color-base-background);
+  color: var(--g-color-text-primary);
+}
+
+.g-root_theme_dark {
+  --g-color-base-background: #0f172a;
+  --g-color-base-generic: #1e293b;
+  --g-color-base-generic-hover: #334155;
+  --g-color-base-simple-hover: rgba(255, 255, 255, 0.05);
+  --g-color-line-generic: #334155;
+  --g-color-base-brand: #3b82f6;
+  --g-color-base-brand-hover: #2563eb;
+  --g-color-text-primary: #f8fafc;
+  --g-color-text-secondary: #94a3b8;
+}
+
+.g-root_theme_light {
+  --g-color-text-primary: #172554; /* Elegant dark blue for main text and icons */
+  --g-color-line-generic: #bfdbfe; /* Light blue for card borders */
+  --g-color-base-simple-hover: #eff6ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  min-height: 100vh;
+}
