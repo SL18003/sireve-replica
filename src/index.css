@@ -185,6 +185,33 @@ body {
   transform: translateY(-1px);
 }
 
+/* Botones action — contraste legible sobre fondo azul */
+.g-button_view_action,
+.contacto-btn,
+.actas-card-btn,
+.reglamentos-item-btn {
+  --g-button-background-color: var(--sireve-primary) !important;
+  --g-button-background-color-hover: var(--sireve-primary-dark) !important;
+  --g-button-text-color: #ffffff !important;
+  background-color: var(--sireve-primary) !important;
+  color: #ffffff !important;
+}
+
+.g-button_view_action:hover,
+.contacto-btn:hover,
+.actas-card-btn:hover,
+.reglamentos-item-btn:hover {
+  background-color: var(--sireve-primary-dark) !important;
+  color: #ffffff !important;
+}
+
+.g-button_view_action .g-button__text,
+.contacto-btn .g-button__text,
+.actas-card-btn .g-button__text,
+.reglamentos-item-btn .g-button__text {
+  color: #ffffff !important;
+}
+
 @media (max-width: 768px) {
   .page-hero { padding: 40px 20px; }
   .page-body { padding: 32px 20px; }

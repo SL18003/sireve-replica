@@ -2,12 +2,13 @@ import { Link } from 'react-router-dom';
 import { Text } from '@gravity-ui/uikit';
 import { Picture } from '@gravity-ui/icons';
 import PageHeader from '../components/Layout/PageHeader';
+import { handleImageError } from '../utils/imageFallback';
 import './Galeria.css';
 
 const years = [
-  { year: '2017', image: 'https://images.unsplash.com/photo-1523050854058-8df90110c7f1?w=600&h=360&fit=crop' },
-  { year: '2018', image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&h=360&fit=crop' },
-  { year: '2019', image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&h=360&fit=crop' },
+  { year: '2017', image: '/images/gallery/1.jpg' },
+  { year: '2018', image: '/images/gallery/2.jpg' },
+  { year: '2019', image: '/images/gallery/3.jpg' },
 ];
 
 export default function GaleriaIndex() {
@@ -23,7 +24,7 @@ export default function GaleriaIndex() {
           {years.map(({ year, image }) => (
             <Link key={year} to={`/galeria/${year}`} className="galeria-year-card">
               <div className="galeria-year-image">
-                <img src={image} alt={`Galería ${year}`} />
+                <img src={image} alt={`Galería ${year}`} onError={handleImageError} />
               </div>
               <div className="galeria-year-body">
                 <h3 className="galeria-year-title">{year}</h3>

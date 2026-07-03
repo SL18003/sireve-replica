@@ -31,7 +31,14 @@ export default function Contacto() {
               <Text variant="body-2" className="contacto-label">Mensaje</Text>
               <TextArea size="l" minRows={5} placeholder="Escribe tu mensaje aquí..." name="mensaje" />
             </div>
-            <Button size="l" view="action" className="contacto-btn">Enviar Mensaje</Button>
+            <Button
+              size="l"
+              view="action"
+              className="contacto-btn"
+              onClick={() => window.alert('Mensaje enviado (demostración). Configure Formspree para envío real.')}
+            >
+              Enviar Mensaje
+            </Button>
           </Card>
 
           <Card view="raised" className="contacto-info">

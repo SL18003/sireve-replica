@@ -1,5 +1,6 @@
 import { Text } from '@gravity-ui/uikit';
 import { Link } from 'react-router-dom';
+import SocialLinks from './SocialLinks';
 import './Footer.css';
 
 const programAnchors = [
@@ -16,11 +17,15 @@ export default function Footer() {
     <footer className="footer-container">
       <div className="footer-content">
         <div className="footer-col">
-          <span className="footer-logo">SIREVE</span>
+          <div className="footer-brand-row">
+            <img src="/images/logo-sireve.png" alt="SIREVE" className="footer-logo-img" />
+            <img src="/images/logo-csuca.svg" alt="CSUCA" className="footer-csuca-img" />
+          </div>
           <span className="footer-csuca">Consejo Superior Universitario Centroamericano</span>
           <Text variant="body-2" className="footer-text">
             Sistema Regional de Vida Estudiantil — coordinando la vida estudiantil en Centroamérica y el Caribe.
           </Text>
+          <SocialLinks variant="footer" className="footer-social" />
         </div>
 
         <div className="footer-col">

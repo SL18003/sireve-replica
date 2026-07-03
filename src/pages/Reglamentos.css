@@ -60,3 +60,39 @@
     width: 100%;
   }
 }
+
+.reglamentos-modal {
+  padding: 8px 4px;
+  max-width: 480px;
+}
+
+.reglamentos-modal-title {
+  font-weight: 700 !important;
+  margin-bottom: 12px !important;
+  color: var(--g-color-text-primary) !important;
+}
+
+.reglamentos-modal-summary {
+  line-height: 1.6 !important;
+  margin-bottom: 20px !important;
+}
+
+.reglamentos-modal-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 32px 24px;
+  border-radius: var(--sireve-radius);
+  background: var(--g-color-base-simple-hover);
+  border: 1px dashed var(--sireve-border);
+  margin-bottom: 24px;
+  text-align: center;
+  color: var(--sireve-primary);
+}
+
+.reglamentos-modal-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}

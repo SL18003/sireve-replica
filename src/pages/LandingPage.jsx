@@ -5,14 +5,21 @@ import {
   ShieldCheck, HeartPulse, StarFill, Person,
   ChevronLeft, ChevronRight, Folder, Picture, FileText, ChevronDown,
 } from '@gravity-ui/icons';
+import { handleImageError } from '../utils/imageFallback';
 import './LandingPage.css';
 
-const heroImage = 'https://images.unsplash.com/photo-1523050854058-8df90110c7f1?w=1600&h=700&fit=crop';
+const heroImage = '/images/hero.jpg';
 
 const carouselImages = [
-  { url: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=1400&h=600&fit=crop', alt: 'Graduación universitaria' },
-  { url: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1400&h=600&fit=crop', alt: 'Conferencia académica' },
-  { url: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1400&h=600&fit=crop', alt: 'Vida estudiantil' },
+  { url: '/images/carousel/1.jpg', alt: 'Graduación universitaria' },
+  { url: '/images/carousel/2.jpg', alt: 'Conferencia académica' },
+  { url: '/images/carousel/3.jpg', alt: 'Vida estudiantil' },
+];
+
+const heroStats = [
+  { value: '30+', label: 'Universidades miembros' },
+  { value: '6', label: 'Programas regionales' },
+  { value: '8', label: 'Países de la región' },
 ];
 
 const quickLinks = [
@@ -21,21 +28,21 @@ const quickLinks = [
     desc: 'Documentos oficiales del CONREVE y comités',
     icon: Folder,
     path: '/actas',
-    image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&h=320&fit=crop',
+    image: '/images/quick/actas.jpg',
   },
   {
     title: 'Galería',
     desc: 'Eventos y actividades por año',
     icon: Picture,
     path: '/galeria',
-    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&h=320&fit=crop',
+    image: '/images/quick/galeria.jpg',
   },
   {
     title: 'Reglamentos',
     desc: 'Normativas vigentes del sistema',
     icon: FileText,
     path: '/reglamentos',
-    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&h=320&fit=crop',
+    image: '/images/quick/reglamentos.jpg',
   },
 ];
 
@@ -47,7 +54,8 @@ const sections = [
     excerpt: 'Órgano del CSUCA encargado de coordinar, promover y fortalecer la Vida Estudiantil en las universidades miembros.',
     description: 'El Sistema Regional de Vida Estudiantil (SIREVE), es el órgano del Consejo Superior Universitario Centroamericano CSUCA, que a través del Consejo Regional de Vida Estudiantil (CONREVE), está encargado de coordinar, promover, fortalecer y generar iniciativas, programas y proyectos que impulsen el desarrollo del área de Vida Estudiantil de las Universidades miembros; contribuyendo a la formación integral de profesionales que participen con compromiso social, en la transformación, desarrollo e Integración de los países miembros del Sistema de Integración Centroamericana SICA.',
     icon: ShieldCheck,
-    image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&h=360&fit=crop',
+    image: '/images/programs/sireve.jpg',
+    accent: '#00529b',
   },
   {
     id: 'ficcua',
@@ -56,7 +64,8 @@ const sections = [
     excerpt: 'Festival bienal e itinerante de artistas estudiantiles universitarios de Centroamérica.',
     description: 'El FICCUA es un evento bienal e itinerante de artistas estudiantiles universitarios, promovido por el Consejo Superior Universitario Centroamericano y la Secretaría Adjunta para Asuntos Estudiantiles. El FICCUA busca promover la educación integral, articulación del estudiantado centroamericano y proyección universitaria de la región en un marco de hermandad, diversidad, equidad e inclusión, mediante la expresión de distintas manifestaciones artísticas.',
     icon: StarFill,
-    image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=360&fit=crop',
+    image: '/images/programs/ficcua.jpg',
+    accent: '#7c3aed',
   },
   {
     id: 'juduca',
@@ -65,7 +74,8 @@ const sections = [
     excerpt: 'Juegos Deportivos Universitarios Centroamericanos para fortalecer la integración regional.',
     description: 'El Consejo Regional de Vida Estudiantil (CONREVE), órgano del Consejo Superior Universitario Centroamericano (CSUCA), celebra los Juegos Deportivos Universitarios Centroamericanos (JUDUCA) con el objetivo común de contribuir al fortalecimiento de la integración, la solidaridad y la paz entre nuestras universidades de la región.',
     icon: StarFill,
-    image: 'https://images.unsplash.com/photo-1461896836934-ffeeeaa8f07f?w=600&h=360&fit=crop',
+    image: '/images/programs/juduca.jpg',
+    accent: '#059669',
   },
   {
     id: 'premio-ruben-dario',
@@ -74,7 +84,8 @@ const sections = [
     excerpt: 'Reconocimiento a la excelencia académica de estudiantes destacados de la región.',
     description: 'El Premio Regional a la Excelencia Académica "Rubén Darío" se establece mediante Acuerdo Noveno de la XIII Sesión Ordinaria del Consejo Regional de Vida Estudiantil, celebrada en la República de Panamá en el mes de mayo del año 2005. Se crea como un reconocimiento para aquellos estudiantes distinguidos académicamente y que sobresalen en el desarrollo del conocimiento científico, tecnológico y humanista de las diversas ramas del saber.',
     icon: StarFill,
-    image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&h=360&fit=crop',
+    image: '/images/programs/excelencia.jpg',
+    accent: '#c9a227',
   },
   {
     id: 'promotoras-salud',
@@ -83,7 +94,8 @@ const sections = [
     excerpt: 'Red de universidades promotoras de la salud en Centroamérica y el Caribe.',
     description: 'La Promoción de la Salud es aquella actividad que brinda la oportunidad de Promover y concientizar a las personas sobre la prevención y así brindar las herramientas necesarias para un mayor control de la Salud. El cual se ejerce en las universidades a través del Programa de Universidades Promotoras de la Salud y del Sistema Regional de Vida Estudiantil, mediante la Red Centroamericana y Caribeña de Universidades Promotoras de la Salud REDCCUPS.',
     icon: HeartPulse,
-    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&h=360&fit=crop',
+    image: '/images/programs/salud.jpg',
+    accent: '#dc2626',
   },
   {
     id: 'voluntariado',
@@ -92,7 +104,8 @@ const sections = [
     excerpt: 'Compromiso social universitario a través del voluntariado en la región.',
     description: 'El voluntariado es el ejercicio libre, organizado y no remunerado de la solidaridad ciudadana en actividades y programas que van en beneficio de la humanidad y su entorno en general. El cual se ejerce en las universidades a través del Programa de Voluntariado del Sistema Regional de Vida Estudiantil, mediante la Red UNIVOCES.',
     icon: Person,
-    image: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=600&h=360&fit=crop',
+    image: '/images/programs/voluntariado.jpg',
+    accent: '#0891b2',
   },
 ];
 
@@ -139,16 +152,29 @@ export default function LandingPage() {
   return (
     <div className="landing">
       <section className="landing-hero" style={{ backgroundImage: `url(${heroImage})` }}>
+        <div className="landing-hero-blob landing-hero-blob--1" />
+        <div className="landing-hero-blob landing-hero-blob--2" />
         <div className="landing-hero-overlay" />
         <div className="landing-hero-content">
-          <span className="landing-hero-chip">Consejo Superior Universitario Centroamericano</span>
-          <Text variant="display-2" className="landing-hero-title">
+          <img src="/images/logo-sireve.png" alt="SIREVE" className="landing-hero-logo" onError={handleImageError} />
+          <span className="landing-hero-chip landing-hero-animate landing-hero-animate--1">
+            Consejo Superior Universitario Centroamericano
+          </span>
+          <Text variant="display-2" className="landing-hero-title landing-hero-animate landing-hero-animate--2">
             Sistema Regional de Vida Estudiantil
           </Text>
-          <Text variant="body-2" className="landing-hero-sub">
+          <Text variant="body-2" className="landing-hero-sub landing-hero-animate landing-hero-animate--3">
             Coordinando, promoviendo y fortaleciendo la vida estudiantil en Centroamérica y el Caribe
           </Text>
-          <div className="landing-hero-actions">
+          <div className="landing-hero-stats landing-hero-animate landing-hero-animate--4">
+            {heroStats.map((stat) => (
+              <div key={stat.label} className="landing-hero-stat">
+                <span className="landing-hero-stat-value">{stat.value}</span>
+                <span className="landing-hero-stat-label">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+          <div className="landing-hero-actions landing-hero-animate landing-hero-animate--5">
             <button type="button" className="landing-btn landing-btn-primary" onClick={scrollToPrograms}>
               Explorar programas
             </button>
@@ -157,6 +183,9 @@ export default function LandingPage() {
             </button>
           </div>
         </div>
+        <svg className="landing-hero-wave" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,50 1440,40 L1440,80 L0,80 Z" fill="var(--g-color-base-background)" />
+        </svg>
       </section>
 
       <AnimatedSection>
@@ -169,7 +198,7 @@ export default function LandingPage() {
             {quickLinks.map((link) => (
               <article key={link.title} className="quick-card" onClick={() => navigate(link.path)} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(link.path)}>
                 <div className="quick-card-image">
-                  <img src={link.image} alt={link.title} />
+                  <img src={link.image} alt={link.title} onError={handleImageError} />
                   <div className="quick-card-image-overlay" />
                 </div>
                 <div className="quick-card-body">
@@ -199,7 +228,7 @@ export default function LandingPage() {
             <div className="carousel-track">
               {carouselImages.map((img, i) => (
                 <div key={img.alt} className={`carousel-slide${i === currentImgIdx ? ' active' : ''}`}>
-                  <img src={img.url} alt={img.alt} />
+                  <img src={img.url} alt={img.alt} onError={handleImageError} />
                   <div className="carousel-overlay" />
                 </div>
               ))}
@@ -230,13 +259,24 @@ export default function LandingPage() {
           </div>
           <div className="programs-grid">
             {sections.map((section) => (
-              <article key={section.id} id={section.id} className="program-card">
+              <article
+                key={section.id}
+                id={section.id}
+                className="program-card"
+                style={{ '--program-accent': section.accent }}
+              >
                 <div className="program-card-image">
-                  <img src={section.image} alt={section.title} />
+                  <img src={section.image} alt={section.title} onError={handleImageError} />
+                  <div className="program-card-image-overlay">
+                    <div className="program-card-image-badge">
+                      <Icon data={section.icon} size={18} />
+                    </div>
+                    <h3 className="program-card-image-title">{section.title}</h3>
+                  </div>
+                  <div className="program-card-accent-bar" />
                 </div>
                 <div className="program-card-body">
                   <span className="program-card-label">{section.subtitle}</span>
-                  <h3 className="program-card-title">{section.title}</h3>
                   <p className={`program-card-text${expandedId === section.id ? ' expanded' : ''}`}>
                     {expandedId === section.id ? section.description : section.excerpt}
                   </p>

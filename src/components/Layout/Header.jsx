@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Icon } from '@gravity-ui/uikit';
 import { ChevronDown, ChevronUp, Bars, Xmark, Sun, Moon } from '@gravity-ui/icons';
+import SocialLinks from './SocialLinks';
 import './Header.css';
 
 const programLinks = [
@@ -53,8 +54,8 @@ export default function Header({ currentTheme, onToggleTheme }) {
     <header className="site-header">
       <div className="header-inner">
         <Link to="/" className="header-brand">
-          <span className="header-logo">SIREVE</span>
-          <span className="header-tagline">CSUCA</span>
+          <img src="/images/logo-sireve.png" alt="SIREVE" className="header-logo-img" />
+          <img src="/images/logo-csuca.svg" alt="CSUCA" className="header-csuca-img" />
         </Link>
 
         <button
@@ -125,6 +126,8 @@ export default function Header({ currentTheme, onToggleTheme }) {
           <Link to="/contacto" className={`header-link header-link--cta${isActive('/contacto') ? ' active' : ''}`}>
             Contacto
           </Link>
+
+          <SocialLinks variant="header" className="header-social" />
 
           <Button view="flat" size="m" onClick={onToggleTheme} className="header-theme-btn" title="Cambiar tema">
             <Icon data={currentTheme === 'light' ? Moon : Sun} size={18} />

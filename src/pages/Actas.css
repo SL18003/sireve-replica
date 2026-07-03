@@ -5,45 +5,106 @@
 }
 
 .actas-card {
-  padding: 28px !important;
+  padding: 0 !important;
   border-radius: var(--sireve-radius) !important;
   display: flex;
   flex-direction: column;
-  min-height: 200px;
-  transition: all 0.25s ease !important;
+  min-height: 220px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   border: 1px solid var(--sireve-border) !important;
+  overflow: hidden;
+  position: relative;
 }
 
 .actas-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--sireve-shadow-hover) !important;
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0, 82, 155, 0.15) !important;
   border-color: var(--sireve-primary-light) !important;
 }
 
 .actas-card--skeleton {
   pointer-events: none;
+  padding: 28px !important;
+}
+
+.actas-card-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--sireve-primary), var(--sireve-accent));
+}
+
+.actas-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 28px 28px 0;
+}
+
+.actas-card-icon-wrap {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(0, 82, 155, 0.12), rgba(0, 82, 155, 0.06));
+  color: var(--sireve-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 82, 155, 0.15);
+  transition: all 0.3s ease;
+}
+
+.actas-card:hover .actas-card-icon-wrap {
+  background: var(--sireve-primary);
+  color: #fff;
+  transform: scale(1.05);
 }
 
 .actas-card-title {
   font-weight: 700 !important;
-  font-size: 16px !important;
-  line-height: 1.4 !important;
+  font-size: 15px !important;
+  line-height: 1.35 !important;
   color: var(--g-color-text-primary) !important;
-  margin-bottom: 10px !important;
+  margin: 0 !important;
+  padding-top: 4px;
 }
 
 .actas-card-desc {
-  line-height: 1.6 !important;
+  line-height: 1.65 !important;
   font-size: 14px !important;
+  padding: 12px 28px 0;
 }
 
 .actas-card-spacer {
   flex: 1;
-  min-height: 16px;
+  min-height: 20px;
 }
 
 .actas-card-btn {
-  text-transform: uppercase;
-  font-size: 13px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 28px 28px;
+  padding: 12px 24px;
+  background: var(--sireve-primary);
+  color: #fff !important;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+
+.actas-card-btn:hover {
+  background: var(--sireve-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 82, 155, 0.3);
+  color: #fff !important;
 }
