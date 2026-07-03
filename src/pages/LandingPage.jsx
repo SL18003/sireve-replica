@@ -1,125 +1,164 @@
-import { useState, useEffect } from 'react';
-import { Card, Text, Button, Icon } from '@gravity-ui/uikit';
-import { ShieldCheck, HeartPulse, StarFill, Person, ChevronLeft, ChevronRight } from '@gravity-ui/icons';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Text, Card, Icon } from '@gravity-ui/uikit';
+import { Folder, Picture, FileText, StarFill, HeartPulse, Person, ShieldCheck, ChevronRight } from '@gravity-ui/icons';
 import './LandingPage.css';
 
-const sections = [
+const carouselSlides = [
   {
-    title: '¿Qué es SIREVE?',
-    description: 'El Sistema Regional de Vida Estudiantil (SIREVE), es el órgano del Consejo Superior Universitario Centroamericano CSUCA, que través del Consejo Regional de Vida Estudiantil (CONREVE), está encargado de coordinar, promover, fortalecer y generar iniciativas, programas y proyectos que impulsen el desarrollo del área de Vida Estudiantil de las Universidades miembros; contribuyendo a la formación integral de profesionales que participen con compromiso social, en la transformación, desarrollo e Integración de los países miembros del Sistema de Integración Centroamericana SICA.',
-    icon: ShieldCheck,
-    color: 'var(--g-color-base-brand)',
+    image: 'https://images.unsplash.com/photo-1523050854058-8df90110c7f1?w=1400&h=600&fit=crop',
+    alt: 'Estudiantes universitarios',
   },
   {
-    title: 'FICCUA',
-    description: 'El FICCUA es un evento bienal e itinerante de artistas estudiantiles universitarios, promovido por el Consejo Superior Universitario Centroamericano y la Secretaría Adjunta para Asuntos Estudiantiles. El FICCUA busca promover la educación integral, articulación del estudiantado centroamericano y proyección universitaria de la región en un marco de hermandad, diversidad, equidad e inclusión, mediante la expresión de distintas manifestaciones artísticas.',
-    icon: StarFill,
-    color: 'var(--g-color-base-info)',
+    image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=1400&h=600&fit=crop',
+    alt: 'Graduación',
   },
   {
-    title: 'JUDUCA',
-    description: 'El Consejo Regional de Vida Estudiantil (CONREVE), órgano del Consejo Superior Universitario Centroamericano (CSUCA), celebra los Juegos Deportivos Universitarios Centroamericanos (JUDUCA) con el objetivo común de contribuir al fortalecimiento de la integración, la solidaridad y la paz entre nuestras universidades de la región.',
-    icon: StarFill,
-    color: 'var(--g-color-base-warning)',
-  },
-  {
-    title: 'Premio Rubén Darío',
-    description: 'El Premio Regional a la Excelencia Académica "Rubén Darío" se establece mediante Acuerdo Noveno de la XIII Sesión Ordinaria del Consejo Regional de Vida Estudiantil, celebrada en la República de Panamá en el mes de mayo del año 2005. Se crea como un reconocimiento para aquellos estudiantes distinguidos académicamente y que sobresalen en el desarrollo del conocimiento científico, tecnológico y humanista de las diversas ramas del saber. El Consejo Regional de Vida Estudiantil a través de este premio reconoce el esfuerzo, perseverancia y constancia en la excelencia académica de las y los estudiantes en las universidades que conforman el Consejo Superior Universitario Centroamericano y República Dominicana.',
-    icon: StarFill,
-    color: 'var(--g-color-base-positive)',
-  },
-  {
-    title: 'Promotoras de Salud',
-    description: 'La Promoción de la Salud es aquella actividad que brinda la oportunidad de Promover y concientizar a las personas sobre la prevención y así brindar las herramientas necesarias para un mayor control de la Salud. El cual se ejerce en las universidades a través del Programa de Universidades Promotoras de la Salud y del Sistema Regional de Vida Estudiantil, mediante la Red Centroamericana y Caribeña de Universidades Promotoras de la Salud REDCCUPS, La cual promueve la Promoción de la salud como actividad de compromiso social universitario que complementa el proceso enseñanza-aprendizaje y el desarrollo integral estudiantil universitario.',
-    icon: HeartPulse,
-    color: 'var(--g-color-base-danger)',
-  },
-  {
-    title: 'Voluntariado',
-    description: 'El voluntariado es el ejercicio libre, organizado y no remunerado de la solidaridad ciudadana en actividades y programas que van en beneficio de la humanidad y su entorno en general. El cual se ejerce en las universidades a través del Programa de Voluntariado del Sistema Regional de Vida Estudiantil, mediante la Red UNIVOCES, el cual promueve el voluntariado como actividad de compromiso social universitario que complementa el proceso enseñanza-aprendizaje y el desarrollo integral estudiantil universitario.',
-    icon: Person,
-    color: 'var(--g-color-base-special)',
+    image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1400&h=600&fit=crop',
+    alt: 'Conferencia',
   },
 ];
 
-export default function LandingPage() {
-  const [currentImgIdx, setCurrentImgIdx] = useState(0);
+const quickLinks = [
+  { title: 'Actas', desc: 'Documentos oficiales', icon: Folder, path: '/actas', color: '#0d9488' },
+  { title: 'Galería', desc: 'Eventos y actividades', icon: Picture, path: '/galeria/2019', color: '#7c3aed' },
+  { title: 'Reglamentos', desc: 'Normativas vigentes', icon: FileText, path: '/reglamentos', color: '#f59e0b' },
+];
 
-  const carouselImages = [
-    { url: 'https://picsum.photos/seed/sansalvador/800/400', alt: 'San Salvador' },
-    { url: 'https://picsum.photos/seed/universidad/800/400', alt: 'Universidad' },
-    { url: 'https://picsum.photos/seed/estudiantes/800/400', alt: 'Estudiantes' },
-    { url: 'https://picsum.photos/seed/campus/800/400', alt: 'Campus' },
-    { url: 'https://picsum.photos/seed/centroamerica/800/400', alt: 'Centroamérica' },
-  ];
+const programs = [
+  { title: 'SIREVE', desc: 'Sistema Regional de Vida Estudiantil', icon: ShieldCheck, path: '/sireve', color: '#0d9488' },
+  { title: 'FICCUA', desc: 'Festival de Cultura y Arte', icon: StarFill, path: '/ficcua', color: '#7c3aed' },
+  { title: 'JUDUCA', desc: 'Juegos Deportivos Universitarios', icon: StarFill, path: '/juduca', color: '#f59e0b' },
+  { title: 'Premio Rubén Darío', desc: 'Excelencia Académica', icon: StarFill, path: '/excelencia-academica', color: '#ef4444' },
+  { title: 'Promotoras de Salud', desc: 'Red de Universidades Saludables', icon: HeartPulse, path: '/promotoras-salud', color: '#ec4899' },
+  { title: 'Voluntariado', desc: 'Red UNIVOCES', icon: Person, path: '/voluntariado', color: '#14b8a6' },
+];
+
+function useInView(threshold = 0.15) {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setInView(true); obs.disconnect(); }
+    }, { threshold });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [threshold]);
+  return [ref, inView];
+}
+
+function AnimatedSection({ children, className = '' }) {
+  const [ref, inView] = useInView();
+  return (
+    <div ref={ref} className={`fade-section ${inView ? 'visible' : ''} ${className}`}>
+      {children}
+    </div>
+  );
+}
+
+export default function LandingPage() {
+  const navigate = useNavigate();
+  const [slide, setSlide] = useState(0);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentImgIdx((prev) => (prev + 1) % carouselImages.length);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, [carouselImages.length]);
-
-  const handlePrev = () => setCurrentImgIdx(prev => (prev === 0 ? carouselImages.length - 1 : prev - 1));
-  const handleNext = () => setCurrentImgIdx(prev => (prev + 1) % carouselImages.length);
+    const t = setInterval(() => setSlide(s => (s + 1) % carouselSlides.length), 6000);
+    return () => clearInterval(t);
+  }, []);
 
   return (
-    <div className="landing-container">
-      <div className="hero-banner-solid">
-        <div className="hero-content">
-          <Text variant="display-2" className="landing-title" style={{ color: '#fff' }}>
-            Bienvenido a SIREVE
-          </Text>
-          <div style={{ height: '16px' }}></div>
-          <Text variant="header-1" className="landing-subtitle" style={{ color: 'rgba(255,255,255,0.9)' }}>
-            Explora los programas, eventos y recursos de la Vida Estudiantil
-          </Text>
+    <div className="landing">
+      <section className="hero">
+        <div className="hero-bg">
+          {carouselSlides.map((s, i) => (
+            <div key={i} className={`hero-bg-slide ${i === slide ? 'active' : ''}`}>
+              <img src={s.image} alt={s.alt} />
+            </div>
+          ))}
+          <div className="hero-overlay" />
         </div>
-      </div>
 
-      <div className="carousel-container-single">
-        <Button view="flat" size="xl" onClick={handlePrev} className="carousel-btn left">
-          <Icon data={ChevronLeft} size={24} />
-        </Button>
-        
-        <img 
-          src={carouselImages[currentImgIdx].url} 
-          alt={carouselImages[currentImgIdx].alt} 
-          className="carousel-image-single" 
-        />
-        
-        <Button view="flat" size="xl" onClick={handleNext} className="carousel-btn right">
-          <Icon data={ChevronRight} size={24} />
-        </Button>
+        <div className="hero-content">
+          <Text variant="display-3" className="hero-title">
+            Sistema Regional de<br />Vida Estudiantil
+          </Text>
+          <Text variant="header-1" className="hero-subtitle">
+            Coordinando, promoviendo y fortaleciendo la vida estudiantil en Centroamérica
+          </Text>
+          <div className="hero-actions">
+            <button className="hero-btn hero-btn-primary" onClick={() => navigate('/sireve')}>
+              Conocer más <Icon data={ChevronRight} size={18} />
+            </button>
+            <button className="hero-btn hero-btn-secondary" onClick={() => navigate('/contacto')}>
+              Contactar
+            </button>
+          </div>
+        </div>
 
-        <div className="carousel-dots">
-          {carouselImages.map((_, idx) => (
-            <div 
-              key={idx} 
-              className={`carousel-dot ${idx === currentImgIdx ? 'active' : ''}`}
-              onClick={() => setCurrentImgIdx(idx)}
-            />
+        <div className="hero-dots">
+          {carouselSlides.map((_, i) => (
+            <button key={i} className={`hero-dot ${i === slide ? 'active' : ''}`} onClick={() => setSlide(i)} />
           ))}
         </div>
-      </div>
+      </section>
 
-      <div className="cards-grid">
-        {sections.map((section, index) => (
-          <Card key={index} className="info-card" view="raised" type="action">
-            <div className="info-card-content">
-              <div className="icon-wrapper" style={{ color: section.color }}>
-                <Icon data={section.icon} size={32} />
-              </div>
-              <Text variant="header-1" as="h3" className="card-title" style={{ color: '#0d9488' }}>
-                {section.title}
-              </Text>
-              <Text variant="body-2" color="secondary" className="card-desc">
-                {section.description}
-              </Text>
-            </div>
-          </Card>
-        ))}
-      </div>
+      <AnimatedSection>
+        <section className="quick-section">
+          <div className="section-header">
+            <Text variant="display-1" className="section-title">Acceso rápido</Text>
+            <Text variant="body-2" className="section-desc">Explora los recursos del SIREVE</Text>
+          </div>
+          <div className="quick-grid">
+            {quickLinks.map((link, i) => (
+              <Card key={i} view="raised" type="action" className="quick-card" onClick={() => navigate(link.path)}>
+                <div className="quick-card-icon" style={{ background: link.color }}>
+                  <Icon data={link.icon} size={28} />
+                </div>
+                <div>
+                  <div className="quick-card-title">{link.title}</div>
+                  <div className="quick-card-desc">{link.desc}</div>
+                </div>
+                <ChevronRight size={20} className="quick-card-arrow" />
+              </Card>
+            ))}
+          </div>
+        </section>
+      </AnimatedSection>
+
+      <AnimatedSection>
+        <section className="programs-section">
+          <div className="section-header">
+            <Text variant="display-1" className="section-title">Nuestros programas</Text>
+            <Text variant="body-2" className="section-desc">Iniciativas para el desarrollo estudiantil centroamericano</Text>
+          </div>
+          <div className="programs-grid">
+            {programs.map((p, i) => (
+              <Card key={i} view="raised" type="action" className={`program-card program-${i}`} onClick={() => navigate(p.path)}>
+                <div className="program-card-top" style={{ background: p.color }}>
+                  <Icon data={p.icon} size={36} />
+                </div>
+                <div className="program-card-body">
+                  <div className="program-card-title">{p.title}</div>
+                  <div className="program-card-desc">{p.desc}</div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </section>
+      </AnimatedSection>
+
+      <AnimatedSection>
+        <section className="cta-section">
+          <div className="cta-inner">
+            <Text variant="display-1" className="cta-title">¿Tienes alguna consulta?</Text>
+            <Text variant="body-2" className="cta-desc">Estamos para servirte. Contáctanos y te responderemos a la brevedad.</Text>
+            <button className="hero-btn hero-btn-primary" onClick={() => navigate('/contacto')}>
+              Ir a Contacto <Icon data={ChevronRight} size={18} />
+            </button>
+          </div>
+        </section>
+      </AnimatedSection>
     </div>
   );
 }

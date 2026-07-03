@@ -1,64 +1,65 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Text, Card, Skeleton } from '@gravity-ui/uikit';
+import { useParams, Link } from 'react-router-dom';
+import { Text, Card, Icon } from '@gravity-ui/uikit';
+import { Picture, ChevronLeft } from '@gravity-ui/icons';
+
+const years = ['2017', '2018', '2019'];
 
 const events2017 = [
-  { id: '1', title: 'Sesión Comite Directivo CONREVE, Panamá 30 y 31 de mayo 2017' },
+  { id: '1', title: 'Sesión Comité Directivo CONREVE, Panamá 30 y 31 de mayo 2017' },
   { id: '2', title: 'CEUCA. Costa Rica, 2017' },
   { id: '3', title: 'Unidad de Comunicación CSUCA' },
   { id: '4', title: 'CONADER' },
-  { id: '5', title: 'Primera Visita Organización Ruben Dario. El Salvador' },
-  { id: '6', title: '1ER. Congresillo JUDUCA 2018. Panamá' },
-  { id: '7', title: 'Organización Congreso Neurociencias' }
+  { id: '5', title: 'Primera Visita Organización Rubén Darío. El Salvador' },
+  { id: '6', title: '1er. Congresillo JUDUCA 2018. Panamá' },
+  { id: '7', title: 'Organización Congreso Neurociencias' },
 ];
+
+const yearData = { '2017': events2017 };
 
 export default function Galeria() {
   const { year } = useParams();
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    setIsLoading(true);
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 800);
-    return () => clearTimeout(timer);
-  }, [year]);
-
-  let items = [];
-  if (year === '2017') {
-    items = events2017;
-  }
+  const items = yearData[year] || [];
 
   return (
-    <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
-      <Text variant="display-2" as="h1" style={{ marginBottom: '24px' }}>Galería {year}</Text>
-      
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px', width: '100%', marginTop: '20px' }}>
-        {isLoading ? (
-          Array.from({ length: 6 }).map((_, index) => (
-            <Card key={index} view="raised" style={{ overflow: 'hidden', width: '100%' }}>
-              <Skeleton style={{ width: '100%', height: '250px', borderRadius: '0' }} />
-              <div style={{ padding: '16px' }}>
-                <Skeleton style={{ height: '20px', width: '90%', borderRadius: '4px' }} />
+    <div className="page-wrap">
+      <div className="page-hero" style={{ background: 'linear-gradient(135deg, #7c3aed, #6d28d9)' }}>
+        <Icon data={Picture} size={48} className="page-hero-icon" />
+        <Text variant="display-2" as="h1" className="page-hero-title">Galería {year}</Text>
+        <Text variant="header-1" className="page-hero-sub">Eventos y actividades del SIREVE</Text>
+      </div>
+      <div className="page-body">
+        <div className="galeria-bar">
+          {years.map(y => (
+            <Link key={y} to={`/galeria/${y}`} className={`galeria-tab ${y === year ? 'active' : ''}`}>{y}</Link>
+          ))}
+        </div>
+
+        {items.length > 0 ? (
+          <>
+            <div className="galeria-grid">
+              {items.map(item => (
+                <Card key={item.id} view="raised" className="galeria-card">
+                  <img src={`https://picsum.photos/400/300?random=${item.id}`} alt={item.title} className="galeria-img" />
+                  <div className="galeria-body">
+                    <Text variant="body-2" className="galeria-label">{item.title}</Text>
+                  </div>
+                </Card>
+              ))}
+            </div>
+            {year !== '2019' && (
+              <div style={{ marginTop: 32 }}>
+                <Link to="/galeria/2019" className="back-link"><Icon data={ChevronLeft} size={16} /> Galería más reciente</Link>
               </div>
-            </Card>
-          ))
-        ) : items.length > 0 ? (
-          items.map((item, index) => (
-            <Card key={item.id} view="raised" style={{ overflow: 'hidden', width: '100%' }}>
-              <img 
-                src={`https://picsum.photos/400/300?random=${item.id}`} 
-                alt={item.title} 
-                style={{ width: '100%', height: '250px', objectFit: 'cover', display: 'block' }}
-              />
-              <div style={{ padding: '16px' }}>
-                <Text variant="body-2" style={{ fontWeight: 600 }}>{item.title}</Text>
-              </div>
-            </Card>
-          ))
+            )}
+          </>
         ) : (
-          <div style={{ gridColumn: '1 / -1' }}>
-            <Text variant="body-2" color="secondary">No hay eventos registrados para el año {year}</Text>
+          <div className="empty-state">
+            <Text variant="body-2" color="secondary">No hay eventos registrados para {year}</Text>
+            <div className="galeria-bar" style={{ marginTop: 16, justifyContent: 'center' }}>
+              {years.filter(y => y !== year).map(y => (
+                <Link key={y} to={`/galeria/${y}`} className="galeria-tab">Ver {y}</Link>
+              ))}
+            </div>
           </div>
         )}
       </div>
