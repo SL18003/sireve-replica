@@ -55,46 +55,13 @@
 
 .galeria-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
 }
 
-.galeria-card {
-  overflow: hidden !important;
-  border-radius: var(--sireve-radius) !important;
-  transition: all 0.3s ease !important;
-}
-
-.galeria-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--sireve-shadow-hover) !important;
-}
-
-.galeria-img-wrap {
+.galeria-skeleton {
+  border-radius: var(--sireve-radius);
   overflow: hidden;
-  height: 220px;
-}
-
-.galeria-img-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.4s ease;
-}
-
-.galeria-card:hover .galeria-img-wrap img {
-  transform: scale(1.04);
-}
-
-.galeria-card-body {
-  padding: 16px 18px 20px;
-}
-
-.galeria-card-title {
-  font-weight: 600 !important;
-  line-height: 1.5 !important;
-  color: var(--g-color-text-primary) !important;
 }
 
 .galeria-empty {
