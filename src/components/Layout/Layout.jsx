@@ -1,12 +1,13 @@
 import { Outlet } from 'react-router-dom';
-import Sidebar from './Sidebar';
+import Header from './Header';
 import Footer from './Footer';
+import './Layout.css';
 
-export default function Layout() {
+export default function Layout({ currentTheme, onToggleTheme }) {
   return (
     <div className="layout-container">
-      <Sidebar />
-      <main className="main-content" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Header currentTheme={currentTheme} onToggleTheme={onToggleTheme} />
+      <main className="main-content">
         <Outlet />
         <Footer />
       </main>

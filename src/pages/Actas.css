@@ -1,0 +1,49 @@
+.actas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.actas-card {
+  padding: 28px !important;
+  border-radius: var(--sireve-radius) !important;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  transition: all 0.25s ease !important;
+  border: 1px solid var(--sireve-border) !important;
+}
+
+.actas-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sireve-shadow-hover) !important;
+  border-color: var(--sireve-primary-light) !important;
+}
+
+.actas-card--skeleton {
+  pointer-events: none;
+}
+
+.actas-card-title {
+  font-weight: 700 !important;
+  font-size: 16px !important;
+  line-height: 1.4 !important;
+  color: var(--g-color-text-primary) !important;
+  margin-bottom: 10px !important;
+}
+
+.actas-card-desc {
+  line-height: 1.6 !important;
+  font-size: 14px !important;
+}
+
+.actas-card-spacer {
+  flex: 1;
+  min-height: 16px;
+}
+
+.actas-card-btn {
+  text-transform: uppercase;
+  font-size: 13px !important;
+  letter-spacing: 0.04em;
+}

@@ -1,0 +1,220 @@
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #fff;
+  border-bottom: 1px solid var(--sireve-border);
+  box-shadow: 0 2px 12px rgba(0, 61, 115, 0.06);
+}
+
+.g-root_theme_dark .site-header {
+  background: var(--g-color-base-background);
+  border-bottom-color: var(--g-color-line-generic);
+}
+
+.header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.header-brand {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.header-logo {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--sireve-primary);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.header-tagline {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sireve-muted);
+}
+
+.header-mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--g-color-text-primary);
+  padding: 8px;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.header-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  color: var(--g-color-text-primary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.header-link:hover {
+  background: var(--g-color-base-simple-hover);
+  color: var(--sireve-primary);
+}
+
+.header-link.active {
+  color: var(--sireve-primary);
+  font-weight: 600;
+}
+
+.header-link--cta {
+  background: var(--sireve-primary);
+  color: #fff !important;
+  margin-left: 4px;
+}
+
+.header-link--cta:hover {
+  background: var(--sireve-primary-dark);
+}
+
+.header-link--cta.active {
+  background: var(--sireve-primary-dark);
+}
+
+.header-dropdown {
+  position: relative;
+}
+
+.header-dropdown-toggle.open {
+  color: var(--sireve-primary);
+  background: var(--g-color-base-simple-hover);
+}
+
+.header-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius);
+  box-shadow: var(--sireve-shadow-hover);
+  padding: 8px;
+  z-index: 100;
+  animation: fadeUp 0.2s ease;
+}
+
+.g-root_theme_dark .header-dropdown-menu {
+  background: var(--g-color-base-generic);
+  border-color: var(--g-color-line-generic);
+}
+
+.header-dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: 14px;
+  color: var(--g-color-text-primary);
+  text-decoration: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.header-dropdown-item:hover {
+  background: var(--g-color-base-simple-hover);
+  color: var(--sireve-primary);
+}
+
+.header-theme-btn {
+  margin-left: 4px;
+  color: var(--g-color-text-secondary) !important;
+}
+
+@media (max-width: 960px) {
+  .header-mobile-toggle {
+    display: flex;
+  }
+
+  .header-nav {
+    display: none;
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    background: #fff;
+    border-bottom: 1px solid var(--sireve-border);
+    padding: 16px;
+    gap: 4px;
+    box-shadow: var(--sireve-shadow);
+  }
+
+  .g-root_theme_dark .header-nav {
+    background: var(--g-color-base-background);
+  }
+
+  .header-nav.open {
+    display: flex;
+  }
+
+  .header-link {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 12px 14px;
+  }
+
+  .header-link--cta {
+    margin-left: 0;
+    justify-content: center;
+  }
+
+  .header-dropdown {
+    width: 100%;
+  }
+
+  .header-dropdown-toggle {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .header-dropdown-menu {
+    position: static;
+    box-shadow: none;
+    border: none;
+    padding: 0 0 0 12px;
+    margin-top: 4px;
+  }
+
+  .header-theme-btn {
+    align-self: flex-start;
+    margin-left: 8px;
+  }
+}

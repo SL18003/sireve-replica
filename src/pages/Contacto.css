@@ -1,0 +1,69 @@
+.contacto-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+.contacto-form {
+  padding: 32px !important;
+  border-radius: var(--sireve-radius) !important;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contacto-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contacto-label {
+  font-weight: 600 !important;
+  color: var(--g-color-text-primary) !important;
+}
+
+.contacto-btn {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+.contacto-info {
+  padding: 28px !important;
+  border-radius: var(--sireve-radius) !important;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contacto-info-heading {
+  font-weight: 700 !important;
+  color: var(--g-color-text-primary) !important;
+  margin-bottom: 4px !important;
+}
+
+.contacto-info-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.contacto-info-icon {
+  color: var(--sireve-primary) !important;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.contacto-info-label {
+  display: block;
+  font-weight: 600 !important;
+  margin-bottom: 4px !important;
+  color: var(--g-color-text-primary) !important;
+}
+
+@media (max-width: 768px) {
+  .contacto-grid {
+    grid-template-columns: 1fr;
+  }
+}
