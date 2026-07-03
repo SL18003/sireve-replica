@@ -20,18 +20,18 @@ const carouselSlides = [
 ];
 
 const quickLinks = [
-  { title: 'Actas', desc: 'Documentos oficiales', icon: Folder, path: '/actas', color: '#0d9488' },
-  { title: 'Galería', desc: 'Eventos y actividades', icon: Picture, path: '/galeria/2019', color: '#7c3aed' },
-  { title: 'Reglamentos', desc: 'Normativas vigentes', icon: FileText, path: '/reglamentos', color: '#f59e0b' },
+  { title: 'Actas', desc: 'Documentos oficiales', icon: Folder, path: '/actas' },
+  { title: 'Galería', desc: 'Eventos y actividades', icon: Picture, path: '/galeria/2019' },
+  { title: 'Reglamentos', desc: 'Normativas vigentes', icon: FileText, path: '/reglamentos' },
 ];
 
 const programs = [
-  { title: 'SIREVE', desc: 'Sistema Regional de Vida Estudiantil', icon: ShieldCheck, path: '/sireve', color: '#0d9488' },
-  { title: 'FICCUA', desc: 'Festival de Cultura y Arte', icon: StarFill, path: '/ficcua', color: '#7c3aed' },
-  { title: 'JUDUCA', desc: 'Juegos Deportivos Universitarios', icon: StarFill, path: '/juduca', color: '#f59e0b' },
-  { title: 'Premio Rubén Darío', desc: 'Excelencia Académica', icon: StarFill, path: '/excelencia-academica', color: '#ef4444' },
-  { title: 'Promotoras de Salud', desc: 'Red de Universidades Saludables', icon: HeartPulse, path: '/promotoras-salud', color: '#ec4899' },
-  { title: 'Voluntariado', desc: 'Red UNIVOCES', icon: Person, path: '/voluntariado', color: '#14b8a6' },
+  { title: 'SIREVE', desc: 'Sistema Regional de Vida Estudiantil', icon: ShieldCheck, path: '/sireve' },
+  { title: 'FICCUA', desc: 'Festival de Cultura y Arte', icon: StarFill, path: '/ficcua' },
+  { title: 'JUDUCA', desc: 'Juegos Deportivos Universitarios', icon: StarFill, path: '/juduca' },
+  { title: 'Premio Rubén Darío', desc: 'Excelencia Académica', icon: StarFill, path: '/excelencia-academica' },
+  { title: 'Promotoras de Salud', desc: 'Red de Universidades Saludables', icon: HeartPulse, path: '/promotoras-salud' },
+  { title: 'Voluntariado', desc: 'Red UNIVOCES', icon: Person, path: '/voluntariado' },
 ];
 
 function useInView(threshold = 0.15) {
@@ -112,7 +112,7 @@ export default function LandingPage() {
           <div className="quick-grid">
             {quickLinks.map((link, i) => (
               <Card key={i} view="raised" type="action" className="quick-card" onClick={() => navigate(link.path)}>
-                <div className="quick-card-icon" style={{ background: link.color }}>
+                <div className={`quick-card-icon quick-card-icon--${i}`}>
                   <Icon data={link.icon} size={28} />
                 </div>
                 <div>
@@ -134,8 +134,8 @@ export default function LandingPage() {
           </div>
           <div className="programs-grid">
             {programs.map((p, i) => (
-              <Card key={i} view="raised" type="action" className={`program-card program-${i}`} onClick={() => navigate(p.path)}>
-                <div className="program-card-top" style={{ background: p.color }}>
+              <Card key={i} view="raised" type="action" className="program-card" onClick={() => navigate(p.path)}>
+                <div className={`program-card-top program-card-top--${i}`}>
                   <Icon data={p.icon} size={36} />
                 </div>
                 <div className="program-card-body">
