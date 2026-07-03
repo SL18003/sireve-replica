@@ -16,8 +16,19 @@
 }
 
 .g-root_theme_dark .galeria-year-card {
-  background: var(--g-color-base-generic);
-  border-color: var(--g-color-line-generic);
+  background: #152535;
+  border-color: rgba(26, 110, 181, 0.22);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.g-root_theme_dark .galeria-year-card:hover {
+  background: #1a3048;
+  border-color: rgba(26, 110, 181, 0.45);
+  box-shadow: 0 12px 32px rgba(0, 82, 155, 0.2);
+}
+
+.g-root_theme_dark .galeria-year-title {
+  color: #f0f4f8;
 }
 
 .galeria-year-card:hover {

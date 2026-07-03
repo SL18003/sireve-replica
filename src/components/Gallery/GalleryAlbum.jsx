@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Text, Card, Icon } from '@gravity-ui/uikit';
-import { ChevronLeft, ChevronRight, Xmark, Magnifier } from '@gravity-ui/icons';
+import { ChevronLeft, ChevronRight, Xmark } from '@gravity-ui/icons';
 import { handleImageError } from '../../utils/imageFallback';
 import './GalleryAlbum.css';
 
@@ -48,9 +48,6 @@ export default function GalleryAlbum({ title, images }) {
               alt={`${title} — imagen ${currentIndex + 1}`}
               onError={handleImageError}
             />
-            <span className="gallery-album-zoom">
-              <Icon data={Magnifier} size={18} />
-            </span>
           </button>
 
           {total > 1 && (
