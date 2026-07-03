@@ -136,7 +136,16 @@ function AnimatedSection({ children, className = '' }) {
 export default function LandingPage() {
   const navigate = useNavigate();
   const [currentImgIdx, setCurrentImgIdx] = useState(0);
-  const [expandedId, setExpandedId] = useState(null);
+  const [expandedIds, setExpandedIds] = useState(() => new Set());
+
+  const toggleExpanded = (id) => {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -277,16 +286,16 @@ export default function LandingPage() {
                 </div>
                 <div className="program-card-body">
                   <span className="program-card-label">{section.subtitle}</span>
-                  <p className={`program-card-text${expandedId === section.id ? ' expanded' : ''}`}>
-                    {expandedId === section.id ? section.description : section.excerpt}
+                  <p className={`program-card-text${expandedIds.has(section.id) ? ' expanded' : ''}`}>
+                    {expandedIds.has(section.id) ? section.description : section.excerpt}
                   </p>
                   <button
                     type="button"
-                    className={`program-card-toggle${expandedId === section.id ? ' active' : ''}`}
-                    onClick={() => setExpandedId(expandedId === section.id ? null : section.id)}
+                    className={`program-card-toggle${expandedIds.has(section.id) ? ' active' : ''}`}
+                    onClick={() => toggleExpanded(section.id)}
                   >
-                    {expandedId === section.id ? 'Leer menos' : 'Leer más'}
-                    <Icon data={ChevronDown} size={14} className={`program-chevron${expandedId === section.id ? ' open' : ''}`} />
+                    {expandedIds.has(section.id) ? 'Leer menos' : 'Leer más'}
+                    <Icon data={ChevronDown} size={14} className={`program-chevron${expandedIds.has(section.id) ? ' open' : ''}`} />
                   </button>
                 </div>
               </article>

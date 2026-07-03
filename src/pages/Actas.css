@@ -108,3 +108,49 @@
   box-shadow: 0 6px 20px rgba(0, 82, 155, 0.3);
   color: #fff !important;
 }
+
+/* Tema oscuro — tonos azul marino en lugar de gris cálido */
+.g-root_theme_dark .actas-card {
+  background: #152535 !important;
+  border-color: rgba(26, 110, 181, 0.22) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+.g-root_theme_dark .actas-card:hover {
+  background: #1a3048 !important;
+  border-color: rgba(26, 110, 181, 0.45) !important;
+  box-shadow: 0 12px 32px rgba(0, 82, 155, 0.2) !important;
+}
+
+.g-root_theme_dark .actas-card-accent {
+  background: linear-gradient(90deg, var(--sireve-primary-light), var(--sireve-accent));
+}
+
+.g-root_theme_dark .actas-card-icon-wrap {
+  background: rgba(26, 110, 181, 0.18);
+  border-color: rgba(26, 110, 181, 0.3);
+  color: #6eb3e8;
+}
+
+.g-root_theme_dark .actas-card:hover .actas-card-icon-wrap {
+  background: var(--sireve-primary);
+  color: #fff;
+  border-color: transparent;
+}
+
+.g-root_theme_dark .actas-card-title {
+  color: #f0f4f8 !important;
+}
+
+.g-root_theme_dark .actas-card-desc {
+  color: #94a3b8 !important;
+}
+
+.g-root_theme_dark .actas-card-btn {
+  background: var(--sireve-primary-light);
+}
+
+.g-root_theme_dark .actas-card-btn:hover {
+  background: var(--sireve-primary);
+  box-shadow: 0 6px 20px rgba(26, 110, 181, 0.35);
+}
