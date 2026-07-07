@@ -1,0 +1,126 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.g-root_theme_dark .header {
+  background: rgba(15, 23, 42, 0.95);
+  border-bottom-color: #1e293b;
+}
+
+.header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.header-logo {
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.header-logo-text {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #0d9488, #0ea5e9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.header-nav-link {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #475569;
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.g-root_theme_dark .header-nav-link {
+  color: #94a3b8;
+}
+
+.header-nav-link:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.g-root_theme_dark .header-nav-link:hover {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+.header-nav-link.active {
+  background: #f0fdfa;
+  color: #0d9488;
+  font-weight: 600;
+}
+
+.g-root_theme_dark .header-nav-link.active {
+  background: rgba(13, 148, 136, 0.1);
+  color: #2dd4bf;
+}
+
+.header-mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #475569;
+  padding: 8px;
+}
+
+@media (max-width: 1024px) {
+  .header-mobile-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .header-nav {
+    display: none;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(12px);
+    flex-direction: column;
+    padding: 16px;
+    gap: 4px;
+    border-bottom: 1px solid #e2e8f0;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+
+  .g-root_theme_dark .header-nav {
+    background: rgba(15, 23, 42, 0.98);
+    border-bottom-color: #1e293b;
+  }
+
+  .header-nav.open {
+    display: flex;
+  }
+
+  .header-nav-link {
+    width: 100%;
+    padding: 12px 16px;
+  }
+}

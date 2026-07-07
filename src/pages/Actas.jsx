@@ -1,46 +1,54 @@
-import { useState, useEffect } from 'react';
-import { Text, Card, Button, Skeleton } from '@gravity-ui/uikit';
+import { Text, Card, Button, Icon } from '@gravity-ui/uikit';
+import { Folder, ArrowUpRightFromSquare } from '@gravity-ui/icons';
 
 const actasCategories = [
-  'CONSEJO DIRECTIVO CONREVE',
-  'FICCUA',
-  'JUDUCA',
-  'PROMOTORAS DE LA SALUD',
-  'SESIONES CONREVE'
+  {
+    title: 'CONSEJO DIRECTIVO CONREVE',
+    desc: 'Aquí podrás encontrar las actas del comité directivo, el cual es el órgano propositivo del CONREVE.',
+    link: 'https://drive.google.com/open?id=1lOTQdIyd4qffetTIOtlz5vlaYvx2aE_h',
+  },
+  {
+    title: 'FICCUA',
+    desc: 'Detalles de los Congresos Pre FICCUA, los cuales se enmarcan en la organización previa al evento macro estudiantil de la Cultura y el Arte del CSUCA.',
+    link: 'https://drive.google.com/open?id=1DfOaQ_DFvqHXgVvk5X19PlLu44JK_Hc4',
+  },
+  {
+    title: 'JUDUCA',
+    desc: 'Detalles de los Congresos Pre JUDUCA, los cuales se enmarcan en la organización previa al evento macro estudiantil de deporte del CSUCA.',
+    link: 'https://drive.google.com/open?id=1Wfw6WwTzJWllWrIAGM6qs_hnoNc3Q35g',
+  },
+  {
+    title: 'PROMOTORAS DE LA SALUD',
+    desc: 'Detalles de los Acuerdos tomados en las Asambleas General de delegados docentes, funcionarios y estudiantes.',
+    link: 'https://drive.google.com/open?id=1-y2M78ic5uRzOBZKeAF08BqGEkYb1E_W',
+  },
+  {
+    title: 'SESIONES CONREVE',
+    desc: 'El Consejo Regional de Vida Estudiantil se reunirá ordinariamente dos veces por año y extraordinariamente cuando el Comité Directivo lo decida.',
+    link: 'https://drive.google.com/open?id=1rx_yImAJi__RcTDTp6Mv61FYJ0hc5h1Q',
+  },
 ];
 
 export default function Actas() {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 800);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
-    <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
-      <Text variant="display-2" as="h1" style={{ marginBottom: '24px' }}>Actas</Text>
-      
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px', width: '100%', marginTop: '20px' }}>
-        {isLoading ? (
-          Array.from({ length: 5 }).map((_, index) => (
-            <Card key={index} view="raised" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', height: '140px', width: '100%' }}>
-              <Skeleton style={{ height: '24px', width: '80%', borderRadius: '4px' }} />
-              <div style={{ flexGrow: 1 }} />
-              <Skeleton style={{ height: '36px', width: '100%', borderRadius: '4px' }} />
+    <div className="page-wrap">
+      <div className="page-hero" style={{ background: 'linear-gradient(135deg, #0d9488, #0f766e)' }}>
+        <Icon data={Folder} size={48} className="page-hero-icon" />
+        <Text variant="display-2" as="h1" className="page-hero-title">Actas SIREVE</Text>
+        <Text variant="header-1" className="page-hero-sub">Documentos y registros oficiales del CONREVE</Text>
+      </div>
+      <div className="page-body">
+        <div className="actas-grid">
+          {actasCategories.map((cat, i) => (
+            <Card key={i} view="raised" className="acta-card">
+              <Text variant="header-1" className="acta-title">{cat.title}</Text>
+              <Text variant="body-2" color="secondary" className="acta-desc">{cat.desc}</Text>
+              <Button view="action" width="max" onClick={() => window.open(cat.link, '_blank')}>
+                CONSULTAR <Icon data={ArrowUpRightFromSquare} size={16} style={{ marginLeft: 8 }} />
+              </Button>
             </Card>
-          ))
-        ) : (
-          actasCategories.map((category, index) => (
-            <Card key={index} view="raised" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', width: '100%' }}>
-              <Text variant="header-1" as="h3">{category}</Text>
-              <div style={{ flexGrow: 1 }} />
-              <Button view="action" width="max">CONSULTAR</Button>
-            </Card>
-          ))
-        )}
+          ))}
+        </div>
       </div>
     </div>
   );
