@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>one</title></head>
+<body>
+<iframe id="f" style="width:1280px;height:900px;border:0"></iframe>
+<pre id="o">pending</pre>
+<script>
+/* Sonda de calculo para comparar la replica con la de React.
+   - `sel`: lista de selectores separados por `|`, se imprime el estilo de la 1.er
+     coincidencia de cada uno.
+   - `tree`: si viene, se recorre ese elemento `depth` niveles mostrando caja,
+     display, padding, margenes y line-height de cada hijo (para ver de donde
+     sale una diferencia de alto).
+   El iframe es same-origin porque el probe se sirve desde el mismo origen que la
+   ruta medida. */
+const q = new URLSearchParams(location.search);
+const sels = (q.get('sel') || '').split('|').filter(Boolean);
+const treeRoot = q.get('tree');
+const depth = Number(q.get('depth') || 3);
+/* `w`/`h` permiten repetir la medicion en cualquier breakpoint (1280 por
+   defecto); sin eso el arbol siempre saldria en el ancho de escritorio. */
+const W = Number(q.get('w') || 1280);
+const f = document.getElementById('f');
+f.style.width = W + 'px';
+f.addEventListener('load', async () => {
+  const w = f.contentWindow, d = f.contentDocument;
+  /* El margen global del body y la barra deScrollhara falsearian el contraste:
+     se anulan en los dos lados. */
+  d.documentElement.style.margin = '0';
+  d.body.style.margin = '0';
+  const st = d.createElement('style');
+  st.textContent = 'html{scrollbar-width:none}::-webkit-scrollbar{width:0;height:0}';
+  d.head.appendChild(st);
+  try { await w.document.fonts.ready; } catch (e) {}
+  await new Promise((r) => setTimeout(r, 900));
+  const out = [];
+  for (const s of sels) {
+    const el = d.querySelector(s);
+    if (!el) { out.push(`${s} -> NO EXISTE`); continue; }
+    const c = w.getComputedStyle(el);
+    const r = el.getBoundingClientRect();
+    out.push(`${s} -> ${c.fontSize}/${c.lineHeight} w${c.fontWeight} h${r.height.toFixed(1)} w${r.width.toFixed(1)} display ${c.display} ls ${c.letterSpacing}`);
+  }
+  const walk = (el, lvl) => {
+    const c = w.getComputedStyle(el);
+    const r = el.getBoundingClientRect();
+    out.push(`${'  '.repeat(lvl)}<${el.tagName.toLowerCase()} class="${[...el.classList].join(' ')}"> `
+      + `box ${r.width.toFixed(1)}x${r.height.toFixed(1)} disp ${c.display} `
+      + `pad ${c.paddingTop}/${c.paddingBottom} mar ${c.marginTop}/${c.marginBottom} lineH ${c.lineHeight}`);
+    if (lvl < depth) for (const ch of el.children) walk(ch, lvl + 1);
+  };
+  if (treeRoot) {
+    const root = d.querySelector(treeRoot);
+    if (!root) out.push(`tree "${treeRoot}" -> NO EXISTE`);
+    else walk(root, 0);
+  }
+  document.getElementById('o').textContent = out.join('\n');
+});
+f.src = q.get('route') || '/';
+</script>
+</body></html>

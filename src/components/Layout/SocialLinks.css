@@ -8,16 +8,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
+  /* 40px: minimo comodo para el dedo en celular */
+  width: 40px;
+  height: 40px;
+  border-radius: var(--sireve-radius-sm);
   color: inherit;
   text-decoration: none;
   transition: background 0.2s, color 0.2s, transform 0.2s;
 }
 
 .social-links--default .social-links-item {
-  background: rgba(0, 82, 155, 0.08);
+  background: rgba(66, 154, 208, 0.16);
   color: var(--sireve-primary);
 }
 
@@ -27,24 +28,34 @@
   transform: translateY(-1px);
 }
 
+/* Footer en CAROLINA: iconos blancos, hover en chip GREEN BLUE */
 .social-links--footer .social-links-item {
-  background: rgba(255, 255, 255, 0.08);
-  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
 }
 
 .social-links--footer .social-links-item:hover {
-  background: var(--sireve-accent);
-  color: var(--sireve-ink);
+  background: var(--sireve-primary);
+  color: #fff;
 }
 
 .social-links--header .social-links-item {
   background: transparent;
-  color: var(--sireve-muted);
-  width: 32px;
-  height: 32px;
+  color: #fff;
+  /* Antes 32px (por debajo del area tactil minima). En la barra de escritorio
+     caben igual: la nav ya es compacta. */
+  width: 40px;
+  height: 40px;
 }
 
 .social-links--header .social-links-item:hover {
-  color: var(--sireve-primary);
-  background: var(--g-color-base-simple-hover);
+  background: var(--sireve-primary);
+  color: #fff;
+}
+
+/* Dentro del panel movil (fondo blanco) el icono vuelve a oscuro */
+@media (max-width: 960px) {
+  .social-links--header .social-links-item {
+    color: #000;
+  }
 }

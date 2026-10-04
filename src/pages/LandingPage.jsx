@@ -1,25 +1,25 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Text, Icon } from '@gravity-ui/uikit';
 import {
-  ShieldCheck, HeartPulse, StarFill, Person,
-  ChevronLeft, ChevronRight, Folder, Picture, FileText, ChevronDown,
+  ChevronLeft, ChevronRight, Folder, Picture, FileText,
+  GraduationCap, BookOpen, Globe, ArrowRight,
 } from '@gravity-ui/icons';
 import { handleImageError } from '../utils/imageFallback';
+import { programs } from '../data/programs';
 import './LandingPage.css';
 
-const heroImage = '/images/hero.jpg';
 
 const carouselImages = [
-  { url: '/images/carousel/1.jpg', alt: 'Graduación universitaria' },
-  { url: '/images/carousel/2.jpg', alt: 'Conferencia académica' },
-  { url: '/images/carousel/3.jpg', alt: 'Vida estudiantil' },
+  { url: '/images/carousel/1.jpg', alt: 'Autoridades de la CSUCA con las banderas de los países centroamericanos' },
+  { url: '/images/carousel/2.jpg', alt: 'Plenaria del 5.º SICEVAES en la UNED de Costa Rica' },
+  { url: '/images/carousel/3.jpg', alt: 'Comité del SIREVE en el Auditorio Cora Ferro Calabrese de la UNA' },
 ];
 
 const heroStats = [
-  { value: '30+', label: 'Universidades miembros' },
-  { value: '6', label: 'Programas regionales' },
-  { value: '8', label: 'Países de la región' },
+  { value: '30+', label: 'Universidades miembros', icon: GraduationCap },
+  { value: '5', label: 'Programas regionales', icon: BookOpen },
+  { value: '8', label: 'Países de la región', icon: Globe },
 ];
 
 const quickLinks = [
@@ -46,68 +46,12 @@ const quickLinks = [
   },
 ];
 
-const sections = [
-  {
-    id: 'sireve',
-    title: 'SIREVE',
-    subtitle: '¿Qué es SIREVE?',
-    excerpt: 'Órgano del CSUCA encargado de coordinar, promover y fortalecer la Vida Estudiantil en las universidades miembros.',
-    description: 'El Sistema Regional de Vida Estudiantil (SIREVE), es el órgano del Consejo Superior Universitario Centroamericano CSUCA, que a través del Consejo Regional de Vida Estudiantil (CONREVE), está encargado de coordinar, promover, fortalecer y generar iniciativas, programas y proyectos que impulsen el desarrollo del área de Vida Estudiantil de las Universidades miembros; contribuyendo a la formación integral de profesionales que participen con compromiso social, en la transformación, desarrollo e Integración de los países miembros del Sistema de Integración Centroamericana SICA.',
-    icon: ShieldCheck,
-    image: '/images/programs/sireve.jpg',
-    accent: '#00529b',
-  },
-  {
-    id: 'ficcua',
-    title: 'FICCUA',
-    subtitle: 'Qué es FICCUA',
-    excerpt: 'Festival bienal e itinerante de artistas estudiantiles universitarios de Centroamérica.',
-    description: 'El FICCUA es un evento bienal e itinerante de artistas estudiantiles universitarios, promovido por el Consejo Superior Universitario Centroamericano y la Secretaría Adjunta para Asuntos Estudiantiles. El FICCUA busca promover la educación integral, articulación del estudiantado centroamericano y proyección universitaria de la región en un marco de hermandad, diversidad, equidad e inclusión, mediante la expresión de distintas manifestaciones artísticas.',
-    icon: StarFill,
-    image: '/images/programs/ficcua.jpg',
-    accent: '#7c3aed',
-  },
-  {
-    id: 'juduca',
-    title: 'JUDUCA',
-    subtitle: 'Qué es JUDUCA',
-    excerpt: 'Juegos Deportivos Universitarios Centroamericanos para fortalecer la integración regional.',
-    description: 'El Consejo Regional de Vida Estudiantil (CONREVE), órgano del Consejo Superior Universitario Centroamericano (CSUCA), celebra los Juegos Deportivos Universitarios Centroamericanos (JUDUCA) con el objetivo común de contribuir al fortalecimiento de la integración, la solidaridad y la paz entre nuestras universidades de la región.',
-    icon: StarFill,
-    image: '/images/programs/juduca.jpg',
-    accent: '#059669',
-  },
-  {
-    id: 'premio-ruben-dario',
-    title: 'Excelencia Académica',
-    subtitle: 'Premio Rubén Darío',
-    excerpt: 'Reconocimiento a la excelencia académica de estudiantes destacados de la región.',
-    description: 'El Premio Regional a la Excelencia Académica "Rubén Darío" se establece mediante Acuerdo Noveno de la XIII Sesión Ordinaria del Consejo Regional de Vida Estudiantil, celebrada en la República de Panamá en el mes de mayo del año 2005. Se crea como un reconocimiento para aquellos estudiantes distinguidos académicamente y que sobresalen en el desarrollo del conocimiento científico, tecnológico y humanista de las diversas ramas del saber.',
-    icon: StarFill,
-    image: '/images/programs/excelencia.jpg',
-    accent: '#c9a227',
-  },
-  {
-    id: 'promotoras-salud',
-    title: 'Promotoras de Salud',
-    subtitle: 'Qué son los Promotores de Salud',
-    excerpt: 'Red de universidades promotoras de la salud en Centroamérica y el Caribe.',
-    description: 'La Promoción de la Salud es aquella actividad que brinda la oportunidad de Promover y concientizar a las personas sobre la prevención y así brindar las herramientas necesarias para un mayor control de la Salud. El cual se ejerce en las universidades a través del Programa de Universidades Promotoras de la Salud y del Sistema Regional de Vida Estudiantil, mediante la Red Centroamericana y Caribeña de Universidades Promotoras de la Salud REDCCUPS.',
-    icon: HeartPulse,
-    image: '/images/programs/salud.jpg',
-    accent: '#dc2626',
-  },
-  {
-    id: 'voluntariado',
-    title: 'Voluntariado',
-    subtitle: 'Red UNIVOCES',
-    excerpt: 'Compromiso social universitario a través del voluntariado en la región.',
-    description: 'El voluntariado es el ejercicio libre, organizado y no remunerado de la solidaridad ciudadana en actividades y programas que van en beneficio de la humanidad y su entorno en general. El cual se ejerce en las universidades a través del Programa de Voluntariado del Sistema Regional de Vida Estudiantil, mediante la Red UNIVOCES.',
-    icon: Person,
-    image: '/images/programs/voluntariado.jpg',
-    accent: '#0891b2',
-  },
-];
+const sireveSection = {
+  id: 'sireve',
+  title: 'SIREVE',
+  subtitle: '¿Qué es SIREVE?',
+  description: 'El Sistema Regional de Vida Estudiantil (SIREVE), es el órgano del Consejo Superior Universitario Centroamericano CSUCA, que a través del Consejo Regional de Vida Estudiantil (CONREVE), está encargado de coordinar, promover, fortalecer y generar iniciativas, programas y proyectos que impulsen el desarrollo del área de Vida Estudiantil de las Universidades miembros; contribuyendo a la formación integral de profesionales que participen con compromiso social, en la transformación, desarrollo e Integración de los países miembros del Sistema de Integración Centroamericana SICA.',
+};
 
 function useInView(threshold = 0.1) {
   const ref = useRef(null);
@@ -136,16 +80,6 @@ function AnimatedSection({ children, className = '' }) {
 export default function LandingPage() {
   const navigate = useNavigate();
   const [currentImgIdx, setCurrentImgIdx] = useState(0);
-  const [expandedIds, setExpandedIds] = useState(() => new Set());
-
-  const toggleExpanded = (id) => {
-    setExpandedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -160,30 +94,31 @@ export default function LandingPage() {
 
   return (
     <div className="landing">
-      <section className="landing-hero" style={{ backgroundImage: `url(${heroImage})` }}>
-        <div className="landing-hero-blob landing-hero-blob--1" />
-        <div className="landing-hero-blob landing-hero-blob--2" />
-        <div className="landing-hero-overlay" />
+      <section className="landing-hero">
         <div className="landing-hero-content">
-          <img src="/images/logo-sireve.png" alt="SIREVE" className="landing-hero-logo" onError={handleImageError} />
-          <span className="landing-hero-chip landing-hero-animate landing-hero-animate--1">
+          <h1 className="landing-hero-h1">
+            <span className="landing-hero-logo-plate landing-hero-animate landing-hero-animate--1">
+              <img
+                src="/images/logo-csuca.png"
+                alt="SIREVE — Sistema Regional de Vida Estudiantil (CSUCA)"
+                className="landing-hero-logo"
+                onError={handleImageError}
+              />
+            </span>
+          </h1>
+          <Text variant="body-2" className="landing-hero-sub landing-hero-animate landing-hero-animate--2">
             Consejo Superior Universitario Centroamericano
-          </span>
-          <Text variant="display-2" className="landing-hero-title landing-hero-animate landing-hero-animate--2">
-            Sistema Regional de Vida Estudiantil
           </Text>
-          <Text variant="body-2" className="landing-hero-sub landing-hero-animate landing-hero-animate--3">
-            Coordinando, promoviendo y fortaleciendo la vida estudiantil en Centroamérica y el Caribe
-          </Text>
-          <div className="landing-hero-stats landing-hero-animate landing-hero-animate--4">
+          <div className="landing-hero-stats landing-hero-animate landing-hero-animate--3">
             {heroStats.map((stat) => (
               <div key={stat.label} className="landing-hero-stat">
+                <Icon data={stat.icon} size={26} className="landing-hero-stat-icon" />
                 <span className="landing-hero-stat-value">{stat.value}</span>
                 <span className="landing-hero-stat-label">{stat.label}</span>
               </div>
             ))}
           </div>
-          <div className="landing-hero-actions landing-hero-animate landing-hero-animate--5">
+          <div className="landing-hero-actions landing-hero-animate landing-hero-animate--4">
             <button type="button" className="landing-btn landing-btn-primary" onClick={scrollToPrograms}>
               Explorar programas
             </button>
@@ -192,10 +127,36 @@ export default function LandingPage() {
             </button>
           </div>
         </div>
-        <svg className="landing-hero-wave" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,50 1440,40 L1440,80 L0,80 Z" fill="var(--g-color-base-background)" />
-        </svg>
       </section>
+
+      <AnimatedSection>
+        <section className="sireve-section" id="sireve">
+          <div className="sireve-grid">
+            <div className="sireve-copy">
+              <span className="sireve-eyebrow">{sireveSection.subtitle}</span>
+              <h2 className="sireve-title">{sireveSection.title}</h2>
+              <span className="sireve-rule" aria-hidden="true" />
+              <Text variant="body-2" className="sireve-text">
+                {sireveSection.description}
+              </Text>
+              <button
+                type="button"
+                className="landing-btn landing-btn-primary sireve-cta"
+                onClick={scrollToPrograms}
+              >
+                Ver programas
+              </button>
+            </div>
+            <div className="sireve-mosaic" aria-hidden="true">
+              {programs.map((program) => (
+                <div key={program.slug} className="sireve-mosaic-item">
+                  <img src={program.image} alt="" onError={handleImageError} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </AnimatedSection>
 
       <AnimatedSection>
         <section className="quick-section">
@@ -264,39 +225,28 @@ export default function LandingPage() {
         <section className="programs-section" id="programas">
           <div className="section-header">
             <Text variant="display-1" className="section-title">Nuestros programas</Text>
-            <Text variant="body-2" className="section-desc">Iniciativas del Consejo Regional de Vida Estudiantil (CONREVE)</Text>
+            <Text variant="body-2" className="section-desc">Iniciativas del SIREVE desarrolladas por el Consejo Regional de Vida Estudiantil (CONREVE)</Text>
           </div>
           <div className="programs-grid">
-            {sections.map((section) => (
-              <article
-                key={section.id}
-                id={section.id}
-                className="program-card"
-                style={{ '--program-accent': section.accent }}
-              >
+            {programs.map((program) => (
+              <article key={program.slug} id={program.slug} className="program-card">
                 <div className="program-card-image">
-                  <img src={section.image} alt={section.title} onError={handleImageError} />
+                  <img src={program.image} alt={program.title} onError={handleImageError} />
                   <div className="program-card-image-overlay">
                     <div className="program-card-image-badge">
-                      <Icon data={section.icon} size={18} />
+                      <Icon data={program.icon} size={18} />
                     </div>
-                    <h3 className="program-card-image-title">{section.title}</h3>
+                    <h3 className="program-card-image-title">{program.title}</h3>
                   </div>
                   <div className="program-card-accent-bar" />
                 </div>
                 <div className="program-card-body">
-                  <span className="program-card-label">{section.subtitle}</span>
-                  <p className={`program-card-text${expandedIds.has(section.id) ? ' expanded' : ''}`}>
-                    {expandedIds.has(section.id) ? section.description : section.excerpt}
-                  </p>
-                  <button
-                    type="button"
-                    className={`program-card-toggle${expandedIds.has(section.id) ? ' active' : ''}`}
-                    onClick={() => toggleExpanded(section.id)}
-                  >
-                    {expandedIds.has(section.id) ? 'Leer menos' : 'Leer más'}
-                    <Icon data={ChevronDown} size={14} className={`program-chevron${expandedIds.has(section.id) ? ' open' : ''}`} />
-                  </button>
+                  <span className="program-card-label">{program.subtitle}</span>
+                  <p className="program-card-text">{program.excerpt}</p>
+                  <Link to={`/programas/${program.slug}`} className="program-card-cta">
+                    Ver programa
+                    <Icon data={ArrowRight} size={14} />
+                  </Link>
                 </div>
               </article>
             ))}

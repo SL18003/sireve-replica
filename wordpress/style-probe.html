@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>style-probe</title>
+<style>html,body{margin:0}iframe{border:0}pre{font:11px monospace;white-space:pre-wrap}</style>
+</head>
+<body>
+<iframe id="f"></iframe>
+<pre id="report">pending</pre>
+<script>
+/* Compara estilos calculados. Se abre en el mismo origen que la pagina que se
+   quiere medir (5173 para la replica React, 8099 para los fragmentos
+   estaticos) para poder leer el iframe sin tripping la politica de origen. */
+const params = new URLSearchParams(location.search);
+const route = params.get('route') || '/';
+const width = Number(params.get('w') || 1280);
+const f = document.getElementById('f');
+
+const SELECTORS = [
+  '.site-header', '.header-inner', '.header-brand', '.header-brand-logo', '.header-logo-img',
+  '.header-brand-text', '.header-brand-title', '.header-nav', '.header-link',
+  '.header-dropdown-toggle', '.header-dropdown-menu', '.header-dropdown-item',
+  '.header-mobile-toggle', '.header-divider', '.header-link--cta', '.header-link--external',
+  '.social-links', '.social-links-item', '.header-social',
+
+  '.footer-container', '.footer-content', '.footer-col', '.footer-brand-row', '.footer-logo-img',
+  '.footer-csuca', '.footer-text', '.footer-col-title', '.footer-links', '.footer-link-inline',
+  '.footer-bottom', '.footer-copy', '.footer-social',
+
+  '.landing', '.landing-hero', '.landing-hero-content', '.landing-hero-h1',
+  '.landing-hero-logo-plate', '.landing-hero-logo', '.landing-hero-sub',
+  '.landing-hero-stats', '.landing-hero-stat', '.landing-hero-stat-icon',
+  '.landing-hero-stat-value', '.landing-hero-stat-label', '.landing-hero-actions',
+  '.landing-btn', '.landing-btn-primary', '.landing-btn-secondary',
+
+  '.sireve-section', '.sireve-grid', '.sireve-copy', '.sireve-eyebrow', '.sireve-title',
+  '.sireve-rule', '.sireve-text', '.sireve-cta', '.sireve-mosaic', '.sireve-mosaic-item',
+
+  '.quick-section', '.section-header', '.section-title', '.section-desc',
+  '.quick-grid', '.quick-card', '.quick-card-image', '.quick-card-body', '.quick-card-icon',
+  '.quick-card-title', '.quick-card-desc', '.btn-ver',
+
+  '.carousel-section', '.carousel-container', '.carousel-track', '.carousel-slide',
+  '.carousel-overlay', '.carousel-btn', '.carousel-dots', '.carousel-dot',
+
+  '.programs-section', '.programs-grid', '.program-card', '.program-card-image',
+  '.program-card-image-overlay', '.program-card-image-badge', '.program-card-image-title',
+  '.program-card-accent-bar', '.program-card-body', '.program-card-label',
+  '.program-card-text', '.program-card-cta',
+
+  '.page-wrap', '.page-hero', '.page-hero-title', '.page-hero-sub', '.page-body',
+
+  '.actas-grid', '.actas-card', '.actas-card-accent', '.actas-card-header',
+  '.actas-card-icon-wrap', '.actas-card-title', '.actas-card-desc', '.actas-card-btn',
+
+  '.galeria-sections', '.timeline-section', '.timeline-title', '.timeline-lead',
+  '.timeline-empty', '.timeline-empty-icon', '.timeline-empty-title', '.timeline-empty-text',
+  '.galeria-years-section', '.galeria-years-grid', '.galeria-year-card',
+  '.galeria-year-image', '.galeria-year-body', '.galeria-year-title',
+
+  '.galeria-grid', '.gallery-album', '.gallery-album-carousel', '.gallery-album-img-btn',
+  '.gallery-album-nav', '.gallery-album-counter', '.gallery-album-dots', '.gallery-album-dot',
+  '.gallery-album-body', '.gallery-album-title', '.gallery-album-meta',
+
+  '.program-meta', '.program-meta-item', '.program-meta-icon', '.program-meta-label',
+  '.program-meta-value', '.program-about', '.program-about-copy', '.program-heading',
+  '.program-rule', '.program-about-text', '.program-about-figure', '.program-editions',
+  '.program-editions-empty', '.program-editions-empty-icon', '.program-editions-empty-title',
+  '.program-editions-empty-text', '.program-others', '.program-others-grid',
+  '.program-other-card', '.program-other-image', '.program-other-body',
+  '.program-other-title', '.program-other-sub', '.program-back',
+
+  '.reglamentos-list', '.reglamentos-item', '.reglamentos-item-icon',
+  '.reglamentos-item-title', '.reglamentos-item-btn',
+
+  '.contacto-grid', '.contacto-form', '.contacto-field', '.contacto-label',
+  '.contacto-input', '.contacto-textarea', '.contacto-btn', '.contacto-info',
+  '.contacto-info-heading', '.contacto-info-item', '.contacto-info-icon',
+  '.contacto-info-label', '.contacto-info-link',
+];
+
+const PROPS = [
+  'display', 'position', 'top', 'left', 'right', 'bottom', 'zIndex',
+  'flexDirection', 'flexWrap', 'alignItems', 'justifyContent', 'gap',
+  'gridTemplateColumns', 'gridTemplateRows',
+  'padding', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
+  'margin', 'marginTop', 'marginBottom',
+  'borderTopWidth', 'borderTopStyle', 'borderTopColor',
+  'borderBottomWidth', 'borderBottomStyle', 'borderBottomColor',
+  'borderLeftWidth', 'borderRightWidth', 'borderRadius',
+  'backgroundColor', 'color', 'opacity',
+  'fontFamily', 'fontSize', 'fontWeight', 'lineHeight', 'letterSpacing',
+  'textAlign', 'textTransform', 'textDecorationLine', 'whiteSpace', 'wordBreak',
+  'boxShadow', 'width', 'height', 'maxWidth', 'minHeight', 'minWidth',
+  'objectFit', 'aspectRatio', 'overflow', 'cursor', 'transform', 'visibility',
+  'flexGrow', 'flexShrink', 'flexBasis', 'listStyleType', 'filter', 'backdropFilter',
+];
+
+function measure(d, w) {
+  const out = {};
+  for (const sel of SELECTORS) {
+    const el = d.querySelector(sel);
+    if (!el) continue;
+    const cs = w.getComputedStyle(el);
+    const r = el.getBoundingClientRect();
+    const entry = { tag: el.tagName.toLowerCase() };
+    for (const p of PROPS) {
+      const v = cs[p];
+      if (v === undefined || v === '' || v === 'none' || v === 'normal' || v === '0px' ||
+          v === 'auto' || v === 'rgba(0, 0, 0, 0)' || v === 'static' || v === 'visible') continue;
+      entry[p] = v;
+    }
+    entry.rect = [
+      Math.round(r.width * 10) / 10,
+      Math.round(r.height * 10) / 10,
+      Math.round(r.top * 10) / 10,
+      Math.round(r.left * 10) / 10,
+    ];
+    out[sel] = entry;
+  }
+  return out;
+}
+
+f.style.width = width + 'px';
+f.style.height = Math.max(1000, Math.round(width * 0.75)) + 'px';
+
+f.addEventListener('load', async () => {
+  const w = f.contentWindow, d = f.contentDocument;
+  await w.document.fonts.ready;
+  await new Promise((r) => setTimeout(r, 1200));
+  document.getElementById('report').textContent = JSON.stringify(measure(d, w));
+});
+
+f.src = route;
+</script>
+</body>
+</html>

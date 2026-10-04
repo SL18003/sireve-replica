@@ -1,22 +1,21 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Button, Icon } from '@gravity-ui/uikit';
-import { ChevronDown, ChevronUp, Bars, Xmark, Sun, Moon } from '@gravity-ui/icons';
+import { Icon } from '@gravity-ui/uikit';
+import { ChevronDown, ChevronUp, Bars, Xmark, ArrowUpRightFromSquare } from '@gravity-ui/icons';
 import SocialLinks from './SocialLinks';
 import './Header.css';
 
 const programLinks = [
-  { label: '¿Qué es SIREVE?', hash: 'sireve' },
-  { label: 'Qué es FICCUA', hash: 'ficcua' },
-  { label: 'Qué es JUDUCA', hash: 'juduca' },
-  { label: 'Premio Rubén Darío', hash: 'premio-ruben-dario' },
-  { label: 'Promotoras de Salud', hash: 'promotoras-salud' },
-  { label: 'Voluntariado', hash: 'voluntariado' },
+  { label: 'Qué es FICCUA', to: '/programas/ficcua' },
+  { label: 'Qué es JUDUCA', to: '/programas/juduca' },
+  { label: 'Excelencia Académica', to: '/programas/premio-ruben-dario' },
+  { label: 'Promotoras de Salud', to: '/programas/promotoras-salud' },
+  { label: 'Voluntariado', to: '/programas/voluntariado' },
 ];
 
 const galeriaYears = ['2017', '2018', '2019'];
 
-export default function Header({ currentTheme, onToggleTheme }) {
+export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -54,8 +53,16 @@ export default function Header({ currentTheme, onToggleTheme }) {
     <header className="site-header">
       <div className="header-inner">
         <Link to="/" className="header-brand">
-          <img src="/images/logo-sireve.png" alt="SIREVE" className="header-logo-img" />
-          <img src="/images/logo-csuca.svg" alt="CSUCA" className="header-csuca-img" />
+          <span className="header-brand-logo">
+            <img src="/images/logo-csuca.png" alt="CSUCA" className="header-logo-img" />
+          </span>
+          <span className="header-brand-text">
+            <span className="header-brand-title">
+              Consejo Superior Universitario
+              <br />
+              Centroamericano
+            </span>
+          </span>
         </Link>
 
         <button
@@ -72,6 +79,16 @@ export default function Header({ currentTheme, onToggleTheme }) {
             Inicio
           </Link>
 
+          <button
+            type="button"
+            className="header-link header-nav-anchor"
+            onClick={() => handleProgramClick('sireve')}
+          >
+            SIREVE
+          </button>
+
+          <div className="header-divider" aria-hidden="true" />
+
           <div className="header-dropdown">
             <button
               type="button"
@@ -84,9 +101,14 @@ export default function Header({ currentTheme, onToggleTheme }) {
             {programsOpen && (
               <div className="header-dropdown-menu">
                 {programLinks.map((p) => (
-                  <button key={p.hash} type="button" className="header-dropdown-item" onClick={() => handleProgramClick(p.hash)}>
+                  <Link
+                    key={p.to}
+                    to={p.to}
+                    className="header-dropdown-item"
+                    onClick={() => { setProgramsOpen(false); setMobileOpen(false); }}
+                  >
                     {p.label}
-                  </button>
+                  </Link>
                 ))}
               </div>
             )}
@@ -127,11 +149,18 @@ export default function Header({ currentTheme, onToggleTheme }) {
             Contacto
           </Link>
 
-          <SocialLinks variant="header" className="header-social" />
+          <a
+            href="https://csuca.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="header-link header-link--external"
+            title="Sitio oficial del CSUCA"
+          >
+            CSUCA
+            <Icon data={ArrowUpRightFromSquare} size={11} />
+          </a>
 
-          <Button view="flat" size="m" onClick={onToggleTheme} className="header-theme-btn" title="Cambiar tema">
-            <Icon data={currentTheme === 'light' ? Moon : Sun} size={18} />
-          </Button>
+          <SocialLinks variant="header" className="header-social" />
         </nav>
       </div>
     </header>

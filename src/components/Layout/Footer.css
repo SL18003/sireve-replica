@@ -1,7 +1,11 @@
+/* Footer con el mismo esquema que el header: bloque CAROLINA BLUE #429ad0
+   con texto BLANCO (igual que csuca.org) y franja de cierre GREEN BLUE
+   #1366af con texto blanco. Sin fondos negros en modo claro. */
 .footer-container {
-  background: linear-gradient(180deg, var(--sireve-ink) 0%, #001a33 100%);
-  color: #94a3b8;
-  padding: 56px 32px 24px;
+  background: var(--sireve-primary-light);
+  border-top: 4px solid var(--sireve-primary);
+  color: #fff;
+  padding: 56px 32px 0;
   margin-top: auto;
 }
 
@@ -19,26 +23,24 @@
   flex-direction: column;
 }
 
+/* El logo va sobre placa blanca: es negro/azul y no admite filtro */
 .footer-brand-row {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  align-self: flex-start;
+  background: #fff;
+  padding: 8px 12px;
+  border-radius: var(--sireve-radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .footer-logo-img {
-  height: 44px;
+  height: 40px;
   width: auto;
   object-fit: contain;
-  filter: brightness(0) invert(1);
-}
-
-.footer-csuca-img {
-  height: 32px;
-  width: auto;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-  opacity: 0.9;
+  display: block;
 }
 
 .footer-social {
@@ -46,26 +48,29 @@
 }
 
 .footer-csuca {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--sireve-accent);
-  margin-bottom: 12px;
+  color: #fff;
+  margin-bottom: 10px;
 }
 
 .footer-col-title {
   margin-bottom: 16px !important;
   color: #fff !important;
   font-size: 13px !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
+  padding-bottom: 8px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.85);
+  align-self: flex-start;
 }
 
 .footer-text {
   line-height: 1.7 !important;
-  color: #94a3b8 !important;
+  color: rgba(255, 255, 255, 0.9) !important;
   font-size: 14px !important;
 }
 
@@ -75,36 +80,69 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 2px;
 }
 
 .footer-links a {
-  color: #94a3b8;
+  /* inline-block + padding vertical: cada enlace pasa de ~24px a ~34px de alto,
+     comodo para el dedo. El gap baja a 2px para no stretched la columna. */
+  display: inline-block;
+  padding: 5px 0;
+  color: #fff;
   text-decoration: none;
   font-size: 14px;
-  transition: color 0.2s;
+  transition: font-weight 0.15s;
 }
 
+/* GREEN BLUE sobre CAROLINA solo da 1.7:1, asi que el hover se marca con
+   subrayado y peso en lugar de cambiar de color */
 .footer-links a:hover {
-  color: var(--sireve-accent);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
+/* Correo y telefono reales de la Secretaria General (dentro del texto) */
+.footer-link-inline {
+  display: inline-block;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.55);
+  transition: border-color 0.15s ease;
+}
+
+.footer-link-inline:hover {
+  border-bottom-color: #fff;
+}
+
+/* Franja de derechos reservados: GREEN BLUE, sin negro */
 .footer-bottom {
   text-align: center;
-  padding-top: 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 20px 32px;
+  background: var(--sireve-primary);
+  color: #fff;
 }
 
 .footer-copy {
-  color: #64748b !important;
+  color: rgba(255, 255, 255, 0.95) !important;
   font-size: 13px !important;
+  font-weight: 400;
 }
 
 @media (max-width: 900px) {
   .footer-content {
     grid-template-columns: 1fr 1fr;
+  }
+
+  /* Columnas mas angostas (landscape de celular, iPad en vertical): menos aire
+     para que los enlaces con area tactil mayor sigan cabiendo. */
+  .footer-col-title {
+    margin-bottom: 12px !important;
+  }
+
+  .footer-links {
+    gap: 4px;
   }
 }
 
@@ -115,6 +153,10 @@
   }
 
   .footer-container {
-    padding: 40px 20px 20px;
+    padding: 40px 20px 0;
+  }
+
+  .footer-bottom {
+    padding: 18px 20px;
   }
 }

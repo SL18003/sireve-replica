@@ -38,7 +38,7 @@
 }
 
 .contacto-info-heading {
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   color: var(--g-color-text-primary) !important;
   margin-bottom: 4px !important;
 }
@@ -62,42 +62,91 @@
   color: var(--g-color-text-primary) !important;
 }
 
+/* Correo y telefono como enlaces reales (mailto / tel) */
+.contacto-info-link {
+  display: inline-block;
+  font-size: 15px;
+  color: var(--sireve-primary);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.contacto-info-link:hover {
+  border-bottom-color: var(--sireve-primary);
+}
+
+.g-root_theme_dark .contacto-info-link {
+  color: var(--sireve-primary-light);
+}
+
+.g-root_theme_dark .contacto-info-link:hover {
+  border-bottom-color: var(--sireve-primary-light);
+}
+
+/* Los overrides moviles van AQUI dentro del media query, no al final del
+   archivo: las reglas .g-root_theme_dark de abajo (94+) tienen la misma
+   especificidad y ganarian si se escribieran despues. */
 @media (max-width: 768px) {
   .contacto-grid {
     grid-template-columns: 1fr;
   }
+
+  /* Con 32px/28px fijos el input util en un celular de 375px quedaba en
+     256px; el !important del padding obliga a repetirlo aqui. */
+  .contacto-form {
+    padding: 20px !important;
+    gap: 16px;
+  }
+
+  .contacto-info {
+    padding: 20px !important;
+  }
+
+  /* Correo y telefono: area tactil comoda (antes ~25px de alto) */
+  .contacto-info-link {
+    padding: 7px 0;
+  }
 }
 
-/* Tema oscuro — azul marino en lugar de gris cálido */
+@media (max-width: 380px) {
+  .contacto-form,
+  .contacto-info {
+    padding: 16px !important;
+  }
+}
+
+/* Dark: Black + Battleship Grey con alpha */
 .g-root_theme_dark .contacto-form,
 .g-root_theme_dark .contacto-info {
-  background: #152535 !important;
-  border-color: rgba(26, 110, 181, 0.22) !important;
+  background: rgba(135, 135, 135, 0.14) !important;
+  border-color: rgba(135, 135, 135, 0.3) !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
 }
 
 .g-root_theme_dark .contacto-label,
 .g-root_theme_dark .contacto-info-heading,
 .g-root_theme_dark .contacto-info-label {
-  color: #f0f4f8 !important;
+  color: #fff !important;
 }
 
 .g-root_theme_dark .contacto-info-icon {
-  color: #6eb3e8 !important;
+  color: var(--sireve-primary-light) !important;
 }
 
 .g-root_theme_dark .contacto-form .g-text-input,
 .g-root_theme_dark .contacto-form .g-text-area,
 .g-root_theme_dark .contacto-form .g-text-input__control,
 .g-root_theme_dark .contacto-form .g-text-area__control {
-  background-color: #0f1a26 !important;
-  border-color: rgba(26, 110, 181, 0.28) !important;
-  color: #f0f4f8 !important;
+  background-color: #000 !important;
+  border-color: rgba(135, 135, 135, 0.35) !important;
+  color: #fff !important;
 }
 
 .g-root_theme_dark .contacto-form .g-text-input:hover,
 .g-root_theme_dark .contacto-form .g-text-area:hover,
 .g-root_theme_dark .contacto-form .g-text-input__control:hover,
 .g-root_theme_dark .contacto-form .g-text-area__control:hover {
-  border-color: rgba(26, 110, 181, 0.45) !important;
+  border-color: rgba(66, 154, 208, 0.45) !important;
 }

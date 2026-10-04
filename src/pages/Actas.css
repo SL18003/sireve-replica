@@ -1,6 +1,8 @@
 .actas-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* `min(300px, 100%)`: con viewports de 320px el area de contenido queda en
+     280px y un minmax(300px) fijo desbordaba en horizontal. */
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
   gap: 24px;
 }
 
@@ -18,7 +20,7 @@
 
 .actas-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 16px 40px rgba(0, 82, 155, 0.15) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12) !important;
   border-color: var(--sireve-primary-light) !important;
 }
 
@@ -27,13 +29,14 @@
   padding: 28px !important;
 }
 
+/* Franja superior en rampa azul del manual, sin verde */
 .actas-card-accent {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--sireve-primary), var(--sireve-accent));
+  background: var(--sireve-primary);
 }
 
 .actas-card-header {
@@ -47,13 +50,13 @@
   flex-shrink: 0;
   width: 48px;
   height: 48px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(0, 82, 155, 0.12), rgba(0, 82, 155, 0.06));
+  border-radius: var(--sireve-radius);
+  background: rgba(66, 154, 208, 0.16);
   color: var(--sireve-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(0, 82, 155, 0.15);
+  border: 1px solid rgba(66, 154, 208, 0.3);
   transition: all 0.3s ease;
 }
 
@@ -64,7 +67,7 @@
 }
 
 .actas-card-title {
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   font-size: 15px !important;
   line-height: 1.35 !important;
   color: var(--g-color-text-primary) !important;
@@ -93,9 +96,9 @@
   background: var(--sireve-primary);
   color: #fff !important;
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: var(--sireve-radius);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   transition: all 0.25s ease;
@@ -103,33 +106,33 @@
 }
 
 .actas-card-btn:hover {
-  background: var(--sireve-primary-dark);
+  background: var(--sireve-primary-mid);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 82, 155, 0.3);
+  box-shadow: 0 6px 20px rgba(19, 102, 175, 0.3);
   color: #fff !important;
 }
 
-/* Tema oscuro — tonos azul marino en lugar de gris cálido */
+/* Dark: base Black + Battleship Grey con alpha (sin azul marino inventado) */
 .g-root_theme_dark .actas-card {
-  background: #152535 !important;
-  border-color: rgba(26, 110, 181, 0.22) !important;
+  background: rgba(135, 135, 135, 0.14) !important;
+  border-color: rgba(135, 135, 135, 0.3) !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
 }
 
 .g-root_theme_dark .actas-card:hover {
-  background: #1a3048 !important;
-  border-color: rgba(26, 110, 181, 0.45) !important;
-  box-shadow: 0 12px 32px rgba(0, 82, 155, 0.2) !important;
+  background: rgba(135, 135, 135, 0.22) !important;
+  border-color: var(--sireve-primary-light) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35) !important;
 }
 
 .g-root_theme_dark .actas-card-accent {
-  background: linear-gradient(90deg, var(--sireve-primary-light), var(--sireve-accent));
+  background: var(--sireve-primary-light);
 }
 
 .g-root_theme_dark .actas-card-icon-wrap {
-  background: rgba(26, 110, 181, 0.18);
-  border-color: rgba(26, 110, 181, 0.3);
-  color: #6eb3e8;
+  background: rgba(66, 154, 208, 0.18);
+  border-color: rgba(66, 154, 208, 0.3);
+  color: var(--sireve-primary-light);
 }
 
 .g-root_theme_dark .actas-card:hover .actas-card-icon-wrap {
@@ -139,18 +142,18 @@
 }
 
 .g-root_theme_dark .actas-card-title {
-  color: #f0f4f8 !important;
+  color: #fff !important;
 }
 
 .g-root_theme_dark .actas-card-desc {
-  color: #94a3b8 !important;
+  color: rgba(255, 255, 255, 0.72) !important;
 }
 
 .g-root_theme_dark .actas-card-btn {
-  background: var(--sireve-primary-light);
+  background: var(--sireve-primary);
 }
 
 .g-root_theme_dark .actas-card-btn:hover {
   background: var(--sireve-primary);
-  box-shadow: 0 6px 20px rgba(26, 110, 181, 0.35);
+  box-shadow: 0 6px 20px rgba(66, 154, 208, 0.35);
 }

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>probe</title>
+<style>html,body{margin:0}iframe{width:1280px;height:900px;border:0}pre{font:12px monospace;white-space:pre-wrap}</style>
+</head>
+<body>
+<iframe id="f"></iframe>
+<pre id="report">pending</pre>
+<script>
+const params = new URLSearchParams(location.search);
+const route = params.get('route') || '/';
+const width = Number(params.get('w') || 1280);
+const f = document.getElementById('f');
+
+const report = {};
+const done = (r) => { document.getElementById('report').textContent = JSON.stringify(r, null, 1); };
+
+f.style.width = width + 'px';
+f.style.height = Math.max(900, Math.round(width * 0.7)) + 'px';
+
+f.addEventListener('load', async () => {
+  const w = f.contentWindow, d = f.contentDocument;
+  await w.document.fonts.ready;
+  await new Promise((r) => setTimeout(r, 900));
+
+  const $ = (s) => d.querySelectorAll(s);
+  const active = $$('.active').length;
+  function $$(s) { return Array.from(d.querySelectorAll(s)); }
+
+  report.route = route;
+  report.viewport = width;
+  report.overflowX = d.documentElement.scrollWidth - d.documentElement.clientWidth;
+  report.bodyOverflowX = d.body.scrollWidth - d.body.clientWidth;
+
+  const nav = $('.header-nav')[0];
+  report.header = !!nav;
+  report.footer = !!$('.footer-container')[0];
+  report.logoCargada = !!($('.header-logo-img')[0] && $('.header-logo-img')[0].naturalWidth > 0);
+  report.logoAlt = $('.header-logo-img')[0] ? $('.header-logo-img')[0].naturalWidth : -1;
+
+  /* el texto de marca solo existe a partir de 1300px */
+  const brandText = $('.header-brand-text')[0];
+  report.brandTextVisible = brandText ? w.getComputedStyle(brandText).display !== 'none' : false;
+
+  /* dropdowns arrancan cerrados */
+  report.dropdowns = $$('.header-dropdown-menu').map((m) => m.hidden === true);
+  report.dropdownToggles = $$('.header-dropdown-toggle').length;
+
+  /* enlace de navegacion activo */
+  report.navActivo = $$('[data-nav].active').map((a) => a.getAttribute('data-nav'));
+  report.navItems = $$('[data-nav]').map((a) => a.getAttribute('data-nav'));
+
+  /* ano del footer injectado por JS */
+  report.anoFooter = ($('[data-year]')[0] || {}).textContent;
+
+  /* tipografia */
+  report.montserrat = d.fonts.check('600 13px Montserrat');
+
+  /* imagenes rotas */
+  const imgs = $$('img');
+  report.imgs = imgs.length;
+  report.imgsRotas = imgs.filter((i) => i.complete && i.naturalWidth === 0)
+    .map((i) => (i.currentSrc || i.src).slice(-42));
+  report.widgetkit = imgs.filter((i) => (i.currentSrc || i.src).includes('/cache/widgetkit/')).length;
+
+  /* iconos svg */
+  report.svg = $$('svg').length;
+
+  /* lightbox */
+  const lb = $('.gallery-lightbox')[0];
+  report.lightbox = lb ? { hidden: lb.hidden, title: !!$('.gallery-lightbox-title')[0] } : null;
+
+  /* albums de galeria */
+  report.albums = $$('.gallery-album').length;
+  const primerAlbum = $('.gallery-album')[0];
+  if (primerAlbum) {
+    let n = -1;
+    try { n = JSON.parse(primerAlbum.getAttribute('data-images')).length; } catch (e) { n = -2; }
+    report.primerAlbum = {
+      fotos: n,
+      contador: ($('.gallery-album-counter', primerAlbum) || {}).textContent,
+      dots: primerAlbum.querySelectorAll('.gallery-album-dot').length,
+      primerSrc: (($('.gallery-album-img-btn img', primerAlbum) || {}).src || '').slice(-24),
+    };
+  }
+
+  /* landing: carrusel y reveal */
+  const slides = $$('.carousel-slide');
+  if (slides.length) {
+    report.carrusel = {
+      slides: slides.length,
+      activo: slides.findIndex((s) => s.classList.contains('active')),
+      dots: $$('.carousel-dot').length,
+    };
+  }
+  const fade = $$('.fade-section');
+  if (fade.length) {
+    w.scrollTo(0, d.body.scrollHeight);
+    await new Promise((r) => setTimeout(r, 700));
+    w.scrollTo(0, 0);
+    await new Promise((r) => setTimeout(r, 400));
+    report.reveal = {
+      secciones: fade.length,
+      visibles: fade.filter((s) => s.classList.contains('visible')).length,
+      revealReady: $('.sireve')[0].classList.contains('reveal-ready'),
+    };
+  }
+
+  /* contacto */
+  const form = $('.contacto-form')[0];
+  report.formulario = form ? { tag: form.tagName, campos: form.querySelectorAll('input,textarea').length } : null;
+
+  /* programas */
+  const otros = $$('.program-other-card');
+  if (otros.length) report.programas = { otros: otros.length, edicionesVacias: !!$('.program-editions-empty')[0] };
+  report.metaChips = $$('.program-meta-item').length;
+
+  /* timeline */
+  report.timeline = { vacio: !!$('.timeline-empty')[0], items: $$('.timeline-item').length, tarjetasAnio: $$('.galeria-year-card').length };
+
+  done(report);
+});
+
+f.src = route;
+</script>
+</body>
+</html>

@@ -1,19 +1,18 @@
+/* Zona de navegacion: barra CAROLINA BLUE #429ad0 con texto BLANCO, igual
+   que csuca.org. Hover y activo en chip GREEN BLUE #1366af con texto blanco
+   (5.9:1) para que el estado resalte sobre la barra. El negro aqui no se
+   usa ni como texto ni como fondo: la zona es azul, el contenido es oscuro. */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: #fff;
-  border-bottom: 1px solid var(--sireve-border);
-  box-shadow: 0 2px 12px rgba(0, 61, 115, 0.06);
-}
-
-.g-root_theme_dark .site-header {
-  background: var(--g-color-base-background);
-  border-bottom-color: var(--g-color-line-generic);
+  background: var(--sireve-primary-light);
+  border-bottom: 4px solid var(--sireve-primary);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
 }
 
 .header-inner {
-  max-width: 1280px;
+  max-width: 1360px;
   margin: 0 auto;
   padding: 0 24px;
   height: 72px;
@@ -26,21 +25,79 @@
 .header-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   text-decoration: none;
+  min-width: 0;
+}
+
+/* El logo oficial es negro/azul: su area de proteccion es blanca */
+.header-brand-logo {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  padding: 6px 10px;
+  border-radius: var(--sireve-radius-sm);
   flex-shrink: 0;
 }
 
 .header-logo-img {
-  height: 40px;
+  height: 38px;
   width: auto;
   object-fit: contain;
+  display: block;
 }
 
-.header-csuca-img {
-  height: 28px;
-  width: auto;
-  object-fit: contain;
+/* Descriptor junto al logo: "Consejo Superior Universitario
+   Centroamericano" (el nombre SIREVE lo lleva la seccion hero). El usuario lo
+   pidio en DOS lineas, nunca en una sola ni en tres.
+
+   El corte es explicito con <br> y cada renglon va en nowrap, asi que el texto
+   NUNCA se puede re-partir en mas lineas: dependeria del ancho disponible y con
+   el nav de escritorio apretado el flex lo aplastaba (a 1200px el bloque quedaba
+   en 115px y "Consejo Superior" / "Universitario" / "Centroamericano" se
+   partian en 3-5 renglones).
+
+   Medido en Chrome con Montserrat 600: "Consejo Superior Universitario" = 206.3px
+   y "Centroamericano" = 118.7px a 13px, o sea que el ancho de la marca es el de
+   la primera linea. Por eso el nombre solo se muestra a partir de 1300px: con el
+   logo (156px) + nav completo + redes, la barra necesita ~1261px, y a 1300px
+   quedan ~40px de holgura real. Nunca se recorta con ellipsis. */
+.header-brand-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.header-brand-title {
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+/* Entre 961 y 1299px el nav de escritorio completo no deja sitio para el
+   nombre: se oculta el texto y la marca queda solo con el logo (la barra NO se
+   desborda y el nav sigue visible). El nombre sigue en el hero y en el footer. */
+@media (max-width: 1300px) {
+  .header-brand-text {
+    display: none;
+  }
+}
+
+.header-nav-anchor {
+  font-weight: 700;
+}
+
+.header-divider {
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.6);
+  margin: 0 8px;
+  flex-shrink: 0;
 }
 
 .header-social {
@@ -52,26 +109,33 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--g-color-text-primary);
-  padding: 8px;
+  color: #fff;
+  /* Area tactil de 44px (icono 22px) */
+  padding: 11px;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
 }
 
 .header-nav {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
+  flex-shrink: 0;
 }
 
+/* Blanco en la barra; el peso 600 refuerza la lectura sobre azul claro */
 .header-link {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 8px 14px;
-  border-radius: 8px;
-  color: var(--g-color-text-primary);
+  padding: 8px 10px;
+  border-radius: var(--sireve-radius-sm);
+  color: #fff;
   text-decoration: none;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   border: none;
   background: transparent;
   cursor: pointer;
@@ -80,28 +144,33 @@
   white-space: nowrap;
 }
 
-.header-link:hover {
-  background: var(--g-color-base-simple-hover);
-  color: var(--sireve-primary);
-}
-
+.header-link:hover,
 .header-link.active {
-  color: var(--sireve-primary);
-  font-weight: 600;
+  background: var(--sireve-primary);
+  color: #fff;
 }
 
+/* CTA Contacto: blanco con texto GREEN BLUE, invertido al hover */
 .header-link--cta {
-  background: var(--sireve-primary);
-  color: #fff !important;
+  background: #fff;
+  color: var(--sireve-primary) !important;
   margin-left: 4px;
 }
 
-.header-link--cta:hover {
-  background: var(--sireve-primary-dark);
+.header-link--cta:hover,
+.header-link--cta.active {
+  background: var(--sireve-primary);
+  color: #fff !important;
 }
 
-.header-link--cta.active {
-  background: var(--sireve-primary-dark);
+/* CSUCA: enlace externo al sitio oficial, visible en toda la navegacion */
+.header-link--external {
+  margin-left: 4px;
+  opacity: 0.95;
+}
+
+.header-link--external:hover {
+  opacity: 1;
 }
 
 .header-dropdown {
@@ -109,10 +178,12 @@
 }
 
 .header-dropdown-toggle.open {
-  color: var(--sireve-primary);
-  background: var(--g-color-base-simple-hover);
+  background: var(--sireve-primary);
+  color: #fff;
 }
 
+/* Menús desplegables y panel móvil: blancos en ambos temas, texto oscuro.
+   Toda la zona de navegacion es clara, el contenido de la pagina es oscuro. */
 .header-dropdown-menu {
   position: absolute;
   top: calc(100% + 8px);
@@ -127,11 +198,6 @@
   animation: fadeUp 0.2s ease;
 }
 
-.g-root_theme_dark .header-dropdown-menu {
-  background: var(--g-color-base-generic);
-  border-color: var(--g-color-line-generic);
-}
-
 .header-dropdown-item {
   display: block;
   width: 100%;
@@ -140,31 +206,36 @@
   background: transparent;
   text-align: left;
   font-size: 14px;
-  color: var(--g-color-text-primary);
+  color: #000;
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: var(--sireve-radius-sm);
   cursor: pointer;
   font-family: inherit;
-  transition: background 0.15s;
+  transition: background 0.15s, color 0.15s;
 }
 
 .header-dropdown-item:hover {
-  background: var(--g-color-base-simple-hover);
+  background: rgba(19, 102, 175, 0.1);
   color: var(--sireve-primary);
 }
 
 .header-theme-btn {
   margin-left: 4px;
-  color: var(--g-color-text-secondary) !important;
+  color: #fff !important;
+}
+
+.header-theme-btn:hover {
+  background: var(--sireve-primary);
+  color: #fff !important;
 }
 
 @media (max-width: 960px) {
   .header-logo-img {
-    height: 32px;
+    height: 30px;
   }
 
-  .header-csuca-img {
-    height: 22px;
+  .header-brand-logo {
+    padding: 5px 8px;
   }
 
   .header-social {
@@ -178,7 +249,7 @@
   .header-nav {
     display: none;
     position: absolute;
-    top: 72px;
+    top: 100%;
     left: 0;
     right: 0;
     flex-direction: column;
@@ -188,25 +259,51 @@
     padding: 16px;
     gap: 4px;
     box-shadow: var(--sireve-shadow);
-  }
-
-  .g-root_theme_dark .header-nav {
-    background: var(--g-color-base-background);
+    /* Con Programas y Galeria abiertos el panel mide ~500-600px: en landscape
+       (390-430px de alto) se salia de la pantalla sin forma de desplazarse. */
+    max-height: calc(100vh - 72px);
+    max-height: calc(100dvh - 72px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .header-nav.open {
     display: flex;
   }
 
+  /* El panel movil es blanco: los links vuelven a texto oscuro.
+     padding 14px = area tactil de ~46px por enlace. */
   .header-link {
     width: 100%;
     justify-content: flex-start;
-    padding: 12px 14px;
+    padding: 14px;
+    color: #000;
+  }
+
+  .header-link:hover,
+  .header-link.active {
+    background: var(--sireve-primary);
+    color: #fff;
   }
 
   .header-link--cta {
     margin-left: 0;
     justify-content: center;
+    background: var(--sireve-primary);
+    color: #fff !important;
+  }
+
+  .header-link--cta:hover,
+  .header-link--cta.active {
+    background: var(--sireve-primary);
+    color: #fff !important;
+  }
+
+  .header-divider {
+    width: 100%;
+    height: 1px;
+    margin: 4px 0;
+    background: rgba(19, 102, 175, 0.35);
   }
 
   .header-dropdown {
@@ -229,5 +326,6 @@
   .header-theme-btn {
     align-self: flex-start;
     margin-left: 8px;
+    color: #000 !important;
   }
 }

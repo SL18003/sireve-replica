@@ -3,13 +3,12 @@ import { Link } from 'react-router-dom';
 import SocialLinks from './SocialLinks';
 import './Footer.css';
 
-const programAnchors = [
-  { label: '¿Qué es SIREVE?', hash: 'sireve' },
-  { label: 'Qué es FICCUA', hash: 'ficcua' },
-  { label: 'Qué es JUDUCA', hash: 'juduca' },
-  { label: 'Premio Rubén Darío', hash: 'premio-ruben-dario' },
-  { label: 'Promotoras de Salud', hash: 'promotoras-salud' },
-  { label: 'Voluntariado', hash: 'voluntariado' },
+const programLinks = [
+  { label: 'Qué es FICCUA', to: '/programas/ficcua' },
+  { label: 'Qué es JUDUCA', to: '/programas/juduca' },
+  { label: 'Excelencia Académica', to: '/programas/premio-ruben-dario' },
+  { label: 'Promotoras de Salud', to: '/programas/promotoras-salud' },
+  { label: 'Voluntariado', to: '/programas/voluntariado' },
 ];
 
 export default function Footer() {
@@ -18,12 +17,11 @@ export default function Footer() {
       <div className="footer-content">
         <div className="footer-col">
           <div className="footer-brand-row">
-            <img src="/images/logo-sireve.png" alt="SIREVE" className="footer-logo-img" />
-            <img src="/images/logo-csuca.svg" alt="CSUCA" className="footer-csuca-img" />
+            <img src="/images/logo-csuca.png" alt="CSUCA" className="footer-logo-img" />
           </div>
-          <span className="footer-csuca">Consejo Superior Universitario Centroamericano</span>
+          <span className="footer-csuca">Sistema Regional de Vida Estudiantil</span>
           <Text variant="body-2" className="footer-text">
-            Sistema Regional de Vida Estudiantil — coordinando la vida estudiantil en Centroamérica y el Caribe.
+            Consejo Superior Universitario Centroamericano. Coordinando la vida estudiantil en Centroamérica y el Caribe.
           </Text>
           <SocialLinks variant="footer" className="footer-social" />
         </div>
@@ -36,14 +34,19 @@ export default function Footer() {
             <li><Link to="/galeria">Galería</Link></li>
             <li><Link to="/reglamentos">Reglamentos</Link></li>
             <li><Link to="/contacto">Contacto</Link></li>
+            <li>
+              <a href="https://csuca.org/" target="_blank" rel="noopener noreferrer">
+                Sitio oficial CSUCA
+              </a>
+            </li>
           </ul>
         </div>
 
         <div className="footer-col">
           <Text variant="header-1" className="footer-col-title">Programas</Text>
           <ul className="footer-links">
-            {programAnchors.map((p) => (
-              <li key={p.hash}><Link to={`/#${p.hash}`}>{p.label}</Link></li>
+            {programLinks.map((p) => (
+              <li key={p.to}><Link to={p.to}>{p.label}</Link></li>
             ))}
           </ul>
         </div>
@@ -51,9 +54,12 @@ export default function Footer() {
         <div className="footer-col">
           <Text variant="header-1" className="footer-col-title">Contacto</Text>
           <Text variant="body-2" className="footer-text">
-            San Salvador, El Salvador<br />
-            info@sireve.csuca.org<br />
-            +503 2222-2222
+            Secretaría General del CSUCA<br />
+            Av. Las Américas 1-03, Zona 14,<br />
+            interior Club Deportivo Los Arcos,<br />
+            Ciudad de Guatemala, Guatemala<br />
+            <a href="mailto:sg@csuca.org" className="footer-link-inline">sg@csuca.org</a><br />
+            <a href="tel:+50225027500" className="footer-link-inline">+(502) 2502-7500</a>
           </Text>
         </div>
       </div>

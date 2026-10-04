@@ -1,0 +1,488 @@
+/* Pagina /programas/:slug — paleta y formas del manual CSUCA:
+   contenido sobre blanco, azul como acento (titulo, filete, botones),
+   radios 4/3px, superficies Battleship con alpha. */
+
+.program-about {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: 36px;
+  align-items: start;
+  margin-bottom: 52px;
+}
+
+/* Ficha rapida: 3 datos del programa, sin inventar informacion */
+.program-meta {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 44px;
+}
+
+.program-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--sireve-surface);
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius);
+}
+
+.program-meta-icon {
+  color: var(--sireve-primary);
+  flex-shrink: 0;
+}
+
+.program-meta-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sireve-muted);
+  line-height: 1.3;
+}
+
+.program-meta-value {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--sireve-ink);
+  line-height: 1.35;
+}
+
+.program-heading {
+  font-size: 24px;
+  font-weight: 300;
+  color: var(--sireve-primary);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.program-rule {
+  display: block;
+  width: 56px;
+  height: 3px;
+  background: var(--sireve-primary);
+  border-radius: var(--sireve-radius-sm);
+  margin: 10px 0 18px;
+}
+
+.program-about-text {
+  font-size: 15.5px;
+  line-height: 1.85;
+  color: var(--g-color-text-secondary);
+}
+
+.program-about-figure {
+  margin: 0;
+}
+
+.program-about-figure img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius);
+  box-shadow: var(--sireve-shadow);
+}
+
+/* Historial de ediciones */
+.program-editions {
+  margin-bottom: 16px;
+}
+
+/* Sin ediciones cargadas: panel reservado (nada de anos inventados) */
+.program-editions-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 44px 28px;
+  background: var(--sireve-surface);
+  border: 1px dashed var(--sireve-border);
+  border-radius: var(--sireve-radius);
+}
+
+.program-editions-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 4px;
+  background: #fff;
+  color: var(--sireve-primary);
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius);
+}
+
+.program-editions-empty-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--sireve-ink);
+}
+
+.program-editions-empty-text {
+  font-size: 14px;
+  line-height: 1.7;
+  max-width: 520px;
+}
+
+/* Otros programas */
+.program-others {
+  margin-bottom: 8px;
+}
+
+.program-others-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.program-other-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius);
+  text-decoration: none;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.program-other-card:hover {
+  border-color: var(--sireve-primary);
+  transform: translateY(-2px);
+}
+
+.program-other-image {
+  display: block;
+  width: 56px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: var(--sireve-radius-sm);
+  overflow: hidden;
+}
+
+.program-other-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.program-other-body {
+  min-width: 0;
+}
+
+.program-other-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--sireve-primary);
+  line-height: 1.3;
+}
+
+/* Antes nowrap + ellipsis: en celular el subtitulo quedaba truncado
+   ("Premio Ruben Dario"). Ahora maximo dos lineas y a 13px. */
+.program-other-sub {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--sireve-muted);
+  overflow: hidden;
+}
+
+.program-editions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.program-edition {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+  padding: 20px;
+  background: var(--sireve-surface);
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius);
+  transition: border-color 0.25s ease;
+}
+
+.program-edition:hover {
+  border-color: var(--sireve-primary-light);
+}
+
+/* Slot reservado para el logo / mascota / flayer de la edicion */
+.program-edition-logo {
+  flex: 0 0 140px;
+  width: 140px;
+  height: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px;
+  text-align: center;
+  background: var(--g-color-base-background);
+  border: 1px dashed var(--sireve-border);
+  border-radius: var(--sireve-radius);
+  color: var(--sireve-primary);
+  overflow: hidden;
+}
+
+.program-edition-logo span {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--sireve-muted);
+}
+
+.program-edition-logo.has-logo {
+  border-style: solid;
+}
+
+.program-edition-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.program-edition-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.program-edition-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 16px;
+}
+
+.program-edition-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--sireve-ink);
+  margin: 0;
+}
+
+.program-edition-place {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: var(--sireve-muted);
+}
+
+.program-edition-placeholder {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--sireve-muted);
+  margin: 12px 0 0;
+  padding-left: 12px;
+  border-left: 3px solid var(--sireve-border);
+}
+
+.program-edition-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.program-edition-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  /* 9px de padding = ~40px de alto, comodo para el dedo */
+  padding: 9px 14px;
+  border: 1px solid var(--sireve-primary);
+  border-radius: var(--sireve-radius-sm);
+  color: var(--sireve-primary);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.program-edition-link:hover {
+  background: var(--sireve-primary);
+  color: #fff;
+}
+
+.program-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 32px;
+  padding: 11px 20px;
+  border: 1px solid var(--sireve-primary);
+  border-radius: var(--sireve-radius);
+  color: var(--sireve-primary);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.program-back:hover {
+  background: var(--sireve-primary);
+  color: #fff;
+}
+
+.program-notfound {
+  display: flex;
+  justify-content: center;
+}
+
+.program-notfound .program-back {
+  margin-top: 0;
+}
+
+/* Dark: GREEN BLUE sobre negro da 3.9:1, asi que titulos y acentos suben a
+   CAROLINA BLUE #429ad0 (8.6:1); superficies con Battleship alpha. */
+.g-root_theme_dark .program-heading {
+  color: var(--sireve-primary-light);
+}
+
+.g-root_theme_dark .program-rule {
+  background: var(--sireve-primary-light);
+}
+
+.g-root_theme_dark .program-about-text {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.g-root_theme_dark .program-about-figure img {
+  border-color: rgba(135, 135, 135, 0.3);
+}
+
+.g-root_theme_dark .program-edition {
+  background: rgba(135, 135, 135, 0.14);
+  border-color: rgba(135, 135, 135, 0.3);
+}
+
+.g-root_theme_dark .program-edition:hover {
+  border-color: var(--sireve-primary-light);
+}
+
+.g-root_theme_dark .program-edition-logo {
+  background: var(--g-color-base-background);
+  border-color: rgba(135, 135, 135, 0.45);
+  color: var(--sireve-primary-light);
+}
+
+.g-root_theme_dark .program-edition-title {
+  color: var(--sireve-white);
+}
+
+.g-root_theme_dark .program-edition-placeholder {
+  color: rgba(255, 255, 255, 0.72);
+  border-left-color: rgba(135, 135, 135, 0.45);
+}
+
+.g-root_theme_dark .program-meta-item,
+.g-root_theme_dark .program-editions-empty {
+  background: rgba(135, 135, 135, 0.14);
+  border-color: rgba(135, 135, 135, 0.3);
+}
+
+.g-root_theme_dark .program-meta-icon {
+  color: var(--sireve-primary-light);
+}
+
+.g-root_theme_dark .program-meta-value {
+  color: var(--sireve-white);
+}
+
+.g-root_theme_dark .program-editions-empty-icon {
+  background: var(--g-color-base-background);
+  border-color: rgba(135, 135, 135, 0.45);
+  color: var(--sireve-primary-light);
+}
+
+.g-root_theme_dark .program-editions-empty-title {
+  color: var(--sireve-white);
+}
+
+.g-root_theme_dark .program-other-card {
+  background: var(--g-color-base-background);
+  border-color: var(--g-color-line-generic);
+}
+
+.g-root_theme_dark .program-other-title {
+  color: var(--sireve-primary-light);
+}
+
+.g-root_theme_dark .program-edition-link,
+.g-root_theme_dark .program-back {
+  color: var(--sireve-primary-light);
+  border-color: var(--sireve-primary-light);
+}
+
+.g-root_theme_dark .program-edition-link:hover,
+.g-root_theme_dark .program-back:hover {
+  background: var(--sireve-primary-light);
+  color: #000;
+}
+
+@media (max-width: 900px) {
+  .program-meta,
+  .program-others-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .program-meta,
+  .program-others-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .program-about {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+
+  .program-heading {
+    font-size: 21px;
+  }
+
+  .program-editions-empty {
+    padding: 32px 20px;
+  }
+
+  .program-edition {
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .program-edition-logo {
+    flex-basis: auto;
+    width: 120px;
+    height: 88px;
+  }
+
+  .program-edition-head {
+    justify-content: flex-start;
+  }
+
+  .program-edition-title {
+    font-size: 16px;
+  }
+}

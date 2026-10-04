@@ -44,8 +44,8 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 2;
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: none;
   background: rgba(255, 255, 255, 0.92);
@@ -77,11 +77,11 @@
   bottom: 10px;
   right: 10px;
   z-index: 2;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(0, 34, 68, 0.7);
+  padding: 6px 10px;
+  border-radius: var(--sireve-radius-sm);
+  background: rgba(19, 102, 175, 0.75);
   color: #fff;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -96,6 +96,7 @@
 }
 
 .gallery-album-dot {
+  position: relative;
   width: 7px;
   height: 7px;
   border-radius: 50%;
@@ -106,8 +107,16 @@
   transition: all 0.2s ease;
 }
 
+/* Los dots son de 7px y los albunes tienen hasta 22 fotos: sin esto los taps
+   fallaban. `::after` agranda el area tocable a ~25px sin cambiar el aspecto. */
+.gallery-album-dot::after {
+  content: '';
+  position: absolute;
+  inset: -9px;
+}
+
 .gallery-album-dot.active {
-  background: var(--sireve-accent);
+  background: #fff;
   transform: scale(1.25);
 }
 
@@ -136,6 +145,9 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
+  /* En pantallas bajas (landscape de celular) imagen + pie + titulo no cabian
+     y no habia forma de desplazarse. */
+  overflow-y: auto;
   animation: fadeIn 0.2s ease;
 }
 
@@ -210,9 +222,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   width: 100%;
   margin-top: 16px;
-  gap: 16px;
+  gap: 8px 16px;
   color: #fff;
 }
 
@@ -220,6 +233,7 @@
   font-size: 14px;
   font-weight: 600;
   flex: 1;
+  min-width: 0;
 }
 
 .gallery-lightbox-counter {
@@ -228,11 +242,20 @@
   flex-shrink: 0;
 }
 
-@media (max-width: 768px) {
+/* En cualquier dispositivo tactil (celular o tablet) las flechas se ven siempre:
+   sin hover no hay forma de descubrirlas ni de pulsarlas. */
+@media (hover: none) {
   .gallery-album-nav {
     opacity: 1;
+    width: 44px;
+    height: 44px;
   }
+}
 
+/* Lightbox en pantallas angostas: las flechas vivian en left/right: -64px y el
+   boton de cerrar en top: -48px, o sea FUERA de la pantalla entre 769 y 1100px
+   (iPad 810-1024px, Kindle, netbooks). El arreglo de ancho pasa a 1100px. */
+@media (max-width: 1100px) {
   .gallery-lightbox-nav--prev { left: 8px; }
   .gallery-lightbox-nav--next { right: 8px; }
 
@@ -243,27 +266,37 @@
   }
 }
 
-/* Tema oscuro — azul marino en lugar de gris cálido */
+@media (max-width: 768px) {
+  .gallery-album-nav {
+    opacity: 1;
+  }
+
+  .gallery-lightbox {
+    padding: 12px;
+  }
+}
+
+/* Dark: Black + Battleship Grey con alpha */
 .g-root_theme_dark .gallery-album {
-  background: #152535 !important;
-  border-color: rgba(26, 110, 181, 0.22) !important;
+  background: rgba(135, 135, 135, 0.14) !important;
+  border-color: rgba(135, 135, 135, 0.3) !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
 }
 
 .g-root_theme_dark .gallery-album:hover {
-  background: #1a3048 !important;
-  border-color: rgba(26, 110, 181, 0.45) !important;
-  box-shadow: 0 12px 32px rgba(0, 82, 155, 0.2) !important;
+  background: rgba(135, 135, 135, 0.22) !important;
+  border-color: var(--sireve-primary-light) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35) !important;
 }
 
 .g-root_theme_dark .gallery-album-carousel {
-  background: #0f1a26;
+  background: #000;
 }
 
 .g-root_theme_dark .gallery-album-title {
-  color: #f0f4f8 !important;
+  color: #fff !important;
 }
 
 .g-root_theme_dark .gallery-album-meta {
-  color: #94a3b8 !important;
+  color: rgba(255, 255, 255, 0.72) !important;
 }

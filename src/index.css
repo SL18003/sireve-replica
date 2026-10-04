@@ -1,51 +1,125 @@
+/* Identidad institucional CSUCA (manual de identidad + logos oficiales) */
 :root {
-  --sireve-primary: #00529b;
-  --sireve-primary-dark: #003d73;
-  --sireve-primary-light: #1a6eb5;
-  --sireve-ink: #002244;
-  --sireve-accent: #c9a227;
-  --sireve-accent-hover: #b08d1e;
-  --sireve-slate: #1a2e44;
-  --sireve-slate-mid: #2c3e50;
-  --sireve-muted: #5a6b7d;
-  --sireve-surface: #f4f7fb;
-  --sireve-border: #dce4ee;
-  --sireve-radius: 12px;
-  --sireve-shadow: 0 4px 24px rgba(0, 61, 115, 0.08);
-  --sireve-shadow-hover: 0 12px 40px rgba(0, 82, 155, 0.14);
+  /* Rampa azul CSUCA (p.75 del manual), de oscuro a claro */
+  --sireve-primary: #1366af;       /* GREEN BLUE — color principal, limite oscuro */
+  --sireve-blue-200: #1e71b6;      /* SPANISH BLUE */
+  --sireve-blue-300: #297bbd;      /* STEEL BLUE */
+  --sireve-blue-400: #2f85c3;      /* GREEN BLUE CRAYOLA */
+  --sireve-blue-500: #3b90c9;      /* GREEN BLUE CRAYOLA */
+  --sireve-primary-light: #429ad0; /* CAROLINA BLUE — limite claro */
+
+  /* Alias funcionales */
+  --sireve-primary-mid: #297bbd;
+  /* El manual no define ningun azul mas oscuro que GREEN BLUE, asi que el
+     token "dark" resuelve al propio GREEN BLUE. Los fondos oscuros (hero,
+     seccion SIREVE) usan #1366af y no tonos inventados. */
+  --sireve-primary-dark: #1366af;
+
+  /* Neutros del manual: Black, White y Battleship Grey */
+  --sireve-ink: #000000;
+  --sireve-white: #ffffff;
+  --sireve-grey: #878787;
+
+  /* Derivados de Battleship Grey sobre blanco (alpha, no colores nuevos).
+     El texto secundario usa Black con alpha para mantener contraste AA:
+     Battleship #878787 sobre blanco se queda en 3.3:1, insuficiente. */
+  --sireve-muted: rgba(0, 0, 0, 0.68);
+  --sireve-surface: rgba(135, 135, 135, 0.08);
+  --sireve-border: rgba(135, 135, 135, 0.32);
+
+  /* Android Green #47ac34 y Battleship Grey #878787 se usan unica y
+     exclusivamente en el isologo: no hay token de verde en el CSS, el logo
+     oficial ya lo incorpora en su PNG. */
+
+  /* Formas: el manual prescribe 3-5px, esquinas casi rectas */
+  --sireve-radius: 4px;
+  --sireve-radius-sm: 3px;
+  --sireve-radius-input: 7px;
+
+  --sireve-font: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  --sireve-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --sireve-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.16);
+}
+
+/* Celular: red de seguridad global.
+   `overflow-x: clip` (y no `hidden`) porque `overflow: hidden` en html/body
+   desactiva el `position: sticky` del header. Evita que cualquier desborde
+   puntual (grids con minmax, flechas del lightbox) genere scroll horizontal
+   en toda la pagina. */
+html,
+body {
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Foco visible al navegar con teclado o stylus (las quick-cards de la landing
+   son <article role="button">, sin esto no se ve donde Estas). */
+:focus-visible {
+  outline: 2px solid var(--sireve-primary);
+  outline-offset: 2px;
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: var(--g-font-family-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+  font-family: var(--sireve-font);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.7;
+  letter-spacing: 0.2px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--g-color-base-background);
   color: var(--g-color-text-primary);
 }
 
+/* Graviy UI: forzar Montserrat en todos sus componentes de texto */
+:root,
+.g-root_theme_light,
 .g-root_theme_dark {
-  --g-color-base-background: #0f1a26;
-  --g-color-base-generic: #1a2e44;
-  --g-color-base-generic-hover: #243a52;
-  --g-color-base-simple-hover: rgba(255, 255, 255, 0.05);
-  --g-color-line-generic: #2c3e50;
-  --g-color-base-brand: #1a6eb5;
-  --g-color-base-brand-hover: #00529b;
-  --g-color-text-primary: #f0f4f8;
-  --g-color-text-secondary: #94a3b8;
+  --g-font-family-sans: var(--sireve-font);
+  --g-text-body-font-family: var(--sireve-font);
+  --g-text-display-font-family: var(--sireve-font);
+  --g-text-subtitles-font-family: var(--sireve-font);
+  --g-text-caption-font-family: var(--sireve-font);
+  --g-text-header-font-family: var(--sireve-font);
+  /* Titulos Thin/light como en csuca.org */
+  --g-text-header-font-weight: 300;
+  --g-text-subtitles-font-weight: 300;
+  --g-text-display-font-weight: 300;
+  --g-text-accent-font-weight: 400;
+}
+
+/* Dark: base Black puro + Battleship Grey con alpha. Sin azules inventados,
+   y sin gris calido: por eso las cards ya no se ven marrones. */
+.g-root_theme_dark {
+  --g-color-base-background: #000000;
+  --g-color-base-generic: rgba(135, 135, 135, 0.14);
+  --g-color-base-generic-hover: rgba(135, 135, 135, 0.22);
+  --g-color-base-simple-hover: rgba(255, 255, 255, 0.06);
+  --g-color-line-generic: rgba(135, 135, 135, 0.3);
+  --g-color-base-brand: #1366af;
+  --g-color-base-brand-hover: #3b90c9;
+  --g-color-text-primary: #ffffff;
+  --g-color-text-secondary: rgba(255, 255, 255, 0.72);
+
+  --sireve-surface: rgba(135, 135, 135, 0.14);
+  --sireve-border: rgba(135, 135, 135, 0.3);
+  --sireve-muted: rgba(255, 255, 255, 0.72);
+  --sireve-shadow: 0 4px 24px rgba(0, 0, 0, 0.32);
+  --sireve-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.45);
 }
 
 .g-root_theme_light {
-  --g-color-text-primary: #002244;
-  --g-color-line-generic: #dce4ee;
-  --g-color-base-simple-hover: #f4f7fb;
+  --g-color-text-primary: #000000;
+  --g-color-line-generic: rgba(135, 135, 135, 0.32);
+  --g-color-base-simple-hover: rgba(135, 135, 135, 0.08);
   --g-color-base-background: #ffffff;
-  --g-color-base-generic: #f4f7fb;
-  --g-color-base-brand: #00529b;
-  --g-color-base-brand-hover: #003d73;
-  --g-color-text-secondary: #5a6b7d;
+  --g-color-base-generic: rgba(135, 135, 135, 0.08);
+  --g-color-base-brand: #1366af;
+  --g-color-base-brand-hover: #297bbd;
+  --g-color-text-secondary: rgba(0, 0, 0, 0.68);
 }
 
 * {
@@ -78,49 +152,51 @@ body {
   flex: 1;
 }
 
+/* Como en csuca.org el azul no es superficie de contenido: el page-hero es
+   blanco con filete superior GREEN BLUE y el azul solo en titulo e icono. */
 .page-hero {
   padding: 56px 32px;
   text-align: center;
-  background: linear-gradient(135deg, var(--sireve-ink) 0%, var(--sireve-primary-dark) 60%, var(--sireve-primary) 100%);
-  color: #fff;
+  background: var(--g-color-base-background);
+  color: var(--sireve-ink);
+  border-top: 4px solid var(--sireve-primary);
   position: relative;
   overflow: hidden;
 }
 
-.page-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1600&h=400&fit=crop') center/cover;
-  opacity: 0.15;
-}
-
-.page-hero > * {
-  position: relative;
-  z-index: 1;
-}
-
 .page-hero-icon {
   margin-bottom: 12px;
-  color: #fff !important;
+  color: var(--sireve-primary) !important;
   opacity: 0.9;
 }
 
+/* csuca.org usa Montserrat Thin (weight 100) en todos los titulos */
 .page-hero-title {
   display: block;
-  color: #fff !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.02em !important;
+  color: var(--sireve-primary) !important;
+  font-weight: 300 !important;
+  letter-spacing: 0 !important;
+  border-radius: var(--sireve-radius-sm);
   margin-bottom: 8px !important;
 }
 
 .page-hero-sub {
   display: block;
-  color: rgba(255, 255, 255, 0.88) !important;
+  color: var(--sireve-muted) !important;
   font-weight: 400 !important;
   line-height: 1.6 !important;
   max-width: 560px;
   margin: 0 auto !important;
+}
+
+/* Dark: GREEN BLUE sobre negro solo da 3.9:1, asi que los titulos y el icono
+   suben a CAROLINA BLUE #429ad0 (8.6:1). Sigue dentro de la rampa del manual. */
+.g-root_theme_dark .page-hero-title {
+  color: var(--sireve-primary-light) !important;
+}
+
+.g-root_theme_dark .page-hero-icon {
+  color: var(--sireve-primary-light) !important;
 }
 
 .page-body {
@@ -138,20 +214,25 @@ body {
 
 .section-title {
   display: block;
-  font-weight: 800 !important;
-  letter-spacing: -0.02em !important;
+  font-weight: 300 !important;
+  letter-spacing: 0 !important;
   margin-bottom: 8px !important;
   color: var(--g-color-text-primary) !important;
 }
 
+/* Filete del mismo GREEN BLUE que la regla de SIREVE: un solo azul de acento */
 .section-title::after {
   content: '';
   display: block;
   width: 48px;
   height: 3px;
-  background: var(--sireve-accent);
+  background: var(--sireve-primary);
   margin: 12px auto 0;
-  border-radius: 2px;
+  border-radius: 0;
+}
+
+.g-root_theme_dark .section-title::after {
+  background: var(--sireve-primary-light);
 }
 
 .section-desc {
@@ -168,10 +249,12 @@ body {
   justify-content: center;
   gap: 6px;
   padding: 10px 24px;
+  /* ~42px de alto: comodo para el dedo sin cambiar el aspecto en escritorio */
+  min-height: 42px;
   background: var(--sireve-primary);
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--sireve-radius);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -180,8 +263,9 @@ body {
   text-decoration: none;
 }
 
+/* Sin azul mas oscuro en el manual: el hover sube a STEEL BLUE */
 .btn-ver:hover {
-  background: var(--sireve-primary-dark);
+  background: var(--sireve-primary-mid);
   transform: translateY(-1px);
 }
 
@@ -191,7 +275,7 @@ body {
 .actas-card-btn,
 .reglamentos-item-btn {
   --g-button-background-color: var(--sireve-primary) !important;
-  --g-button-background-color-hover: var(--sireve-primary-dark) !important;
+  --g-button-background-color-hover: var(--sireve-primary-mid) !important;
   --g-button-text-color: #ffffff !important;
   background-color: var(--sireve-primary) !important;
   color: #ffffff !important;
@@ -201,7 +285,7 @@ body {
 .contacto-btn:hover,
 .actas-card-btn:hover,
 .reglamentos-item-btn:hover {
-  background-color: var(--sireve-primary-dark) !important;
+  background-color: var(--sireve-primary-mid) !important;
   color: #ffffff !important;
 }
 
@@ -215,4 +299,19 @@ body {
 @media (max-width: 768px) {
   .page-hero { padding: 40px 20px; }
   .page-body { padding: 32px 20px; }
+
+  /* Titulos largos del page-header ("Excelencia Academica") en movil */
+  .page-hero-title {
+    font-size: clamp(22px, 6vw, 30px) !important;
+  }
+
+  .page-hero-icon {
+    margin-bottom: 8px !important;
+  }
+}
+
+/* Pantallas muy angostas (iPhone SE 320px y similares) */
+@media (max-width: 380px) {
+  .page-hero { padding: 32px 16px; }
+  .page-body { padding: 24px 16px; }
 }

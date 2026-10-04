@@ -28,8 +28,8 @@
 .reglamentos-item-icon {
   width: 40px;
   height: 40px;
-  border-radius: 10px;
-  background: rgba(0, 82, 155, 0.1);
+  border-radius: var(--sireve-radius);
+  background: rgba(66, 154, 208, 0.16);
   color: var(--sireve-primary);
   display: flex;
   align-items: center;
@@ -48,13 +48,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 20px;
+  /* 11px de padding = ~44px de alto (antes 36px) y texto de 13px (antes 12) */
+  padding: 11px 20px;
+  min-height: 44px;
   background: var(--sireve-primary);
   color: #fff !important;
   text-decoration: none;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 700;
+  border-radius: var(--sireve-radius);
+  font-size: 13px;
+  font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   transition: background 0.2s, transform 0.2s;

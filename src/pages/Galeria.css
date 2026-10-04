@@ -1,7 +1,325 @@
+/* ============================ Línea de tiempo ============================
+   El eje es el mandato, no el ano: los presidentes duran 2 anos y se eligen a
+   mitad de ano, asi que un ano puede tocar a dos. Estilo: azul es cromo
+   (punto, filete, chip), nunca superficie de contenido. Radios 3-5px. */
+
+.galeria-sections {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Con la linea de tiempo vacia, el panel reservado pasa abajo de las galerias */
+.galeria-sections--timeline-last .timeline-section {
+  order: 2;
+  margin-top: 48px;
+}
+
+.timeline-section {
+  margin-bottom: 48px;
+}
+
+.galeria-sections--timeline-last .timeline-section:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-title {
+  display: block;
+  font-weight: 300;
+  font-size: 26px;
+  color: var(--g-color-text-primary);
+  margin: 0 0 8px;
+}
+
+/* Mismo filete GREEN BLUE que .section-title del inicio, pero a la izquierda
+   porque dentro de .page-body el texto va alineado a la izquierda */
+.timeline-title::after {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 3px;
+  background: var(--sireve-primary);
+  margin: 12px 0 0;
+  border-radius: 0;
+}
+
+.timeline-lead {
+  margin: 16px 0 28px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--sireve-muted);
+}
+
+/* --- Estado vacío: mismo patrón que .program-editions-empty --- */
+.timeline-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 44px 28px;
+  background: var(--sireve-surface);
+  border: 1px dashed var(--sireve-border);
+  border-radius: var(--sireve-radius);
+}
+
+.timeline-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 4px;
+  background: #fff;
+  color: var(--sireve-primary);
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius);
+}
+
+.timeline-empty-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--sireve-ink);
+}
+
+.timeline-empty-text {
+  font-size: 14px;
+  line-height: 1.7;
+  max-width: 560px;
+}
+
+/* --- Lista vertical --- */
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* La guia vertical se dibuja en el `::before` del item, no en el marcador, para
+   que no se corte cuando el texto crece en movil */
+.timeline-item {
+  position: relative;
+  padding: 0 0 32px 34px;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  bottom: -2px;
+  left: 7px;
+  width: 2px;
+  background: var(--sireve-border);
+}
+
+.timeline-item:last-child::before {
+  display: none;
+}
+
+.timeline-marker {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 4px solid var(--sireve-primary);
+}
+
+.timeline-body {
+  background: #fff;
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius);
+  box-shadow: var(--sireve-shadow);
+  padding: 20px 22px;
+}
+
+.timeline-term {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  padding: 3px 10px;
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius-sm);
+  background: var(--sireve-surface);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sireve-primary);
+}
+
+.timeline-term-icon {
+  color: var(--sireve-primary);
+}
+
+.timeline-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.timeline-photo {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius);
+  background: var(--sireve-surface);
+  overflow: hidden;
+}
+
+.timeline-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.timeline-headings {
+  min-width: 0;
+}
+
+.timeline-name {
+  margin: 0 0 2px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--sireve-ink);
+}
+
+.timeline-org {
+  display: block;
+  font-size: 14px;
+  color: var(--sireve-muted);
+}
+
+.timeline-session,
+.timeline-note {
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--sireve-muted);
+}
+
+/* --- Chips de año: son enlaces a /galeria/:año --- */
+.timeline-years {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.timeline-year {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  /* area tactil comoda: ~40px de alto */
+  min-height: 40px;
+  padding: 8px 16px;
+  border: 1px solid var(--sireve-primary);
+  border-radius: var(--sireve-radius-sm);
+  background: #fff;
+  color: var(--sireve-primary);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.timeline-year:hover {
+  background: var(--sireve-primary);
+  color: #fff;
+}
+
+.timeline-year-tag {
+  padding: 2px 6px;
+  border-radius: var(--sireve-radius-sm);
+  background: var(--sireve-surface);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--sireve-muted);
+}
+
+.timeline-year:hover .timeline-year-tag {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.timeline-noyears {
+  display: block;
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--sireve-muted);
+}
+
+/* --- Chip de presidente en /galeria/:año --- */
+.galeria-context {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  background: var(--sireve-surface);
+  border: 1px solid var(--sireve-border);
+  border-left: 4px solid var(--sireve-primary);
+  border-radius: var(--sireve-radius);
+}
+
+.galeria-context-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  background: #fff;
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius);
+  color: var(--sireve-primary);
+}
+
+.galeria-context-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--sireve-ink);
+}
+
+.galeria-context-term {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 8px;
+  padding: 2px 8px;
+  background: #fff;
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--sireve-muted);
+}
+
+.galeria-context-term-icon {
+  color: var(--sireve-primary);
+}
+
+.galeria-years-section {
+  margin-top: 8px;
+}
+
 .galeria-years-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
+  margin-top: 28px;
 }
 
 .galeria-year-card {
@@ -15,20 +333,21 @@
   box-shadow: var(--sireve-shadow);
 }
 
+/* Dark: Black + Battleship Grey con alpha */
 .g-root_theme_dark .galeria-year-card {
-  background: #152535;
-  border-color: rgba(26, 110, 181, 0.22);
+  background: rgba(135, 135, 135, 0.14);
+  border-color: rgba(135, 135, 135, 0.3);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
 
 .g-root_theme_dark .galeria-year-card:hover {
-  background: #1a3048;
-  border-color: rgba(26, 110, 181, 0.45);
-  box-shadow: 0 12px 32px rgba(0, 82, 155, 0.2);
+  background: rgba(135, 135, 135, 0.22);
+  border-color: var(--sireve-primary-light);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
 }
 
 .g-root_theme_dark .galeria-year-title {
-  color: #f0f4f8;
+  color: #fff;
 }
 
 .galeria-year-card:hover {
@@ -59,14 +378,15 @@
 
 .galeria-year-title {
   font-size: 28px;
-  font-weight: 800;
+  font-weight: 300;
   color: var(--g-color-text-primary);
   margin: 0 0 16px;
 }
 
 .galeria-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* `min(300px, 100%)` evita el desborde horizontal en viewports de 320px */
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
   gap: 24px;
 }
 
@@ -84,5 +404,61 @@
 @media (max-width: 768px) {
   .galeria-years-grid {
     grid-template-columns: 1fr;
+  }
+
+  .timeline-title {
+    font-size: 22px;
+  }
+
+  /* La guia se corre a la izquierda para que el texto no quede en un carril
+     estrecho; el padding del item se ajusta para mantener el margen */
+  .timeline-item {
+    padding-left: 26px;
+    padding-bottom: 24px;
+  }
+
+  .timeline-item::before {
+    left: 5px;
+  }
+
+  .timeline-body {
+    padding: 16px;
+  }
+
+  .timeline-empty {
+    padding: 32px 18px;
+  }
+
+  .timeline-empty-text {
+    font-size: 13px;
+  }
+
+  /* El chip del presidente en /galeria/:año puede partirse en dos lineas */
+  .galeria-context {
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .galeria-context-term {
+    margin-left: 0;
+    margin-top: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .timeline-name {
+    font-size: 17px;
+  }
+
+  /* Un chip por fila: dos chips de año a 375px apenas entran y se ven apretados */
+  .timeline-years {
+    gap: 8px;
+  }
+
+  .timeline-year {
+    flex: 1 1 auto;
+    justify-content: center;
+    padding: 8px 12px;
   }
 }

@@ -8,7 +8,7 @@ export default function Contacto() {
     <div className="page-wrap">
       <PageHeader
         title="Contacto"
-        subtitle="¿Tienes alguna duda o consulta? Déjanos tu mensaje."
+        subtitle="El SIREVE es un sistema del CSUCA; las consultas se dirigen a la Secretaría General."
         icon={Envelope}
       />
       <div className="page-body">
@@ -47,21 +47,25 @@ export default function Contacto() {
               <Icon data={Geo} size={20} className="contacto-info-icon" />
               <div>
                 <Text variant="body-2" className="contacto-info-label">Dirección</Text>
-                <Text variant="body-2" color="secondary">San Salvador, El Salvador</Text>
+                <Text variant="body-2" color="secondary">
+                  Av. Las Américas 1-03, Zona 14,<br />
+                  interior Club Deportivo Los Arcos,<br />
+                  Ciudad de Guatemala, Guatemala
+                </Text>
               </div>
             </div>
             <div className="contacto-info-item">
               <Icon data={Envelope} size={20} className="contacto-info-icon" />
               <div>
                 <Text variant="body-2" className="contacto-info-label">Correo</Text>
-                <Text variant="body-2" color="secondary">info@sireve.csuca.org</Text>
+                <a href="mailto:sg@csuca.org" className="contacto-info-link">sg@csuca.org</a>
               </div>
             </div>
             <div className="contacto-info-item">
               <Icon data={Smartphone} size={20} className="contacto-info-icon" />
               <div>
                 <Text variant="body-2" className="contacto-info-label">Teléfono</Text>
-                <Text variant="body-2" color="secondary">+503 2222-2222</Text>
+                <a href="tel:+50225027500" className="contacto-info-link">+(502) 2502-7500</a>
               </div>
             </div>
           </Card>
