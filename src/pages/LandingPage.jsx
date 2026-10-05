@@ -2,8 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Text, Icon } from '@gravity-ui/uikit';
 import {
-  ChevronLeft, ChevronRight, Folder, Picture, FileText,
-  GraduationCap, BookOpen, Globe, ArrowRight,
+  ChevronLeft, ChevronRight, Folder, Picture, FileText, ArrowRight,
 } from '@gravity-ui/icons';
 import { handleImageError } from '../utils/imageFallback';
 import { programs } from '../data/programs';
@@ -17,9 +16,9 @@ const carouselImages = [
 ];
 
 const heroStats = [
-  { value: '30+', label: 'Universidades miembros', icon: GraduationCap },
-  { value: '5', label: 'Programas regionales', icon: BookOpen },
-  { value: '8', label: 'Países de la región', icon: Globe },
+  { value: '30+', label: 'Universidades miembros' },
+  { value: '5', label: 'Programas regionales' },
+  { value: '8', label: 'Países de la región' },
 ];
 
 const quickLinks = [
@@ -96,8 +95,8 @@ export default function LandingPage() {
     <div className="landing">
       <section className="landing-hero">
         <div className="landing-hero-content">
-          <h1 className="landing-hero-h1">
-            <span className="landing-hero-logo-plate landing-hero-animate landing-hero-animate--1">
+          <div className="landing-hero-brand landing-hero-animate landing-hero-animate--1">
+            <span className="landing-hero-logo-plate">
               <img
                 src="/images/logo-csuca.png"
                 alt="SIREVE — Sistema Regional de Vida Estudiantil (CSUCA)"
@@ -105,20 +104,13 @@ export default function LandingPage() {
                 onError={handleImageError}
               />
             </span>
-          </h1>
-          <Text variant="body-2" className="landing-hero-sub landing-hero-animate landing-hero-animate--2">
-            Consejo Superior Universitario Centroamericano
-          </Text>
-          <div className="landing-hero-stats landing-hero-animate landing-hero-animate--3">
-            {heroStats.map((stat) => (
-              <div key={stat.label} className="landing-hero-stat">
-                <Icon data={stat.icon} size={26} className="landing-hero-stat-icon" />
-                <span className="landing-hero-stat-value">{stat.value}</span>
-                <span className="landing-hero-stat-label">{stat.label}</span>
-              </div>
-            ))}
+            <span className="landing-hero-brand-divider" aria-hidden="true" />
+            <span className="landing-hero-brand-text">CSUCA</span>
           </div>
-          <div className="landing-hero-actions landing-hero-animate landing-hero-animate--4">
+          <span className="landing-hero-eyebrow landing-hero-animate landing-hero-animate--1">Integración universitaria regional</span>
+          <h1 className="landing-hero-title landing-hero-animate landing-hero-animate--2">Consejo Superior Universitario Centroamericano</h1>
+          <span className="landing-hero-rule" aria-hidden="true" />
+          <div className="landing-hero-actions landing-hero-animate landing-hero-animate--3">
             <button type="button" className="landing-btn landing-btn-primary" onClick={scrollToPrograms}>
               Explorar programas
             </button>
@@ -126,6 +118,30 @@ export default function LandingPage() {
               Contacto
             </button>
           </div>
+          <div className="landing-hero-stats landing-hero-animate landing-hero-animate--4">
+            {heroStats.map((stat) => (
+              <div key={stat.label} className="landing-hero-stat">
+                <span className="landing-hero-stat-bar" aria-hidden="true" />
+                <span className="landing-hero-stat-value">{stat.value}</span>
+                <span className="landing-hero-stat-label">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="landing-hero-figure landing-hero-animate landing-hero-animate--2">
+          <span className="landing-hero-figure-frame" aria-hidden="true" />
+          <div className="landing-hero-photo-plate">
+            <img
+              src="/images/hero-sicevaes.jpg"
+              alt="Participantes en una plenaria del encuentro estudiantil regional del CSUCA"
+              className="landing-hero-photo"
+              onError={handleImageError}
+            />
+          </div>
+          <span className="landing-hero-badge">
+            <span className="landing-hero-badge-dot" aria-hidden="true" />
+            Vida estudiantil · Centroamérica
+          </span>
         </div>
       </section>
 

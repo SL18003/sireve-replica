@@ -2,57 +2,106 @@
   width: 100%;
 }
 
-/* Hero CSUCA: contenido sobre blanco puro, como csuca.org (alli el azul solo
-   esta en las barras). SIN imagenes de fondo, franja ni foto lateral: el
-   usuario no quiere imagenes. El logo ampliado hace de titulo (igual que
-   csuca.org/es/sireve), seguido del subtitulo, las cajas de stats y los CTAs. */
+/* Hero CSUCA — layout a dos columnas (texto a la izquierda, foto institucional
+   a la derecha con marco azul detras y badge flotante).
+   Alineacion con el navbar: usa exactamente `max-width: 1360px` +
+   `padding-inline: 24px`, igual que `.header-inner`, para que el titular arranque
+   a la misma altura visual que el logo del header y el borde derecho de la foto
+   coincida con el ultimo item del nav.
+   El azul es cromo (barra, regla, marco, punto del badge): el fondo sigue siendo
+   blanco puro, nunca superficie azul de contenido. */
 .landing-hero {
   position: relative;
-  max-width: 1280px;
+  max-width: 1360px;
   margin-inline: auto;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 56px;
   align-items: center;
   background: var(--g-color-base-background);
-  text-align: center;
-  padding: 64px 32px 40px;
+  padding: 56px 24px 52px;
   overflow: hidden;
 }
 
 .landing-hero-content {
   position: relative;
   z-index: 1;
-  width: 100%;
-  max-width: 860px;
+  min-width: 0;
 }
 
-.landing-hero-h1 {
-  margin: 0;
-  font-weight: 300;
+/* Lockup de marca: logo oficial sobre placa blanca + divisor + sigla CSUCA.
+   Placa con borde porque el PNG tiene area de proteccion transparente y sobre
+   blanco se "perderia" el limite de la caja. `max-width` + `box-sizing` evitan
+   que la placa supere el ancho disponible en pantallas angostas. */
+.landing-hero-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
 }
 
-/* Placa blanca: el logo oficial es negro/azul y no admite filtro. Sobre fondo
-   blanco necesita borde para que se lea el area de proteccion.
-   `max-width` + `box-sizing` garantizan que la placa NUNCA supere el ancho
-   disponible: antes a 320-390px el logo (675x188) se salia de la pantalla y
-   `overflow: hidden` lo cortaba. */
 .landing-hero-logo-plate {
   display: inline-block;
   max-width: 100%;
   box-sizing: border-box;
   background: #fff;
-  padding: 18px 32px;
+  padding: 9px 16px;
   border-radius: var(--sireve-radius);
-  margin-bottom: 20px;
   border: 1px solid var(--sireve-border);
-  box-shadow: var(--sireve-shadow);
 }
 
 .landing-hero-logo {
-  height: 120px;
+  height: 40px;
   width: auto;
   max-width: 100%;
   display: block;
+}
+
+.landing-hero-brand-divider {
+  width: 1px;
+  height: 30px;
+  background: var(--sireve-border);
+}
+
+.landing-hero-brand-text {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sireve-primary);
+  line-height: 1;
+}
+
+.landing-hero-eyebrow {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sireve-primary);
+  margin-bottom: 16px;
+}
+
+/* Titular en texto (no el logo). El manual escribe los h1-h6 en peso light, pero
+   aqui se pide el titular "llamativo" como en el mockup: 700 solo en este H1. */
+.landing-hero-title {
+  margin: 0;
+  font-size: clamp(32px, 4.2vw, 54px);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  color: #000;
+  text-wrap: balance;
+}
+
+.landing-hero-rule {
+  display: block;
+  width: 64px;
+  height: 4px;
+  background: var(--sireve-primary);
+  border-radius: 2px;
+  margin: 26px 0 30px;
 }
 
 .landing-hero-animate {
@@ -70,40 +119,54 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Stats del hero: tres tarjetas independientes (superficie Battleship +
-   borde), cada una con icono GREEN BLUE, cifra y etiqueta. */
+.landing-hero-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+/* Cifras del hero: fila plana sin tarjetas ni iconos, separada por filetes
+   verticales, con una barra azul de 3px encima de cada numero para darle peso
+   visual. Blanco puro de fondo (el azul solo es acento), numero en Black,
+   etiqueta en versalitas con `--sireve-muted` (7.4:1 sobre blanco). */
 .landing-hero-stats {
   display: flex;
-  justify-content: center;
-  gap: 16px;
-  width: fit-content;
+  margin-top: 44px;
+  width: 100%;
   max-width: 100%;
-  margin: 0 auto 32px;
 }
 
 .landing-hero-stat {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 6px;
+  align-items: flex-start;
   flex: 1;
-  min-width: 150px;
-  padding: 18px 24px;
-  background: var(--sireve-surface);
-  border: 1px solid var(--sireve-border);
-  border-radius: var(--sireve-radius);
+  min-width: 0;
+  padding: 0 26px;
+  border-left: 1px solid var(--sireve-border);
 }
 
-.landing-hero-stat-icon {
-  color: var(--sireve-primary);
-  margin-bottom: 2px;
+.landing-hero-stat:first-child {
+  padding-left: 0;
+  border-left: none;
+}
+
+.landing-hero-stat-bar {
+  display: block;
+  width: 32px;
+  height: 3px;
+  background: var(--sireve-primary);
+  border-radius: 2px;
+  margin-bottom: 14px;
 }
 
 .landing-hero-stat-value {
-  font-size: 36px;
-  font-weight: 300;
-  color: var(--sireve-primary);
+  font-size: clamp(34px, 3.4vw, 46px);
+  font-weight: 700;
+  color: #000;
   line-height: 1;
+  letter-spacing: -0.01em;
 }
 
 .landing-hero-stat-label {
@@ -112,22 +175,90 @@
   color: var(--sireve-muted);
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  line-height: 1.35;
+  margin-top: 9px;
+  max-width: 15ch;
 }
 
-.landing-hero-sub {
+/* Columna derecha: rectangulo azul desplazado detras de la foto (acento plano,
+   sin gradientes ni formas curvas), foto recortada y badge flotante. */
+.landing-hero-figure {
+  position: relative;
+  min-width: 0;
+}
+
+.landing-hero-figure-frame {
+  position: absolute;
+  top: -22px;
+  left: -22px;
+  width: 48%;
+  height: 70%;
+  background: var(--sireve-primary);
+  border-radius: var(--sireve-radius);
+  z-index: 0;
+}
+
+.landing-hero-photo-plate {
+  position: relative;
+  z-index: 1;
+  background: var(--sireve-surface);
+  border-radius: var(--sireve-radius);
+  overflow: hidden;
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.16);
+}
+
+.landing-hero-photo {
   display: block;
-  color: var(--sireve-muted) !important;
-  line-height: 1.7 !important;
-  margin-bottom: 32px !important;
-  font-size: 17px !important;
-  font-weight: 300;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center 30%;
 }
 
-.landing-hero-actions {
-  display: flex;
-  gap: 14px;
-  justify-content: center;
-  flex-wrap: wrap;
+.landing-hero-badge {
+  position: absolute;
+  left: 20px;
+  bottom: -20px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: #fff;
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius);
+  padding: 11px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sireve-muted);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.14);
+  max-width: calc(100% - 40px);
+}
+
+.landing-hero-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--sireve-primary);
+  flex: none;
+}
+
+/* Un solo texto legible en pantallas estrechas: el titular siempre
+   arriba y la foto debajo. */
+@media (max-width: 1080px) {
+  .landing-hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    padding: 48px 24px 56px;
+  }
+
+  .landing-hero-figure {
+    max-width: 720px;
+    width: 100%;
+  }
+
+  .landing-hero-title {
+    font-size: clamp(30px, 5vw, 44px);
+  }
 }
 
 .landing-btn {
@@ -169,10 +300,9 @@
 
 /* SIREVE — programa marco. Sobre blanco como el resto del contenido: el azul
    del manual queda reservado para barras, titulos y acentos. padding-top 48px
-   (mas 40px de padding-bottom del hero = 88px de hueco; antes eran 152px y el
-   usuario lo reporto como "demasiado espacio"). padding-bottom corto para que
-   el hueco hasta "Acceso rapido" no se dispire (sumado al padding-top de
-   .quick-section da 80px). */
+   (mas los 52px de padding-bottom del hero = 100px de hueco; era 40px/88px en
+   el hero centrado anterior). padding-bottom corto para que el hueco hasta
+   "Acceso rapido" no se dispare (sumado al padding-top de .quick-section da 80px). */
 .sireve-section {
   background: var(--g-color-base-background);
   padding: 48px 24px 40px;
@@ -256,11 +386,10 @@
   display: block;
 }
 
-/* Dark: sobre negro los azules GREEN BLUE quedan en 3.9:1, asi que cifras e
-   iconos suben a CAROLINA BLUE #429ad0 (8.6:1). Las tarjetas de stats suben
-   la superficie Battleship a 0.14 como el resto de cards oscuras. */
+/* Dark (reglas inertes: el sitio es solo claro): sobre negro los azules GREEN
+   BLUE quedan en 3.9:1, asi que cifras e iconos suben a CAROLINA BLUE #429ad0
+   (8.6:1). */
 .g-root_theme_dark .landing-hero-stat-value,
-.g-root_theme_dark .landing-hero-stat-icon,
 .g-root_theme_dark .sireve-title,
 .g-root_theme_dark .sireve-eyebrow {
   color: var(--sireve-primary-light) !important;
@@ -663,38 +792,34 @@
   }
 
   .landing-hero {
-    padding: 48px 20px 36px;
+    padding: 44px 20px 56px;
+    gap: 44px;
   }
 
   .landing-hero-logo {
-    height: 88px;
+    height: 44px;
   }
 
   .landing-hero-logo-plate {
-    padding: 14px 22px;
-  }
-
-  .landing-hero-stats {
-    gap: 10px;
+    padding: 10px 18px;
   }
 
   .landing-hero-stat {
-    min-width: 0;
-    padding: 12px 10px;
-  }
-
-  .landing-hero-stat-icon {
-    width: 22px;
-    height: 22px;
+    padding: 0 18px;
   }
 
   .landing-hero-stat-value {
-    font-size: 22px;
+    font-size: 34px;
   }
 
   .landing-hero-stat-label {
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: 0.04em;
+  }
+
+  .landing-hero-badge {
+    left: 16px;
+    bottom: -18px;
   }
 
   .carousel-container {
@@ -727,54 +852,94 @@
   }
 }
 
-/* Celulares angostos (360-430px): el logo del hero y las tres tarjetas de
-   stats necesitan bajar de tamano o se salen de la pantalla. El logo sigue
-   siendo el titulo sobre su placa blanca, solo se ajusta el ancho. */
+/* Celulares angostos (320-430px): el lockup de marca, el titular, las tres
+   cifras y el badge necesitan bajar de tamano o se salen de la pantalla. */
 @media (max-width: 480px) {
   .landing-hero {
-    padding: 36px 16px 28px;
+    padding: 32px 16px 52px;
+    gap: 36px;
   }
 
-  /* 88px de alto = 316px de ancho + padding; con 21vw el logo entra siempre
-     dentro del ancho disponible (375px -> 79px, 320px -> 67px). */
+  .landing-hero-brand {
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
   .landing-hero-logo {
-    height: min(88px, 21vw);
+    height: 38px;
   }
 
   .landing-hero-logo-plate {
-    padding: 12px 16px;
-    margin-bottom: 16px;
+    padding: 8px 14px;
   }
 
-  .landing-hero-sub {
-    margin-bottom: 24px !important;
+  .landing-hero-brand-divider {
+    height: 24px;
+  }
+
+  .landing-hero-brand-text {
+    font-size: 13px;
+    letter-spacing: 0.1em;
+  }
+
+  .landing-hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin-bottom: 13px;
+  }
+
+  .landing-hero-title {
+    font-size: clamp(28px, 7.4vw, 34px);
+  }
+
+  .landing-hero-rule {
+    width: 56px;
+    margin: 20px 0 24px;
   }
 
   .landing-hero-stats {
-    gap: 8px;
-    margin-bottom: 28px;
+    margin-top: 34px;
   }
 
   .landing-hero-stat {
-    padding: 12px 6px;
+    padding: 0 8px;
   }
 
-  .landing-hero-stat-icon {
-    width: 20px;
-    height: 20px;
+  .landing-hero-stat-bar {
+    width: 24px;
+    margin-bottom: 10px;
   }
 
   .landing-hero-stat-value {
-    font-size: 20px;
+    font-size: clamp(26px, 8vw, 32px);
   }
 
-  /* Las etiquetas en versalitas de 10px con letter-spacing abierto no cabian en
-     3 tarjetas de 105px; se apilan en 2 lineas cortas sin desbordarse. */
+  /* Las etiquetas en versalitas no caben en 3 columnas de ~80px: se apilan en
+     2 lineas y `hyphens` evita que palabras largas dispare el scroll
+     horizontal en pantallas de 320px. */
   .landing-hero-stat-label {
     font-size: 10px;
     letter-spacing: 0.02em;
     line-height: 1.25;
-    text-align: center;
+    margin-top: 7px;
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
+
+  .landing-hero-figure-frame {
+    top: -14px;
+    left: -14px;
+    width: 44%;
+    height: 66%;
+  }
+
+  .landing-hero-badge {
+    left: 12px;
+    bottom: -16px;
+    padding: 9px 14px;
+    font-size: 12px;
+    gap: 7px;
+    max-width: calc(100% - 24px);
   }
 
   .landing-hero-actions {
