@@ -2,35 +2,181 @@
    contenido sobre blanco, azul como acento (titulo, filete, botones),
    radios 4/3px, superficies Battleship con alpha. */
 
+/* Eyebrow de seccion (Sobre el programa / Archivo y documentos / subtitulo) */
+.program-section-eyebrow {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sireve-muted);
+  margin-bottom: 6px;
+}
+
+/* Portada: copy a la izquierda, grafica destacada con marco azul a la derecha */
+.program-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 34px;
+  align-items: center;
+  margin-top: 26px;
+  margin-bottom: 52px;
+}
+
+.program-hero-copy {
+  min-width: 0;
+}
+
+.program-hero-title {
+  font-size: clamp(30px, 3.2vw, 40px);
+  font-weight: 700;
+  line-height: 1.12;
+  color: var(--sireve-ink);
+  margin: 0;
+}
+
+.program-hero-tagline {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--g-color-text-secondary);
+  margin: 0 0 16px;
+  max-width: 46ch;
+}
+
+.program-hero-kind {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sireve-primary);
+  background: #fff;
+  border: 1px solid rgba(19, 102, 175, 0.28);
+  border-radius: var(--sireve-radius);
+  padding: 7px 12px;
+}
+
+.program-hero-figure {
+  position: relative;
+  margin: 0 auto;
+  max-width: 460px;
+  min-width: 0;
+}
+
+.program-hero-frame {
+  position: absolute;
+  top: -18px;
+  left: -18px;
+  width: 46%;
+  height: 64%;
+  background: var(--sireve-primary);
+  border-radius: var(--sireve-radius);
+  z-index: 0;
+}
+
+.program-hero-figure img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #fff;
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius);
+  box-shadow: var(--sireve-shadow);
+}
+
+/* Escritorio y tablet apaisado: 2 columnas. La imagen se limita a 400px de
+   alto y se pega al borde derecho, asi que el marco azul se ancla a la
+   derecha para seguir pegado a la foto en cualquier proporcion. */
+@media (min-width: 900px) {
+  .program-hero {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    gap: 48px;
+  }
+
+  .program-hero-figure {
+    max-width: none;
+    margin: 0;
+  }
+
+  .program-hero-figure img {
+    width: auto;
+    max-width: 100%;
+    max-height: 400px;
+    margin-left: auto;
+  }
+
+  .program-hero-frame {
+    left: auto;
+    right: -18px;
+  }
+}
+
+/* Descripcion oficial: texto primero en el DOM (celular) y a la derecha
+   en escritorio, con la imagen a la izquierda. */
 .program-about {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
-  gap: 36px;
+  grid-template-columns: 1fr;
+  gap: 28px;
   align-items: start;
   margin-bottom: 52px;
 }
 
-/* Ficha rapida: 3 datos del programa, sin inventar informacion */
+@media (min-width: 769px) {
+  .program-about {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: 44px;
+  }
+
+  .program-about-figure {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .program-about-copy {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+/* Ficha rapida: 3 datos del programa, sin inventar informacion.
+   Blanco + filete azul lateral: el azul va como cromo (filete, mosaico del
+   icono y etiqueta), nunca como fondo de superficie, segun el manual. */
 .program-meta {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 28px;
 }
 
 .program-meta-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 18px;
-  background: var(--sireve-surface);
-  border: 1px solid var(--sireve-border);
+  gap: 14px;
+  padding: 11px 16px;
+  background: #fff;
+  border: 1px solid rgba(19, 102, 175, 0.22);
+  border-left: 4px solid var(--sireve-primary);
   border-radius: var(--sireve-radius);
+  box-shadow: 0 2px 10px rgba(19, 102, 175, 0.07);
 }
 
 .program-meta-icon {
-  color: var(--sireve-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  background: var(--sireve-primary);
+  color: #fff;
+  border-radius: var(--sireve-radius-sm);
+}
+
+.program-meta-body {
+  min-width: 0;
 }
 
 .program-meta-label {
@@ -39,7 +185,7 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--sireve-muted);
+  color: var(--sireve-primary);
   line-height: 1.3;
 }
 
@@ -72,17 +218,19 @@
   font-size: 15.5px;
   line-height: 1.85;
   color: var(--g-color-text-secondary);
+  margin: 0;
 }
 
 .program-about-figure {
   margin: 0;
+  min-width: 0;
 }
 
 .program-about-figure img {
   width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+  height: auto;
   display: block;
+  background: #fff;
   border: 1px solid var(--sireve-border);
   border-radius: var(--sireve-radius);
   box-shadow: var(--sireve-shadow);
@@ -96,11 +244,11 @@
 /* Sin ediciones cargadas: panel reservado (nada de anos inventados) */
 .program-editions-empty {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   align-items: center;
-  text-align: center;
-  gap: 10px;
-  padding: 44px 28px;
+  gap: 8px 20px;
+  text-align: left;
+  padding: 24px 28px;
   background: var(--sireve-surface);
   border: 1px dashed var(--sireve-border);
   border-radius: var(--sireve-radius);
@@ -110,13 +258,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
-  margin-bottom: 4px;
+  flex: 0 0 auto;
+  width: 60px;
+  height: 60px;
   background: #fff;
   color: var(--sireve-primary);
   border: 1px solid var(--sireve-border);
   border-radius: var(--sireve-radius);
+}
+
+.program-editions-empty-body {
+  flex: 1 1 240px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .program-editions-empty-title {
@@ -128,7 +284,6 @@
 .program-editions-empty-text {
   font-size: 14px;
   line-height: 1.7;
-  max-width: 520px;
 }
 
 /* Otros programas */
@@ -343,6 +498,12 @@
   color: #fff;
 }
 
+/* Volver a programas: ahora arriba de la portada, no al pie */
+.program-back.program-back--top {
+  margin-top: 0;
+  margin-bottom: 4px;
+}
+
 .program-notfound {
   display: flex;
   justify-content: center;
@@ -358,16 +519,40 @@
   color: var(--sireve-primary-light);
 }
 
+.g-root_theme_dark .program-section-eyebrow {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.g-root_theme_dark .program-hero-title {
+  color: var(--sireve-white);
+}
+
+.g-root_theme_dark .program-hero-tagline {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.g-root_theme_dark .program-hero-kind {
+  color: var(--sireve-primary-light);
+  background: rgba(135, 135, 135, 0.14);
+  border-color: rgba(135, 135, 135, 0.3);
+}
+
+.g-root_theme_dark .program-hero-frame {
+  background: var(--sireve-primary-light);
+}
+
+.g-root_theme_dark .program-hero-figure img,
+.g-root_theme_dark .program-about-figure img {
+  background: var(--g-color-base-background);
+  border-color: rgba(135, 135, 135, 0.3);
+}
+
 .g-root_theme_dark .program-rule {
   background: var(--sireve-primary-light);
 }
 
 .g-root_theme_dark .program-about-text {
   color: rgba(255, 255, 255, 0.72);
-}
-
-.g-root_theme_dark .program-about-figure img {
-  border-color: rgba(135, 135, 135, 0.3);
 }
 
 .g-root_theme_dark .program-edition {
@@ -394,13 +579,24 @@
   border-left-color: rgba(135, 135, 135, 0.45);
 }
 
-.g-root_theme_dark .program-meta-item,
+.g-root_theme_dark .program-meta-item {
+  background: rgba(135, 135, 135, 0.14);
+  border-color: rgba(135, 135, 135, 0.3);
+  border-left-color: var(--sireve-primary-light);
+  box-shadow: none;
+}
+
 .g-root_theme_dark .program-editions-empty {
   background: rgba(135, 135, 135, 0.14);
   border-color: rgba(135, 135, 135, 0.3);
 }
 
 .g-root_theme_dark .program-meta-icon {
+  background: var(--sireve-primary-light);
+  color: #000;
+}
+
+.g-root_theme_dark .program-meta-label {
   color: var(--sireve-primary-light);
 }
 
@@ -440,22 +636,38 @@
 }
 
 @media (max-width: 900px) {
-  .program-meta,
   .program-others-grid {
     grid-template-columns: 1fr 1fr;
   }
 }
 
 @media (max-width: 768px) {
-  .program-meta,
   .program-others-grid {
     grid-template-columns: 1fr;
   }
 
   .program-about {
-    grid-template-columns: 1fr;
     gap: 24px;
     margin-bottom: 40px;
+  }
+
+  .program-hero {
+    gap: 26px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+  }
+
+  .program-hero-figure {
+    max-width: 380px;
+  }
+
+  .program-meta {
+    margin-top: 24px;
+    gap: 10px;
+  }
+
+  .program-hero-tagline {
+    font-size: 15.5px;
   }
 
   .program-heading {
@@ -463,7 +675,13 @@
   }
 
   .program-editions-empty {
-    padding: 32px 20px;
+    padding: 18px;
+    gap: 6px 16px;
+  }
+
+  .program-editions-empty-icon {
+    width: 52px;
+    height: 52px;
   }
 
   .program-edition {

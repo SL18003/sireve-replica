@@ -5,9 +5,13 @@ import { MusicNote, Cup, Medal, HeartPulse, Person } from '@gravity-ui/icons';
 
    Cada programa tiene:
    - slug / title / subtitle / excerpt / description / icon / image
+   - featureImage: grafica destacada de la pagina /programas/:slug (hero).
+      Va en public/images/programs/<slug>-about.jpg y es distinta de `image`
+      para no repetir la foto del hero en la seccion "El programa".
+   - tagline: linea corta bajo el titulo en la pagina del programa.
    - resources: enlaces reales del programa (carpetas de Drive, galeria,
-     reglamentos). Usan `url` (externo, se abre en pestana nueva) o `to`
-     (ruta interna de este sitio).
+      reglamentos). Usan `url` (externo, se abre en pestana nueva) o `to`
+      (ruta interna de este sitio).
    - editions: historial de ediciones. **ACTUALMENTE VACIO**: todavia no hay
      anos confirmados, asi que la pagina muestra un panel reservado.
 
@@ -53,6 +57,8 @@ export const programs = [
       'El FICCUA es un evento bienal e itinerante de artistas estudiantiles universitarios, promovido por el Consejo Superior Universitario Centroamericano y la Secretaría Adjunta para Asuntos Estudiantiles. El FICCUA busca promover la educación integral, articulación del estudiantado centroamericano y proyección universitaria de la región en un marco de hermandad, diversidad, equidad e inclusión, mediante la expresión de distintas manifestaciones artísticas.',
     icon: MusicNote,
     image: '/images/programs/ficcua.jpg',
+    featureImage: '/images/programs/ficcua-about.jpg',
+    tagline: 'Arte universitario, integración estudiantil y proyección regional',
     resources: [
       { icon: 'Folders', label: 'Actas del FICCUA', desc: 'Congresos pre FICCUA en Google Drive', url: DRIVE.actasFiccua },
       { icon: 'Picture', label: 'Galería SIREVE', desc: 'Fotos de eventos y actividades', to: '/galeria' },
@@ -69,6 +75,8 @@ export const programs = [
       'El Consejo Regional de Vida Estudiantil (CONREVE), órgano del Consejo Superior Universitario Centroamericano (CSUCA), celebra los Juegos Deportivos Universitarios Centroamericanos (JUDUCA) con el objetivo común de contribuir al fortalecimiento de la integración, la solidaridad y la paz entre nuestras universidades de la región.',
     icon: Cup,
     image: '/images/programs/juduca.jpg',
+    featureImage: '/images/programs/juduca-about.png',
+    tagline: 'Deporte universitario, integración estudiantil y proyección regional',
     resources: [
       { icon: 'Folders', label: 'Actas del JUDUCA', desc: 'Congresos pre JUDUCA en Google Drive', url: DRIVE.actasJuduca },
       { icon: 'Picture', label: 'Galería SIREVE', desc: 'Fotos de eventos y actividades', to: '/galeria' },
@@ -85,6 +93,9 @@ export const programs = [
       'El Premio Regional a la Excelencia Académica "Rubén Darío" se establece mediante Acuerdo Noveno de la XIII Sesión Ordinaria del Consejo Regional de Vida Estudiantil, celebrada en la República de Panamá en el mes de mayo del año 2005. Se crea como un reconocimiento para aquellos estudiantes distinguidos académicamente y que sobresalen en el desarrollo del conocimiento científico, tecnológico y humanista de las diversas ramas del saber.',
     icon: Medal,
     image: '/images/programs/excelencia.jpg',
+    featureImage: '/images/programs/excelencia-about.jpg',
+    tagline:
+      'Excelencia académica universitaria, integración estudiantil y proyección regional',
     resources: [
       { icon: 'Folders', label: 'Actas del CONREVE', desc: 'Sesiones del Consejo Regional en Google Drive', url: DRIVE.actasConreve },
       { icon: 'Picture', label: 'Galería SIREVE', desc: 'Fotos de eventos y actividades', to: '/galeria' },
@@ -101,6 +112,8 @@ export const programs = [
       'La Promoción de la Salud es aquella actividad que brinda la oportunidad de promover y concientizar a las personas sobre la prevención y así brindar las herramientas necesarias para un mayor control de la Salud. El cual se ejerce en las universidades a través del Programa de Universidades Promotoras de la Salud y del Sistema Regional de Vida Estudiantil, mediante la Red Centroamericana y Caribeña de Universidades Promotoras de la Salud REDCCUPS.',
     icon: HeartPulse,
     image: '/images/programs/salud.jpg',
+    featureImage: '/images/programs/salud-about.jpg',
+    tagline: 'Salud universitaria, integración estudiantil y proyección regional',
     resources: [
       { icon: 'Folders', label: 'Actas de Promotoras', desc: 'Asambleas de la REDCCUPS en Google Drive', url: DRIVE.actasPromotoras },
       { icon: 'Picture', label: 'Galería SIREVE', desc: 'Fotos de eventos y actividades', to: '/galeria' },
@@ -117,6 +130,8 @@ export const programs = [
       'El voluntariado es el ejercicio libre, organizado y no remunerado de la solidaridad ciudadana en actividades y programas que van en beneficio de la humanidad y su entorno en general. El cual se ejerce en las universidades a través del Programa de Voluntariado del Sistema Regional de Vida Estudiantil, mediante la Red UNIVOCES.',
     icon: Person,
     image: '/images/programs/voluntariado.jpg',
+    featureImage: '/images/programs/voluntariado-about.jpg',
+    tagline: 'Solidaridad universitaria, integración estudiantil y proyección regional',
     resources: [
       { icon: 'Folders', label: 'Actas del CONREVE', desc: 'Sesiones del Consejo Regional en Google Drive', url: DRIVE.actasConreve },
       { icon: 'Picture', label: 'Galería SIREVE', desc: 'Fotos de eventos y actividades', to: '/galeria' },

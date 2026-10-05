@@ -48,30 +48,54 @@ export default function Programa() {
 
   return (
     <div className="page-wrap">
-      <PageHeader title={program.title} subtitle={program.subtitle} icon={program.icon} />
-
       <div className="page-body">
-        {/* Ficha rapida del programa */}
-        <section className="program-meta">
-          {programMeta.map((item) => (
-            <div key={item.label} className="program-meta-item">
-              <Icon data={item.icon} size={20} className="program-meta-icon" />
-              <div>
-                <span className="program-meta-label">{item.label}</span>
-                <span className="program-meta-value">{item.value}</span>
-              </div>
+        <Link to="/#programas" className="program-back program-back--top">
+          <Icon data={ArrowLeft} size={16} />
+          Volver a programas
+        </Link>
+
+        {/* Portada del programa */}
+        <section className="program-hero">
+          <div className="program-hero-copy">
+            <span className="program-section-eyebrow">{program.subtitle}</span>
+            <h1 className="program-hero-title">{program.title}</h1>
+            <span className="program-rule" aria-hidden="true" />
+            <p className="program-hero-tagline">{program.tagline}</p>
+            <span className="program-hero-kind">Programa regional</span>
+
+            {/* Ficha rapida del programa: 3 datos, sin inventar informacion */}
+            <div className="program-meta">
+              {programMeta.map((item) => (
+                <div key={item.label} className="program-meta-item">
+                  <span className="program-meta-icon">
+                    <Icon data={item.icon} size={18} />
+                  </span>
+                  <div className="program-meta-body">
+                    <span className="program-meta-label">{item.label}</span>
+                    <span className="program-meta-value">{item.value}</span>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+
+          <figure className="program-hero-figure">
+            <span className="program-hero-frame" aria-hidden="true" />
+            <img
+              src={program.featureImage}
+              alt={`Gráfica del ${program.title}`}
+              onError={handleImageError}
+            />
+          </figure>
         </section>
 
         {/* Descripcion oficial */}
         <section className="program-about">
           <div className="program-about-copy">
+            <span className="program-section-eyebrow">Sobre el programa</span>
             <h2 className="program-heading">El programa</h2>
             <span className="program-rule" aria-hidden="true" />
-            <Text variant="body-2" className="program-about-text">
-              {program.description}
-            </Text>
+            <p className="program-about-text">{program.description}</p>
           </div>
           <figure className="program-about-figure">
             <img src={program.image} alt={program.title} onError={handleImageError} />
@@ -80,6 +104,7 @@ export default function Programa() {
 
         {/* Historial de ediciones: hoy es un espacio reservado */}
         <section className="program-editions">
+          <span className="program-section-eyebrow">Archivo y documentos</span>
           <h2 className="program-heading">Historial de ediciones</h2>
           <span className="program-rule" aria-hidden="true" />
 
@@ -88,13 +113,15 @@ export default function Programa() {
               <span className="program-editions-empty-icon">
                 <Icon data={program.icon} size={26} />
               </span>
-              <Text variant="header-2" as="h3" className="program-editions-empty-title">
-                Espacio reservado para las ediciones
-              </Text>
-              <Text variant="body-2" color="secondary" className="program-editions-empty-text">
-                Aquí se publicarán la gráfica o mascota, la sede y los documentos de cada
-                edición de {program.title}.
-              </Text>
+              <div className="program-editions-empty-body">
+                <Text variant="header-2" as="h3" className="program-editions-empty-title">
+                  Espacio reservado para las ediciones
+                </Text>
+                <Text variant="body-2" color="secondary" className="program-editions-empty-text">
+                  Aquí se publicarán la gráfica o mascota, la sede y los documentos de cada
+                  edición de {program.title}.
+                </Text>
+              </div>
             </div>
           ) : (
             <div className="program-editions-list">
@@ -182,11 +209,6 @@ export default function Programa() {
             ))}
           </div>
         </section>
-
-        <Link to="/#programas" className="program-back">
-          <Icon data={ArrowLeft} size={16} />
-          Volver a programas
-        </Link>
       </div>
     </div>
   );
