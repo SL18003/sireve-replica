@@ -34,7 +34,7 @@
   /* Formas: el manual prescribe 3-5px, esquinas casi rectas */
   --sireve-radius: 4px;
   --sireve-radius-sm: 3px;
-  --sireve-radius-input: 7px;
+  --sireve-radius-input: 5px;
 
   --sireve-font: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 

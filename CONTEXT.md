@@ -122,8 +122,43 @@ Neutros, solo los tres oficiales:
 - **Montserrat** vía Google Fonts (pesos 100/300/400/600/700), fallback a system stack.
 - Se sobrescriben las variables `--g-font-family-sans` y `--g-text-*-font-family` para Gravity UI.
 - **Títulos Thin/light: `font-weight: 300`** (csuca.org usa weight 100 en sus h1–h6). Texto en 400, títulos de card chica en 600.
-- **Radios:** `--sireve-radius: 4px`, `--sireve-radius-sm: 3px`, `--sireve-radius-input: 7px`. El manual prescribe 3-5px, esquinas casi rectas. **No** usar `999px` (pills) ni radios grandes.
+  - **Único H1 en `700`: el de la landing** (`.landing-hero-title`, decisión documentada del mockup: titular "llamativo"; su comentario está en el CSS). `.program-hero-title` se corrigió de 700 → **300** en la auditoría de 2026-10 para igualar `.page-hero-title` (Actas, Galería, Reglamentos, Contacto). Los otros dos `700` son `.landing-hero-brand-text` (lockup CSUCA) y `.landing-hero-stat-value` (cifras), no títulos.
+- **Textos chicos: mínimo 11px**, con **una sola excepción**: `.landing-hero-stat-label` a **10px** solo en `@media (max-width: 480px)` — a 11px las etiquetas 1 y 2 se solapan 4px a 320px (medido con probe; el comentario en el CSS lo explica). No subirla sin re-medir.
+- **Radios:** `--sireve-radius: 4px`, `--sireve-radius-sm: 3px`, `--sireve-radius-input: 5px` (antes 7px; hoy el token no se usa en ninguna regla). El manual prescribe 3-5px, esquinas casi rectas. **No** usar `999px` (pills) ni radios grandes; **no** hay radios de 8/10px en el proyecto (los que había en `Sidebar.css` y en la imagen del lightbox se corrigieron).
 - Sin formas curvas decorativas: se eliminaron blobs, ondas y gradientes radiales del hero.
+
+### Lenguaje fotográfico (manual, obligatorio)
+
+El manual de identidad define **qué NO se le puede hacer a una foto** y **cómo sí se pone texto encima**:
+
+- **Prohibido:** publicar fotos sin edición de color; usar **filtros** (sepia, negativo, infrarrojos y **degradados**); deformar la foto; fotos casuales de objetos/personas; desenfocar para inventar profundidad de campo. → **Nunca `linear-gradient` ni `filter` decorativos sobre fotos.** (Se eliminaron los 3 que había, ver "Decisiones descartadas".)
+- **Sí permitido y regulado:** aplicar sobre la imagen una **tonalidad plana** y respetar la pareja de contraste: **fondo azul → texto/formas blancas** · **fondo blanco y negro → texto/formas azules**. El degradado está prohibido; el tinte plano, no.
+
+Estado actual:
+
+- **Único tratamiento del sitio: las fotos de las cards de Programas**, con duotono azul plano — `.program-card-image img { filter: grayscale(1) }` + `::after` con `background: var(--sireve-primary)` y `mix-blend-mode: multiply`, dentro de `.program-card-image` con `isolation: isolate` (para que el blend solo vea la foto). El techo del tinte es `#1366af`, así que el `<h3>` blanco baja como mucho a **5.9:1**. Orden de capas: `img` → tint (`z-index:1`) → overlay con badge+título (`z-index:2`) → `.program-card-accent-bar` (`z-index:3`).
+- **Todas las demás fotos van crudas** (hero, mosaico SIREVE, Acceso rápido, carrusel, galería, páginas de programa): sin capa, sin tinte, sin filtro. Sin texto encima no se exige ninguna tonalidad.
+- **Los dots del carrusel salieron de la foto**: `.carousel-dots` es un hermano de `.carousel-container` (que tiene `overflow:hidden` y `height` fijo), en flujo con `margin-top:16px`; inactivo `var(--sireve-grey)` `#878787` (3.5:1 sobre blanco), activo `#1366af` (5.9:1), `gap:24px` para que las áreas táctiles de 28px no se solapen.
+- **Restricción propia:** el usuario ya reportó "demasiado azul toda la página", así que **no** se tiñen de azul fotos que no llevan texto.
+
+### Auditoría de manual (2026-10) — todo `src/` contra el manual
+
+Recorrido completo de CSS/JSX: colores, tipografía, formas, tratamiento fotográfico y contraste. **Conclusión: cumple**, con las desviaciones siguientes **corregidas** (verificado con lint 7 = base, build y probe de iframe):
+
+| Antes | Ahora |
+|---|---|
+| Dots de los álbumes de `/galeria/:año` **blancos sobre la foto** (el activo desaparecía en fotos claras) | **Fuera de la foto**: el bloque pasó de `.gallery-album-carousel` a `.gallery-album-body` en `GalleryAlbum.jsx`; inactivo `var(--sireve-grey)` `#878787` (3.5:1), activo `var(--sireve-primary)` `#1366af` (5.9:1), `margin: 0 0 12px` |
+| `.gallery-album-counter` (chip sobre la foto) en `rgba(19,102,175,0.75)` → texto blanco a ~4:1 sobre foto clara | `var(--sireve-primary)` **opaco** (chip plano, 5.9:1) |
+| Fondo del lightbox `rgba(0, 12, 28, 0.92)` (azul inventado) | `rgba(0, 0, 0, 0.92)` (Black del manual) |
+| Imagen del lightbox con `border-radius: 8px` | `var(--sireve-radius)` (4px) |
+| `.program-hero-title` en `700` | **`300`**, igual que `.page-hero-title` del resto de páginas internas |
+| `.header-nav-anchor` (enlace SIREVE de la nav) en `700` | `600`, igual que el resto del nav |
+| `.program-card-label` a `10px` | `11px` (piso del proyecto) |
+| `Sidebar.css` (código muerto: el layout activo usa Header): `font-weight: 800`, radios 10px/8px, activo en indigo `rgba(79,70,229,…)` (fuera de paleta) | `600`, tokens de radio, `rgba(19,102,175,…)` |
+
+**Sin cambios (a propósito):** los círculos `border-radius: 50%` de flechas/dots/marcadores (8 usos: carrusel, álbum, lightbox, timeline, badge) son botones de ícono, no tarjetas — el manual regula esquinas de superficies, no estos controles. El blanco de la nav sobre `#429ad0` (3.1:1) sigue siendo decisión del usuario ya documentada.
+
+**Cómo se midió:** probe-iframe servido desde `public/` (temporal, **borrado al terminar**) con `--virtual-time-budget=9000` + `--dump-dom` — **sin `--virtual-time-budget`, `--dump-dom` devuelve el DOM antes de que corra el script**. Capturas con `--headless` (**no** `--headless=new`, que falla con "Multiple targets are not supported") y verificación de píxeles con `System.Drawing`. Comprobado: `overflowX=0` en landing 320/375/480/1440 y `/galeria/2017` 375/1440; dots a 16px bajo la foto y centrados sobre blanco; chip contador `#1366af` exacto; `.program-hero-title` `font-weight: 300`.
 
 ### Tema oscuro
 
@@ -195,8 +230,8 @@ Alcance acordado con el usuario (2026-10): **celular + tablet + táctil, solo CS
 - **Cifras en fila plana sin tarjetas ni iconos:** `.landing-hero-stats` es `display:flex; width:100%` de 3 `.landing-hero-stat` con `flex:1`, separadas por `border-left: 1px solid var(--sireve-border)` (la primera sin borde ni padding izquierdo). Cada una: barra `.landing-hero-stat-bar` (32×3px en `--sireve-primary`) → cifra `.landing-hero-stat-value` (`clamp(34px,3.4vw,46px)`, 700, negro) → etiqueta `.landing-hero-stat-label` (11px, versalitas, `--sireve-muted`, `max-width:15ch`). **Los iconos Gravity se eliminaron** (`GraduationCap`, `BookOpen`, `Globe` ya no se importan en `LandingPage.jsx`) porque el usuario pidió cifras "lo más llamativo visualmente" y pegadas al mockup. Historial: fue panel con divisores → 3 cajas con iconos → **fila plana actual**.
 - **Espaciado compacto entre secciones:** hueco hero → "¿Qué es SIREVE?" = **100px** (`.landing-hero` `padding: 56px 24px 52px` + `.sireve-section` `padding-top: 48px`). **Ojo, esto es un drift:** en el diseño anterior era **88px** (`padding-bottom: 40px`) tras la corrección del usuario ("demasiado espacio entre los botones y Qué es SIREVE", cuando era 152px + `min-height`); el hero a dos columnas metió 52px y ahora son 100px. Si el usuario lo reporta otra vez, basta bajar ese `padding-bottom` a `40px`. `.sireve-section` = `48px 24px 40px`, `.quick-section` = `40px 24px 72px` → **80px** entre SIREVE y Acceso rápido; móvil 72px. Filete de títulos `.section-title::after` en `#1366af` (un solo azul de acento, igual que `.sireve-rule`), en CAROLINA sobre dark.
 - **SIREVE es el programa marco**: sección propia `id="sireve"` (fondo blanco, título/regla/CTA en `#1366af`, mosaico de 5 fotos de programas). Va antes de Acceso rápido.
-- Acceso rápido: Actas, Galería, Reglamentos.
-- Carrusel “Vida estudiantil”: **3 fotos reales** del media de csuca.org (tabla abajo), recortadas a **1400×600**, con alts descriptivos en español.
+- Acceso rápido: Actas, Galería, Reglamentos. Las 3 fotos van **crudas** (se quitó el `.quick-card-image-overlay` con degradado azul).
+- Carrusel “Vida estudiantil”: **3 fotos reales** del media de csuca.org (tabla abajo), recortadas a **1400×600**, con alts descriptivos en español. **Sin overlay**: se eliminó `.carousel-overlay` (degradado azul) y los **dots bajaron fuera del recuadro**, sobre blanco — ver "Lenguaje fotográfico (manual)".
 - Programas: **5 cards** (FICCUA, JUDUCA, Excelencia Académica/Premio Rubén Darío, Promotoras de Salud, Voluntariado) — SIREVE ya **no** es una card. Cada card muestra solo el `excerpt` y un botón **"Ver programa →"** (`.program-card-cta`, relleno `#1366af`) que **navega a `/programas/<slug>`**. Se eliminó el expand "Leer más/Leer menos" (el texto completo vive en la página del programa). Las cards se pintan desde `src/data/programs.js` (mismo origen que las páginas).
 - Sin acento por color: todas las cards comparten la misma rampa azul.
 - Fotos de programas son **reales del media de csuca.org** (ver abajo); `onError` → placeholder.
@@ -284,7 +319,7 @@ Fuente: https://sireve.csuca.org/index.php/actas
 ### Galería
 
 - Datos reales de 2017 y 2018 scrapeados del oficial (Widgetkit slideshows) en `galleryData.json`.
-- Cada álbum tiene **varias imágenes** (carrusel en la card: flechas, dots, contador).
+- Cada álbum tiene **varias imágenes** (carrusel en la card: flechas, dots, contador). Los **dots van debajo de la foto**, dentro de `.gallery-album-body` (auditoría 2026-10, ver "Lenguaje fotográfico"); las flechas siguen encima (chip blanco sólido con ícono `#1366af`) y el contador es un chip opaco `#1366af`. Los álbumes de una sola imagen no pintan dots.
 - Clic en la miniatura abre **lightbox** a pantalla completa.
 - Cursor sobre la miniatura: **`pointer` (manita)**, no `zoom-in` ni icono de lupa con “+”.
 - 2019: el oficial no tiene galería publicada; hay fallback local en `galleryData.js`. **Sin aviso de "contenido de demostración"** (el usuario lo quitó por petición el 2026-10: `demoYearNotes` y las reglas `.galeria-demo-note` / `.galeria-year-note` se eliminaron). Las fotos de 2019 son locales de relleno, no del sitio oficial: no inventar albums reales para ese año.
@@ -319,7 +354,7 @@ Referencia: https://sireve.csuca.org/index.php/2017
 1. **Contenido alineado al oficial** cuando existan enlaces reales (Drive de actas/reglamentos, galerías).
 2. **Secciones no vacías:** si falta contenido, usar placeholders genéricos funcionales (imágenes locales, listas demo solo donde no haya URL real).
 3. **No modales innecesarios** en Reglamentos (abrir Drive directo). Actas tampoco usa modal.
-4. **UI rica pero no recargada:** cards de programas/actas con overlays y hover; hero con stats y animaciones, pero el logo del hero debe seguir siendo el oficial legible (sobre placa blanca), no un rediseño grande. El hero **sí lleva imagen** hoy (foto lateral en panel derecho, decisión revertida 2026-10 con mockup); sigue prohibido el **fondo con overlay** y la **franja a sangre**. El título es `<h1>` de texto, no el logo ampliado.
+4. **UI rica pero no recargada:** cards de programas/actas con **overlay plano conforme al manual** y hover; hero con stats y animaciones, pero el logo del hero debe seguir siendo el oficial legible (sobre placa blanca), no un rediseño grande. El hero **sí lleva imagen** hoy (foto lateral en panel derecho, decisión revertida 2026-10 con mockup); sigue prohibido el **fondo con overlay** y la **franja a sangre**. El título es `<h1>` de texto, no el logo ampliado. **Ojo:** "overlay" en las cards = **tinte azul plano**, nunca un `linear-gradient` (prohibido por el manual); ver "Lenguaje fotográfico (manual)".
 5. **Contraste** es prioritario; el sitio es **solo tema claro** (el modo oscuro fue eliminado por petición del usuario, 2026-10). El usuario reportó gris “raro” en cards oscuras y botones ilegibles.
 6. **Programas con página propia** en `/programas/:slug` (dropdown del header y footer enlazan esas páginas); el menú mantiene **SIREVE** como ancla propia (con separador) y **“Programas”** con los 5 dependientes. Enlace a **csuca.org** en header ("CSUCA ↗") y footer ("Sitio oficial CSUCA").
 7. **No Tailwind** salvo petición explícita.
@@ -358,6 +393,7 @@ Evitar hotlinks frágiles a Unsplash como única fuente (ya fallaron, p. ej. JUD
 - Logo del hero como bloque tipográfico grande separado del logo oficial.
 - Invertir **todo** el PNG del logo a blanco (desaparece el emblema).
 - Blobs, ondas y gradientes radiales en el hero (el manual usa formas planas, esquinas 3-5px).
+- **Degradados azules sobre fotos** — `.carousel-overlay`, `.quick-card-image-overlay` y `.program-card-image-overlay` llevaban `linear-gradient(rgba(19,102,175,…))`. Eliminados (2026-10) porque el manual prohíbe expresamente "usar filtros… degradados" en las fotografías. Lo único que sobrevive es el **tinte azul plano** de las cards de Programas, que sí regula el manual. No reintroducir ningún `linear-gradient` sobre una foto.
 - **Superficies azules de contenido** (hero `#1366af`, sección SIREVE `#1366af`, `page-hero` `#1366af`, foto del hero al 12% como fondo). El usuario reportó "se ve demasiado azul toda la página". Ahora el azul es solo cromo (barras) + color de título, ícono y botón, como en csuca.org. Ni como fondo con overlay ni en franja: la foto del hero va **en el panel lateral derecho**, nunca como fondo.
 - Icono de lupa/`zoom-in` en miniaturas de galería.
 - Un solo “Leer más” abierto a la vez en programas (ahora son independientes).
@@ -369,6 +405,7 @@ Evitar hotlinks frágiles a Unsplash como única fuente (ya fallaron, p. ej. JUD
 - **Botón de cambio de tema** y estado de tema en `App.jsx`: eliminados (2026-10); el sitio es solo claro.
 - **Años de ejemplo en el historial de ediciones** (2026→2021): eliminados; el usuario no tiene esa información. Se muestra un panel "espacio reservado" hasta que se llene `editions` en `src/data/programs.js`.
 - **Datos de contacto inventados** (`info@sireve.csuca.org`, `+503 2222-2222`, "San Salvador"): eliminados; se usan los datos reales de la Secretaría General del CSUCA.
+- **Desviaciones de manual corregidas en la auditoría de 2026-10** (ver "Auditoría de manual"): radios de 7/8/10px, `font-weight: 700` en `.program-hero-title` y en `.header-nav-anchor`, `800` y el indigo `rgba(79,70,229,…)` de `Sidebar.css`, chips translúcidos encima de foto y **dots de los álbumes de galería sobre la foto**. No reintroducir ninguno de esos valores.
 
 ---
 

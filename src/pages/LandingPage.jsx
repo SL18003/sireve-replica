@@ -185,7 +185,6 @@ export default function LandingPage() {
               <article key={link.title} className="quick-card" onClick={() => navigate(link.path)} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(link.path)}>
                 <div className="quick-card-image">
                   <img src={link.image} alt={link.title} onError={handleImageError} />
-                  <div className="quick-card-image-overlay" />
                 </div>
                 <div className="quick-card-body">
                   <div className="quick-card-icon">
@@ -215,24 +214,23 @@ export default function LandingPage() {
               {carouselImages.map((img, i) => (
                 <div key={img.alt} className={`carousel-slide${i === currentImgIdx ? ' active' : ''}`}>
                   <img src={img.url} alt={img.alt} onError={handleImageError} />
-                  <div className="carousel-overlay" />
                 </div>
               ))}
             </div>
             <button type="button" className="carousel-btn carousel-btn-right" onClick={() => setCurrentImgIdx((p) => (p + 1) % carouselImages.length)} aria-label="Siguiente">
               <Icon data={ChevronRight} size={22} />
             </button>
-            <div className="carousel-dots">
-              {carouselImages.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  className={`carousel-dot${i === currentImgIdx ? ' active' : ''}`}
-                  onClick={() => setCurrentImgIdx(i)}
-                  aria-label={`Slide ${i + 1}`}
-                />
-              ))}
-            </div>
+          </div>
+          <div className="carousel-dots">
+            {carouselImages.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                className={`carousel-dot${i === currentImgIdx ? ' active' : ''}`}
+                onClick={() => setCurrentImgIdx(i)}
+                aria-label={`Slide ${i + 1}`}
+              />
+            ))}
           </div>
         </section>
       </AnimatedSection>

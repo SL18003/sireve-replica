@@ -59,22 +59,24 @@ export default function GalleryAlbum({ title, images }) {
                 <Icon data={ChevronRight} size={20} />
               </button>
               <span className="gallery-album-counter">{currentIndex + 1} / {total}</span>
-              <div className="gallery-album-dots">
-                {images.map((_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    className={`gallery-album-dot${i === currentIndex ? ' active' : ''}`}
-                    onClick={() => setCurrentIndex(i)}
-                    aria-label={`Imagen ${i + 1}`}
-                  />
-                ))}
-              </div>
             </>
           )}
         </div>
 
         <div className="gallery-album-body">
+          {total > 1 && (
+            <div className="gallery-album-dots">
+              {images.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={`gallery-album-dot${i === currentIndex ? ' active' : ''}`}
+                  onClick={() => setCurrentIndex(i)}
+                  aria-label={`Imagen ${i + 1}`}
+                />
+              ))}
+            </div>
+          )}
           <Text variant="body-2" className="gallery-album-title">{title}</Text>
           {total > 1 && (
             <Text variant="caption-2" color="secondary" className="gallery-album-meta">

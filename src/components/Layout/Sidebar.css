@@ -33,7 +33,7 @@
 
 .sidebar-logo {
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--sireve-primary);
   letter-spacing: -0.03em;
   text-decoration: none;
@@ -64,7 +64,7 @@
   justify-content: flex-start;
   gap: 12px;
   padding: 10px 14px;
-  border-radius: 10px;
+  border-radius: var(--sireve-radius);
   color: var(--g-color-text-secondary);
   text-decoration: none;
   background: transparent;
@@ -87,13 +87,13 @@
 }
 
 .nav-link--active {
-  background-color: rgba(79, 70, 229, 0.1);
+  background-color: rgba(19, 102, 175, 0.1);
   color: var(--sireve-primary);
   font-weight: 600;
 }
 
 .g-root_theme_dark .nav-link--active {
-  background-color: rgba(79, 70, 229, 0.15);
+  background-color: rgba(19, 102, 175, 0.15);
 }
 
 .nav-link-left {
@@ -121,7 +121,7 @@
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: var(--sireve-radius-sm);
   color: var(--g-color-text-secondary);
   text-decoration: none;
   transition: all 0.2s;
@@ -150,7 +150,7 @@
   justify-content: flex-start !important;
   gap: 12px !important;
   color: var(--g-color-text-secondary) !important;
-  border-radius: 10px !important;
+  border-radius: var(--sireve-radius) !important;
 }
 
 .sidebar.collapsed .theme-toggle-btn {

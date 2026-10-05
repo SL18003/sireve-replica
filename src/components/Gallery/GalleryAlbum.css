@@ -79,20 +79,23 @@
   z-index: 2;
   padding: 6px 10px;
   border-radius: var(--sireve-radius-sm);
-  background: rgba(19, 102, 175, 0.75);
+  /* Chip plano encima de la foto: fondo #1366af opaco con texto blanco (5.9:1).
+     Con el 75% de translucidez el fondo se aclaraba con fotos claras y el texto
+     blanco caia por debajo de 4.5:1. */
+  background: var(--sireve-primary);
   color: #fff;
   font-size: 12px;
   font-weight: 600;
 }
 
+/* Los dots salieron de la foto (misma decision que el carrusel de la landing):
+   sobre el blanco del cuerpo el inactivo #878787 da 3.5:1 y el activo #1366af
+   5.9:1; sobre una foto clara el punto activo blanco desaparecia. */
 .gallery-album-dots {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
+  justify-content: center;
   gap: 5px;
-  z-index: 2;
+  margin: 0 0 12px;
 }
 
 .gallery-album-dot {
@@ -102,7 +105,7 @@
   border-radius: 50%;
   border: none;
   padding: 0;
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--sireve-grey);
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -116,7 +119,7 @@
 }
 
 .gallery-album-dot.active {
-  background: #fff;
+  background: var(--sireve-primary);
   transform: scale(1.25);
 }
 
@@ -140,7 +143,7 @@
   position: fixed;
   inset: 0;
   z-index: 2000;
-  background: rgba(0, 12, 28, 0.92);
+  background: rgba(0, 0, 0, 0.92);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -169,7 +172,7 @@
   max-width: 100%;
   max-height: calc(90vh - 80px);
   object-fit: contain;
-  border-radius: 8px;
+  border-radius: var(--sireve-radius);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 }
 

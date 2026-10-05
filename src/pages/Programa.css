@@ -27,9 +27,12 @@
   min-width: 0;
 }
 
+/* Mismo peso light que .page-hero-title (Actas, Galeria, Reglamentos, Contacto)
+   y que exige el manual para los h1-h6. El unico H1 en 700 del sitio es el de la
+   landing, decision documentada del mockup. */
 .program-hero-title {
   font-size: clamp(30px, 3.2vw, 40px);
-  font-weight: 700;
+  font-weight: 300;
   line-height: 1.12;
   color: var(--sireve-ink);
   margin: 0;
