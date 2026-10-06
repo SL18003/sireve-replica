@@ -34,15 +34,18 @@ Estilos: tokens en `src/index.css` + CSS por página. Gravity UI aporta controle
 - Trabajo reciente en rama tipo `David-main` (puede variar).
 - Otras ramas del repo (`main`, `richard`, etc.) pueden tener diseños distintos (p. ej. teal/slate). **No copiar paletas de otras ramas** sin pedirlo.
 - Deploy histórico: `richard` → GitHub Pages; `main` / Netlify con `npm run build` y publish `dist`.
-- **Producción (2026-10): `https://sireve.csuca.org/`** sirve la réplica como **tema estático de WordPress** (`sireve-theme`), generado por `node wordpress/build.mjs` desde `src/` + `wordpress/build.mjs`. El usuario lo sube por wp-admin; orden y estado en `wordpress/LEEME.md` §4/§7. **`functions.php` lleva 2 parches que hay que conservar** (slugs numéricos `2017/2018/2019` + rewrite de `/galeria/<año>/`); ya viven en el template de `build.mjs`.
-- **Pendiente de producción:** las **205 fotos de las galerías 2017/2018** apuntan a `sireve.csuca.org/cache/widgetkit/...` (muertas tras el cambio de WordPress) y Wayback casi no las tiene (31, de otras carpetas); se muestran con `placeholder.jpg` (fallback ya aplicado en vivo). Recuperación real de las fotos = pedir originales/backup al usuario.
-- **SEO (2026-10-06):** todo por wp-admin, sin cambios locales — *Ajustes → Generales* (título `SIREVE` + tagline) y **`header.php` reescrito a mano** en Theme File Editor con descriptions/breadcrumbs por ruta, Open Graph, Twitter card y JSON-LD (Organization/WebSite/BreadcrumbList). **Ese `header.php` NO vive en `build.mjs`**: si se recompila y re-sube el tema, se pisa y hay que volver a pegarlo (ver `wordpress/LEEME.md` §7). Estado y verificación HTTP en `wordpress/LEEME.md` §7.
+- **Producción (2026-10): `https://sireve.csuca.org/`** sirve la réplica como **tema estático de WordPress** (`sireve-theme`), generado por `node wordpress/build.mjs` desde `src/` + `wordpress/build.mjs`. El usuario lo sube por wp-admin; orden y estado en `wordpress/LEEME.md` §4/§7. **`functions.php` lleva 3 parches que hay que conservar** (slugs numéricos `2017/2018/2019` + rewrite de `/galeria/<año>/` + **intercept `template_redirect` prio 0** que pinta `/galeria/2020|2023|2024|2025/` sin página en la BD, con 200, título y canonical propios); los tres ya viven en el template de `build.mjs`.
+- **⚠️ Estado del servidor (2026-10): `sireve-theme` BORRADO del servidor** (el usuario hizo los pasos de borrar pero no subió el ZIP nuevo): `sireve.csuca.org` sirve Twenty Twenty-Five y todo da 404/301. `wordpress/sireve-theme.zip` está regenerado en local (17 vistas, 119 imágenes, ~13.4 MB, con las galerías del Premio). **Subir = 5 pasos de `LEEME.md` §8.**
+- **Pendiente de producción:** las **205 fotos de las galerías 2017/2018** apuntan a `sireve.csuca.org/cache/widgetkit/...` (muertas tras el cambio de WordPress) y Wayback casi no las tiene (31, de otras carpetas); se muestran con `placeholder.jpg` (fallback ya aplicado en vivo). Recuperación real de las fotos = pedir originales/backup al usuario. **Las galerías del Premio (2020/2023/2024/2025) no dependen de esto**: sus 92 fotos son locales y viajan en el ZIP.
+- **SEO (2026-10-06):** *Ajustes → Generales* (título `SIREVE` + tagline) y **`header.php` con SEO** (descriptions/breadcrumbs por ruta, Open Graph, Twitter card y JSON-LD Organization/WebSite/BreadcrumbList). **Persistido (2026-10-05): vive en `wordpress/header-src.php` y `build.mjs` lo copia al tema** — un recompilar ya no lo pisa; si se edita en Theme File Editor hay que backportearlo ahí. **En esta versión se añadieron las 4 rutas del Premio → 18 rutas SEO.** Verificación: `node wordpress/sync-check.mjs` (local vs servidor: SHA-1 de los 139 archivos públicos + SEO en las 18 rutas). Rutina completa en `wordpress/LEEME.md` §8.
 
 Comandos habituales:
 
 ```bash
 npm run dev
 npm run build
+node wordpress/build.mjs     # regenera el tema estático de WordPress + sireve-theme.zip
+node wordpress/sync-check.mjs # ¿local y servidor siguen iguales?
 ```
 
 ---
@@ -55,8 +58,8 @@ src/
   index.css               # Tokens globales, tema claro/oscuro, page-hero, .btn-ver
   data/
     programs.js            # Data central de los 5 programas + ediciones (historial)
-    galleryData.json      # Álbumes reales 2017/2018 (URLs del sitio oficial)
-    galleryData.js        # Export + fallback 2019
+    galleryData.json      # Álbumes 2017/2018 (URLs del sitio oficial) + Premio 2020/2023/2024/2025 (fotos locales)
+    galleryData.js        # Export + fallback 2019 + claves nuevas del Premio
     presidents.js         # Presidentes del CONREVE: lista `presidents` + helpers de la línea de tiempo (vacía hoy)
   utils/imageFallback.js  # onError → /images/placeholder.jpg
   components/
@@ -84,7 +87,7 @@ public/images/            # Logos y assets locales (no depender solo de Unsplash
 | `/` | Landing |
 | `/actas` | Actas SIREVE |
 | `/galeria` | Índice: línea de tiempo de presidentes + años |
-| `/galeria/:year` | Galería por año (`2017`, `2018`, `2019`) |
+| `/galeria/:year` | Galería por año (`2017`, `2018`, `2019` + `2020`, `2023`, `2024`, `2025` del Premio Rubén Darío), **agrupada en secciones por programa con ancla** (`/galeria/<año>/#<slug>`) |
 | `/reglamentos` | Reglamento general |
 | `/contacto` | Formulario + info |
 | `/programas/:slug` | Página de programa (`ficcua`, `juduca`, `premio-ruben-dario`, `promotoras-salud`, `voluntariado`; slug inválido → aviso con enlace al inicio) |
@@ -162,6 +165,11 @@ Recorrido completo de CSS/JSX: colores, tipografía, formas, tratamiento fotogr�
 **Sin cambios (a propósito):** los círculos `border-radius: 50%` de flechas/dots/marcadores (8 usos: carrusel, álbum, lightbox, timeline, badge) son botones de ícono, no tarjetas — el manual regula esquinas de superficies, no estos controles. El blanco de la nav sobre `#429ad0` (3.1:1) sigue siendo decisión del usuario ya documentada.
 
 **Cómo se midió:** probe-iframe servido desde `public/` (temporal, **borrado al terminar**) con `--virtual-time-budget=9000` + `--dump-dom` — **sin `--virtual-time-budget`, `--dump-dom` devuelve el DOM antes de que corra el script**. Capturas con `--headless` (**no** `--headless=new`, que falla con "Multiple targets are not supported") y verificación de píxeles con `System.Drawing`. Comprobado: `overflowX=0` en landing 320/375/480/1440 y `/galeria/2017` 375/1440; dots a 16px bajo la foto y centrados sobre blanco; chip contador `#1366af` exacto; `.program-hero-title` `font-weight: 300`.
+
+**Paridad React/estático — dos bugs hallados con la sonda de anclas (2026-10):**
+
+- **El body estático no reseteaba el margen** (8px por defecto del navegador; React lo pone a 0 en `index.css`): toda la página iba **8px más abajo** que React y `box-diff` no lo ve porque **normaliza el margin a mano** antes de medir (`d.body.style.margin='0'` en su probe). Fix: `margin: 0` dentro de la regla defensiva **`body:has(.sireve)`** (la única que toca body en `sireve.css`, ya existente — no rompe la política de "no tocar html/body" porque sigue siendo solo en páginas SIREVE).
+- **El link "CSUCA ↗" del panel móvil** conservaba el `margin-left: 4px` de escritorio: con `width:100%` dentro del panel empujaba 4px más allá del padding (`panel.scrollWidth` = ancho+4) y `interact` fallaba en `mobile.panelSinDesborde`. Existía en **los dos lados** (antes el estático lo tapaba porque su margen de body le daba 16px de aire). Fix: `.header-link--external { margin-left: 0 }` en los bloques móviles de `Header.css` y `sireve.css` (los dos bloques `@media (max-width: 960px)`, el de Header y el de Sidebar).
 
 ### Tema oscuro
 
@@ -252,9 +260,11 @@ Alcance acordado con el usuario (2026-10): **celular + tablet + táctil, solo CS
 - **Imágenes sin recorte:** `.program-hero-figure img` y `.program-about-figure img` usan `width: auto / 100%` con `height: auto` (proporción natural + tope de 400px de alto en el héroe), **nunca** `aspect-ratio`/`object-fit: cover` en estas dos. El héroe usa `featureImage` (`<slug>-about.*`, gráfica propia del programa) y "El programa" usa `image` (la foto que también se ve en la landing y en las mini-cards); por eso los dos campos **deben ser distintos** — en `promotoras-salud` ambos eran el póster del V Encuentro y se duplicaban en la misma página.
 - **Taglines** (`tagline` en `programs.js`, una por programa, patrón "<área> universitaria, integración estudiantil y proyección regional"): FICCUA *Arte* · JUDUCA *Deporte* · premio-ruben-dario *Excelencia académica* · promotoras-salud *Salud* · voluntariado *Solidaridad*. El texto **"Programa regional"** es constante en las 5 y vive en el JSX, no en los datos.
 - **Sin sección "Enlaces del programa"** (el usuario la quitó, 2026-10): no se muestran las cards de Drive/Galería/Reglamento dentro de las páginas de programa. El campo `resources` **se conserva en `src/data/programs.js`** (junto con la constante `DRIVE`) como datos disponibles, pero **no se renderiza**; las mismas URLs siguen accesibles desde `/actas` y el footer. Si se reimplanta la sección: `.program-links`, `.program-links-grid`, `.program-link-*` (esas reglas se borraron de `Programa.css`) y `resourceIcons = { Folders, Picture, Book }`.
-- **Historial:** `editions: []` en los 5 programas — **no hay años confirmados**, así que la página muestra **un solo panel punteado** (`.program-editions-empty`): ícono + "Espacio reservado para las ediciones" + "Aquí se publicarán la gráfica o mascota, la sede y los documentos de cada edición". Nunca escribir años de ejemplo.
+- **Historial:** `editions: []` en 4 de los 5 programas — **no hay años confirmados**, así que la página muestra **un solo panel punteado** (`.program-editions-empty`): ícono + "Espacio reservado para las ediciones" + "Aquí se publicarán la gráfica o mascota, la sede y los documentos de cada edición". Nunca escribir años de ejemplo.
+  - **Excepción (2026-10-05): `premio-ruben-dario` sí tiene ediciones** (fotos que aportó el usuario, de más reciente a más antigua): **2025** (XX, foto grupal de la ceremonia), **2024** (XIX, foto grupal UNACIFOR), **2023** (XVIII, póster oficial "Costa Rica 2023") y **2020** (XV, póster oficial del 22 de octubre). Archivos en `public/images/programs/editions/premio-ruben-dario-<año>.jpg`. **Sedes y documentos NO se inventaron**: cada fila muestra el texto "Documentos y enlaces de esta edición — espacio reservado" hasta que el usuario aporte `place`/`links` — **salvo que ahora lleva el chip "Ver fotos de esta edición →"** (2026-10): si el año tiene álbumes **de este programa** (condición `galleryByYear[String(year)]?.some(a => a.program === program.slug)`), la **foto de la ficha y el chip** enlazan a `/galeria/<año>/#<slug>` (la página del año agrupa por secciones; mismo espejo en `Programa.jsx` y en `programa()` de `build.mjs`; si el programa no tiene fotos ese año, se queda la ficha de div y el placeholder). Fuente de las fotos: carpeta `C:\Users\INTEL\Desktop\Fotos sireve-rubenDario\Fotos sireve\` (2020/2023/2024/2025, 92 fotos de WhatsApp).
+  - **Rediseño del historial (2026-10, petición del usuario: "simple y aburrido" + "la miniatura deja espacio en blanco"):** ahora es un **grid 2×2** (1 columna ≤768px) de tarjetas con **portada a sangre** (`aspect-ratio: 16/9` + `object-fit: cover`, `object-position: center 30%`) — se eliminó la caja fija 140×110 con `contain` que dejaba el hueco blanco —, tarjeta blanca con borde `rgba(19,102,175,.22)` y sombra tenue (empareja las fichas `.program-meta`), hover con elevación `translateY(-3px)` + zoom `scale(1.04)` de la foto (misma receta que `.galeria-year-card`), y CTA **relleno** `.program-edition-cta` (`#1366af`, hover STEEL `--sireve-primary-mid`, ≥42px) alineado al pie con `margin-top:auto`. El chip outline `.program-edition-link` se conserva para enlaces externos futuros. Estilos espejo en `wordpress/sireve.css` (css-diff 0/0); reglas `.g-root_theme_dark` inertes actualizadas en `Programa.css`.
 - **Cuando el usuario llene las ediciones**, cada fila = **slot de logo/mascota/flayer a la izquierda** (140×110, `border: 1px dashed`, ícono + rótulo del año; con `logo` cargado → imagen `object-fit: contain` y borde sólido) + derecha: título de edición (`title` o `año` automático), sede (`place`) y zona de documentos (`links`: cada chip es un `<a>`/`Link` que abre **cualquier URL** — Drive, PDF, `/galeria/2019` o sitio externo; vacía → nota "espacio reservado"). `year` es opcional.
-- **Para rellenar más adelante (el usuario no tiene la info todavía):** todo se edita en `src/data/programs.js` — `logo` (imagen subida a `public/images/programs/editions/<slug>-<año>.png`), `year`, `place`, `links`. El archivo tiene comentarios con un ejemplo completo. **No tocar componentes para agregar contenido.**
+- **Para rellenar más adelante (el usuario no tiene la info todavía):** todo se edita en `src/data/programs.js` — `logo` (imagen subida a `public/images/programs/editions/<slug>-<año>.jpg`), `year`, `place`, `links`. El archivo tiene comentarios con un ejemplo completo. **No tocar componentes para agregar contenido.** Ojo: en `build.mjs` el `logo` se pasa por `media()` solo si empieza por `/images/`, para que la imagen se copie al tema y reciba URL absoluta.
 - Dark mode: reglas `.g-root_theme_dark` **inertes** (el sitio es solo claro; ver "Tema oscuro" arriba).
 
 ### Fotos de programas (origen verificado)
@@ -322,12 +332,14 @@ Fuente: https://sireve.csuca.org/index.php/actas
 ### Galería
 
 - Datos reales de 2017 y 2018 scrapeados del oficial (Widgetkit slideshows) en `galleryData.json`.
+- **Años del Premio Rubén Darío (2026-10): `2020`, `2023`, `2024`, `2025`** —92 fotos locales del usuario en `public/images/gallery/premio/<año>/` con nombres semánticos (`afiche-NN`, `ceremonia-NN`, `listado-oficial`, `galardonado-NN`), clasificadas a mano con contact sheets. Álbumes por año: afiche(s) oficiales, ceremonia/listado (cuando aplica) y "Estudiantes galardonados"; títulos en `add-years.js`/el JSON. Las cubiertas de la card de año están en `GaleriaIndex.jsx` (`covers`) y `build.mjs` (`YEAR_COVERS`). **Sin páginas nuevas en wp-admin**: `/galeria/<año>/` las pinta el intercept de `template_redirect` prio 0 de `functions.php` (ver `LEEME.md` §3.3). Las 4 rutas llevan además su entrada SEO en `header-src.php`.
+- **Secciones por programa con ancla (2026-10, decisión del usuario):** `/galeria/<año>/` ya no es un grid plano: agrupa los álbumes en **secciones con título** — cada álbum con `program` cae en `<section id="<slug>" class="galeria-category">` con `<h2 class="galeria-category-title">` (filete 48×3px `--sireve-primary`), y lo que no tiene `program` va al final en **"Otros eventos" (`id="otros"`)**. Regla de etiquetado: si el título nombra el programa → `program: <slug>` en `galleryData.json` (**17 álbumes** etiquetados: 2017×5, 2018×3, 2019 fallback×3, 2020/2023/2024/2025×todos por `title.includes('Premio')`); ambiguo (p. ej. "Visitas previas… Rúben Darío") → sin etiqueta → Otros eventos. Secciones en el orden de `programs.js`, las vacías no se pintan, y el título **siempre** se ve aunque la sección tenga un solo álbum. Nombre corto del título: campo **`galleryName`** en `programs.js` (premio → "Premio Rubén Darío"). `scroll-margin-top: 96px` en `.galeria-category` (header sticky 72+4) hace que el navegador aterrice la sección justo bajo el header. Espejo estático: `build.mjs galeriaYear()` con el mismo `groupByProgram`; CSS `.galeria-categories` / `.galeria-category*` en `Galeria.css` **y** `sireve.css` (ojo: `.galeria-sections` es el de `GaleriaIndex.jsx` — línea de tiempo —, no colisionar). En React el salto lo hace un efecto de hash **tras el skeleton y con salto instantáneo** (`scrollIntoView({block:'start'})`, sin `'smooth'`: el fragment nativo del lado estático salta instantáneo y el smooth no avanza en headless).
 - Cada álbum tiene **varias imágenes** (carrusel en la card: flechas, dots, contador). Los **dots van debajo de la foto**, dentro de `.gallery-album-body` (auditoría 2026-10, ver "Lenguaje fotográfico"); las flechas siguen encima (chip blanco sólido con ícono `#1366af`) y el contador es un chip opaco `#1366af`. Los álbumes de una sola imagen no pintan dots.
 - Clic en la miniatura abre **lightbox** a pantalla completa.
 - Cursor sobre la miniatura: **`pointer` (manita)**, no `zoom-in` ni icono de lupa con “+”.
 - 2019: el oficial no tiene galería publicada; hay fallback local en `galleryData.js`. **Sin aviso de "contenido de demostración"** (el usuario lo quitó por petición el 2026-10: `demoYearNotes` y las reglas `.galeria-demo-note` / `.galeria-year-note` se eliminaron). Las fotos de 2019 son locales de relleno, no del sitio oficial: no inventar albums reales para ese año.
 - Imágenes del oficial suelen ser **600×300** (caché Widgetkit). En lightbox se ven “pequeñas” por resolución, no por bug de CSS. No inventar upscale agresivo.
-- La lista de años de `/galeria` sale de `Object.keys(galleryByYear)` (no de un array aparte): una sola fuente de verdad.
+- La lista de años de `/galeria` sale de `Object.keys(galleryByYear)` (no de un array aparte): una sola fuente de verdad — por eso el dropdown del header y las cards del índice ya listan los 4 años nuevos automáticamente.
 
 #### Línea de tiempo de presidentes (CONREVE) — `/galeria`
 
@@ -376,10 +388,11 @@ public/images/
   hero.jpg         (sin uso desde que se quitó la franja del hero; conservar)
   placeholder.jpg
   programs/   (sireve SIN USO, ficcua, juduca, excelencia, salud, voluntariado)
-  programs/editions/  (futura: logos/mascotas/flayers por edición; el usuario la llenará)
+  programs/editions/  (premio-ruben-dario-2020/2023/2024/2025.jpg; futura para otros programas)
   quick/      (actas, galeria, reglamentos)
   carousel/   (1–3)
   gallery/    (1–6, fallbacks)
+  gallery/premio/<año>/  (92 fotos del Premio: 2020=23, 2023=26, 2024=23, 2025=20; nombres afiche-NN/ceremonia-NN/listado-oficial/galardonado-NN)
 ```
 
 Evitar hotlinks frágiles a Unsplash como única fuente (ya fallaron, p. ej. JUDUCA). Usar locales + `handleImageError`. Las fotos de programas vienen del media de csuca.org; ver tabla arriba.

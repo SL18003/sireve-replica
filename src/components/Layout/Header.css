@@ -303,6 +303,12 @@
     color: #fff !important;
   }
 
+  /* Sin el margin-left: 4px de escritorio: con width:100% dentro del panel
+     empujaba el link 4px mas alla del padding (scrollWidth +4px). */
+  .header-link--external {
+    margin-left: 0;
+  }
+
   .header-divider {
     width: 100%;
     height: 1px;

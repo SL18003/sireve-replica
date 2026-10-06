@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>interacciones</title></head>
+<body>
+<iframe id="f" style="border:0"></iframe>
+<pre id="report">pending</pre>
+<script>
+/* Comprueba el comportamiento de sireve.js dentro de la pagina real del preview.
+   Se simula la interaccion con la API del DOM (dispatchEvent), no con clicks de
+   raton reales, asi que es determinista. El runner (interact.mjs) copia este
+   archivo al preview y lee el <pre id="report">. */
+const out = {};
+const q0 = new URLSearchParams(location.search);
+const f = document.getElementById('f');
+/* El menu movil solo existe por debajo del breakpoint del header, asi que el
+   ancho del iframe lo fija el runner (1280 para escritorio, 420 para movil). */
+f.style.width = (q0.get('w') || 1280) + 'px';
+f.style.height = '900px';
+f.addEventListener('load', async () => {
+  const w = f.contentWindow, d = f.contentDocument;
+  try { await w.document.fonts.ready; } catch (e) {}
+  await new Promise((r) => setTimeout(r, 700));
+  const q = (s) => d.querySelector(s);
+  const qa = (s) => [...d.querySelectorAll(s)];
+  const visible = (el) => !!el && !el.hasAttribute('hidden') && w.getComputedStyle(el).display !== 'none';
+  const click = (el) => el && el.dispatchEvent(new w.MouseEvent('click', { bubbles: true, cancelable: true }));
+  const pause = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  /* 1. Dropdown de Programas */
+  const ddBtn = q('.header-dropdown-toggle');
+  const ddMenu = ddBtn && ddBtn.parentElement.querySelector('.header-dropdown-menu');
+  const dd = { existe: !!ddBtn, cerradoInicial: !visible(ddMenu) };
+  if (ddBtn) {
+    click(ddBtn);
+    await pause(150);
+    dd.abreAlClic = visible(ddMenu);
+    dd.ariaExpanded = ddBtn.getAttribute('aria-expanded');
+    dd.enlaces = ddMenu ? ddMenu.querySelectorAll('a').length : 0;
+    dd.chevronArriba = visible(q('.header-dropdown-toggle .ico-up'));
+    click(ddBtn);
+    await pause(150);
+    dd.cierraAlSegundoClic = !visible(ddMenu);
+    dd.chevronAbajo = visible(q('.header-dropdown-toggle .ico-down'));
+  }
+  out.dropdown = dd;
+
+  /* 2. Menu movil. No existe por encima del breakpoint del header, asi que a
+     escritorio se reporta null (no aplica) en vez de false (fallo). */
+  const mt = q('.header-mobile-toggle');
+  const toggleVisible = visible(mt);
+  const panel = q('.header-mobile-panel') || q('.header-nav');
+  if (!mt || !toggleVisible) {
+    out.mobile = null;
+  } else {
+    const mob = { aplica: true, panelOcultoInicial: !visible(panel) };
+    mob.cerradoInicial = mt.getAttribute('aria-expanded') === 'false';
+    click(mt);
+    await pause(250);
+    mob.abreAlClic = mt.getAttribute('aria-expanded') === 'true';
+    mob.navVisible = visible(panel);
+    mob.iconoEsX = visible(q('.header-mobile-toggle .ico-close')) && !visible(q('.header-mobile-toggle .ico-bars'));
+    /* los enlaces del panel deben caber en pantalla */
+    mob.panelSinDesborde = panel.scrollWidth <= w.innerWidth + 1;
+    click(mt);
+    await pause(250);
+    mob.cierraAlSegundoClic = mt.getAttribute('aria-expanded') === 'false';
+    mob.iconoVuelveAHamburguesa = visible(q('.header-mobile-toggle .ico-bars'));
+    mob.panelOcultoAlCerrar = !visible(panel);
+    out.mobile = mob;
+  }
+
+  /* 3. Ancla #sireve: href real + data-target para el scroll suave */
+  const anchor = q('.header-nav-anchor');
+  out.ancla = {
+    existe: !!anchor,
+    href: anchor ? anchor.getAttribute('href') : null,
+    dataTarget: anchor ? anchor.getAttribute('data-target') : null,
+  };
+
+  /* 4. Carruseles: el de la portada (.carousel-slide) y el de los albunes de
+     galeria (.gallery-album-dot), que son markups distintos. Si la pagina no
+     tiene ninguno, null (no aplica). */
+  const slides = qa('.carousel-slide');
+  const dotsAlbum = qa('.gallery-album-dot');
+  const car = {};
+  if (slides.length > 1) {
+    const active = () => slides.findIndex((s) => s.classList.contains('active'));
+    const dotActivo = () => qa('.carousel-dot').findIndex((s) => s.classList.contains('active'));
+    const antes = active();
+    car.portada = { slides: slides.length, indiceInicial: antes };
+    const next = q('.carousel-btn-right');
+    if (next) {
+      click(next);
+      await pause(200);
+      car.portada.avanza = active() === (antes + 1) % slides.length;
+      car.portada.dotSigue = dotActivo() === active();
+    }
+    const prev = q('.carousel-btn-left');
+    if (prev) {
+      click(prev);
+      await pause(200);
+      car.portada.vuelveAtras = active() === antes;
+    }
+  }
+  if (dotsAlbum.length > 1) {
+    /* Se elige el primer album que tenga data-images Y varios dots: los albums
+       de una sola imagen no llevan marcadores ni flechas, por diseño. Y NO se
+       hace clic en la miniatura aqui, porque eso abre el lightbox y
+       contaminaria la seccion 5. */
+    const alb = qa('.gallery-album[data-images]').find((a) => a.querySelectorAll('.gallery-album-dot').length > 1);
+    const albm = { albums: qa('.gallery-album[data-images]').length };
+    const counter = alb && alb.querySelector('.gallery-album-counter');
+    const dotsDe = () => qa('.gallery-album-dot');
+    const activo = () => {
+      const todos = dotsDe();
+      return todos.findIndex((x) => x.classList.contains('active'));
+    };
+    albm.dotsPrimerAlbum = alb ? alb.querySelectorAll('.gallery-album-dot').length : 0;
+    const antes = activo();
+    const nextA = alb && alb.querySelector('.gallery-album-nav--next');
+    if (nextA) {
+      click(nextA);
+      await pause(300);
+      albm.avanza = activo() === (antes + 1) % Math.max(albm.dotsPrimerAlbum, 1);
+      albm.contadorTrasAvanzar = ((counter || {}).textContent || '').trim();
+      albm.contadorCoincide = /^\d+\s*\/\s*\d+$/.test(albm.contadorTrasAvanzar);
+    }
+    const prevA = alb && alb.querySelector('.gallery-album-nav--prev');
+    if (prevA) {
+      click(prevA);
+      await pause(300);
+      albm.vuelveAtras = activo() === antes;
+    }
+    car.album = albm;
+  }
+  out.carrusel = (car.portada || car.album) ? car : null;
+
+  /* 5. Lightbox de galeria. Se usa un album de varias imagenes para que las
+     flechas tengan sentido. El clic va sobre el <button> que envuelve la
+     miniatura (.gallery-album-img-btn), que es donde sireve.js se engancha. */
+  const albMulti = qa('.gallery-album[data-images]').find((a) => a.querySelectorAll('.gallery-album-dot').length > 1);
+  const imgBtn = (albMulti || q('.gallery-album-img-btn') ? (albMulti || q('.gallery-album')).querySelector('.gallery-album-img-btn') : null);
+  const box = q('.gallery-lightbox');
+  if (!imgBtn || !box) {
+    out.lightbox = null;
+  } else {
+    const lb = { aplica: true, cerradoInicial: box.hidden || !visible(box) };
+    click(imgBtn);
+    await pause(400);
+    lb.abreAlClic = !box.hidden && visible(box);
+    lb.tieneImg = !!box.querySelector('.gallery-lightbox-img');
+    lb.contador = (box.querySelector('.gallery-lightbox-counter') || {}).textContent || null;
+    lb.titulo = ((box.querySelector('.gallery-lightbox-title') || {}).textContent || '').trim() || null;
+    lb.flechasVisibles = !!q('.gallery-lightbox-nav--next');
+    /* Escape se despacha sobre document.body: un evento dirigido a window no
+       alcanza a los listeners registrados en document. */
+    d.body.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    await pause(400);
+    lb.cierraConEscape = !visible(box);
+    /* y las flechas del teclado tambien deben paginar */
+    click(imgBtn);
+    await pause(400);
+    d.body.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+    await pause(300);
+    lb.flechaDerechaPasa = ((box.querySelector('.gallery-lightbox-counter') || {}).textContent || '') !== lb.contador;
+    d.body.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    await pause(300);
+    /* y el boton de cerrar */
+    click(imgBtn);
+    await pause(400);
+    click(box.querySelector('.gallery-lightbox-close'));
+    await pause(400);
+    lb.cierraConBoton = !visible(box);
+    out.lightbox = lb;
+  }
+
+  /* 6. Formulario: la validacion nativa debe bloquear el envio vacio y, con
+     datos validos, mostrarse el mensaje de confirmacion sin recargar. No
+     aplica en paginas sin formulario (null, no fallo). */
+  const form = q('form');
+  if (!form) {
+    out.formulario = null;
+  } else {
+    const frm = { aplica: true };
+    let recargo = false;
+    w.addEventListener('beforeunload', () => { recargo = true; });
+    frm.campos = form.querySelectorAll('input, textarea').length;
+    frm.method = (form.getAttribute('method') || 'get').toLowerCase();
+    frm.action = form.getAttribute('action') || '';
+    const success = form.querySelector('.contacto-form-success');
+    const visto = () => !!success && success.classList.contains('show');
+    const btn = q('.contacto-btn') || form.querySelector('button');
+    if (btn) {
+      /* 1) con todo vacio la validacion nativa ni siquiera dispara el submit */
+      click(btn);
+      await pause(300);
+      frm.bloqueaVacio = !visto() && !recargo;
+      /* 2) con datos validos: mensaje visible y campos limpios */
+      const rellenar = (sel, valor) => {
+        const el = form.querySelector(sel);
+        if (el) el.value = valor;
+      };
+      rellenar('input[name="nombre"]', 'Prueba SIREVE');
+      rellenar('input[name="email"]', 'prueba@csuca.org');
+      rellenar('input[name="asunto"]', 'Consulta de prueba');
+      rellenar('textarea[name="mensaje"]', 'Mensaje de prueba para la verificacion.');
+      click(btn);
+      await pause(300);
+      frm.exitoVisible = visto() && /gracias por contactarnos/i.test(d.body.textContent);
+      frm.camposLimpios = ['nombre', 'email', 'asunto', 'mensaje'].every((n) => {
+        const el = form.querySelector('[name="' + n + '"]');
+        return el && el.value === '';
+      });
+      frm.noRecarga = !recargo;
+    }
+    out.formulario = frm;
+  }
+
+  /* 7. Enlaces y 8. imagenes */
+  out.enlaces = {
+    total: qa('.sireve a[href]').length,
+    sinDestino: qa('.sireve a[href=""], .sireve a:not([href])').length,
+    hashVacio: qa('.sireve a[href="#"]').length,
+  };
+  out.imagenes = (() => {
+    const todas = qa('.sireve img');
+    const rotas = todas.filter((i) => i.complete && i.naturalWidth === 0);
+    /* Una imagen rota a la que sireve.js ya cambio el src por el placeholder se
+       considera resuelta: la URL de origen esta muerta en el sitio oficial
+       (cache/widgetkit ya no existe) y el replica React pasa por lo mismo. */
+    const sinFallback = rotas.filter((i) => i.dataset.fallbackApplied !== 'true');
+    return {
+      total: todas.length,
+      rotas: sinFallback.length,
+      conFallback: rotas.length - sinFallback.length,
+      rotasSinFallback: sinFallback.map((i) => (i.currentSrc || i.src || '').split('/').pop().slice(0, 60)),
+    };
+  })();
+
+  /* 9. El ano del footer lo rellena el JS */
+  out.anio = ((q('[data-year]') || {}).textContent || '').trim() || null;
+
+  /* 10. Botones nativos: la hoja debe forzar Montserrat */
+  out.botones = qa('.sireve button').slice(0, 8).map((b) => w.getComputedStyle(b).fontFamily.split(',')[0]);
+
+  document.getElementById('report').textContent = JSON.stringify(out, null, 1);
+});
+f.src = q0.get('route') || '/';
+</script>
+</body>

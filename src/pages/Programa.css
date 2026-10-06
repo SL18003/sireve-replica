@@ -362,32 +362,40 @@
   overflow: hidden;
 }
 
+/* Historial: grid de tarjetas con portada (2 columnas, 1 en movil).
+   La foto va a sangre arriba (aspect 16/9 + object-fit cover) para que no
+   queden bordes blancos dentro del hueco; mismo tratamiento de "blanco +
+   filete azul" que las fichas .program-meta. */
 .program-editions-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
 }
 
 .program-edition {
+  position: relative;
   display: flex;
-  gap: 20px;
-  align-items: stretch;
-  padding: 20px;
-  background: var(--sireve-surface);
-  border: 1px solid var(--sireve-border);
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid rgba(19, 102, 175, 0.22);
   border-radius: var(--sireve-radius);
-  transition: border-color 0.25s ease;
+  box-shadow: 0 2px 10px rgba(19, 102, 175, 0.07);
+  overflow: hidden;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 
 .program-edition:hover {
-  border-color: var(--sireve-primary-light);
+  border-color: var(--sireve-primary);
+  box-shadow: 0 8px 22px rgba(19, 102, 175, 0.16);
+  transform: translateY(-3px);
 }
 
-/* Slot reservado para el logo / mascota / flayer de la edicion */
+/* Portada de la edicion: ocupa todo el ancho de la tarjeta.
+   Sin foto queda el hueco punteado con icono + ano (mismo aspect). */
 .program-edition-logo {
-  flex: 0 0 140px;
-  width: 140px;
-  height: 110px;
+  flex: none;
+  width: 100%;
+  aspect-ratio: 16 / 9;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -395,9 +403,9 @@
   gap: 8px;
   padding: 8px;
   text-align: center;
-  background: var(--g-color-base-background);
+  background: var(--sireve-surface);
   border: 1px dashed var(--sireve-border);
-  border-radius: var(--sireve-radius);
+  border-radius: 0;
   color: var(--sireve-primary);
   overflow: hidden;
 }
@@ -411,18 +419,30 @@
 }
 
 .program-edition-logo.has-logo {
-  border-style: solid;
+  padding: 0;
+  background: transparent;
+  border: 0;
 }
 
 .program-edition-logo img {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
+  object-position: center 30%;
+  transition: transform 0.4s ease;
+}
+
+.program-edition:hover .program-edition-logo img {
+  transform: scale(1.04);
 }
 
 .program-edition-body {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 18px 18px;
 }
 
 .program-edition-head {
@@ -437,6 +457,7 @@
   font-size: 17px;
   font-weight: 600;
   color: var(--sireve-ink);
+  line-height: 1.3;
   margin: 0;
 }
 
@@ -460,8 +481,11 @@
 .program-edition-links {
   display: flex;
   flex-wrap: wrap;
+  align-items: stretch;
   gap: 10px;
-  margin-top: 14px;
+  /* empuja el CTA al pie de la tarjeta: todos alineados */
+  margin-top: auto;
+  padding-top: 14px;
 }
 
 .program-edition-link {
@@ -481,6 +505,31 @@
 
 .program-edition-link:hover {
   background: var(--sireve-primary);
+  color: #fff;
+}
+
+/* CTA principal de la tarjeta: relleno azul (crece para ocupar el pie). */
+.program-edition-cta {
+  flex: 1 1 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 42px;
+  padding: 10px 16px;
+  background: var(--sireve-primary);
+  border: 1px solid var(--sireve-primary);
+  border-radius: var(--sireve-radius-sm);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.program-edition-cta:hover {
+  background: var(--sireve-primary-mid);
+  border-color: var(--sireve-primary-mid);
   color: #fff;
 }
 
@@ -564,10 +613,12 @@
 .g-root_theme_dark .program-edition {
   background: rgba(135, 135, 135, 0.14);
   border-color: rgba(135, 135, 135, 0.3);
+  box-shadow: none;
 }
 
 .g-root_theme_dark .program-edition:hover {
   border-color: var(--sireve-primary-light);
+  box-shadow: none;
 }
 
 .g-root_theme_dark .program-edition-logo {
@@ -641,6 +692,12 @@
   color: #000;
 }
 
+.g-root_theme_dark .program-edition-cta {
+  background: var(--sireve-primary-light);
+  border-color: var(--sireve-primary-light);
+  color: #000;
+}
+
 @media (max-width: 900px) {
   .program-others-grid {
     grid-template-columns: 1fr 1fr;
@@ -690,16 +747,12 @@
     height: 52px;
   }
 
-  .program-edition {
-    flex-direction: column;
-    gap: 14px;
-    padding: 16px;
+  .program-editions-list {
+    grid-template-columns: 1fr;
   }
 
-  .program-edition-logo {
-    flex-basis: auto;
-    width: 120px;
-    height: 88px;
+  .program-edition-body {
+    padding: 14px 14px 16px;
   }
 
   .program-edition-head {

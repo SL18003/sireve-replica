@@ -23,6 +23,7 @@
    ============================================================================ */
 
 import { readFileSync, writeFileSync, mkdirSync, rmSync, statSync, copyFileSync, existsSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -228,6 +229,10 @@ const YEAR_COVERS = {
   2017: '/images/gallery/1.jpg',
   2018: '/images/gallery/2.jpg',
   2019: '/images/gallery/3.jpg',
+  2020: '/images/gallery/premio/2020/afiche-01.jpg',
+  2023: '/images/gallery/premio/2023/afiche-02.jpg',
+  2024: '/images/gallery/premio/2024/ceremonia-01.jpg',
+  2025: '/images/gallery/premio/2025/ceremonia-01.jpg',
 };
 
 /* --------------------------------------------------------------- Header */
@@ -865,6 +870,27 @@ function albumCard(album) {
           </article>`;
 }
 
+/* Mismo agrupamiento que src/pages/Galeria.jsx (groupByProgram): los albums
+   con `program` forman una seccion por programa en el orden de programs.js,
+   y lo demas queda en "Otros eventos" al final. Cada seccion es un
+   <section id="<slug>">: la edicion del programa enlaza
+   /galeria/<ano>/#<slug> y el navegador hace el scroll (scroll-margin-top en
+   sireve.css compensa el header sticky). */
+function groupByProgram(albums) {
+  const groups = programs
+    .map((p) => ({
+      slug: p.slug,
+      name: p.galleryName || p.title,
+      albums: albums.filter((a) => a.program === p.slug),
+    }))
+    .filter((g) => g.albums.length > 0);
+  const others = albums.filter((a) => !a.program);
+  if (others.length > 0) {
+    groups.push({ slug: 'otros', name: 'Otros eventos', albums: others });
+  }
+  return groups;
+}
+
 function galeriaYear(year) {
   const albums = galleryByYear[year] || [];
   const president = getPresidentForYear(year);
@@ -879,17 +905,26 @@ function galeriaYear(year) {
         </div>`
     : '';
 
-  const grid = albums.length
-    ? albums.map(albumCard).join('\n          ')
+  const content = albums.length
+    ? `<div class="galeria-categories">
+          ${groupByProgram(albums)
+            .map(
+              (section) => `<section id="${section.slug}" class="galeria-category">
+            <h2 class="galeria-category-title">${esc(section.name)}</h2>
+            <div class="galeria-grid">
+              ${section.albums.map(albumCard).join('\n              ')}
+            </div>
+          </section>`,
+            )
+            .join('\n          ')}
+        </div>`
     : `<div class="galeria-empty"><p>No hay eventos registrados para el año ${year}</p></div>`;
 
   const body = `<div class="page-wrap">
       ${pageHero({ title: `Galería ${year}`, subtitle: 'Eventos y actividades del SIREVE', icon: 'picture' })}
       <div class="page-body">
         ${context}
-        <div class="galeria-grid">
-          ${grid}
-        </div>
+        ${content}
       </div>
     </div>
     ${lightbox()}`;
@@ -1012,25 +1047,49 @@ function programa(program) {
     ? `<div class="program-editions-list">
             ${program.editions
         .map((edition) => {
-          const slot = edition.logo
-            ? `<div class="program-edition-logo has-logo"><img src="${edition.logo}" alt="${attr(`Gráfica del ${program.title} ${edition.year || ''}`)}"></div>`
-            : `<div class="program-edition-logo">${icon(program.icon, 26)}<span>${esc(edition.year || 'Edición')}</span></div>`;
+          const logo = edition.logo?.startsWith('/images/')
+            ? media(edition.logo)
+            : edition.logo;
+          /* Si el ano tiene albums DE ESTE PROGRAMA (campo `program` en
+             galleryData.json), la foto y el chip abren
+             /galeria/<ano>/#<slug>: la pagina del ano agrupa sus albums por
+             secciones y el ancla va a la de este programa (mismo espejo en
+             src/pages/Programa.jsx). */
+          const gallery =
+            edition.year &&
+            (galleryByYear[String(edition.year)] || []).some(
+              (album) => album.program === program.slug,
+            )
+              ? `/galeria/${edition.year}/#${program.slug}`
+              : null;
+          const slotClass = `program-edition-logo${logo ? ' has-logo' : ''}`;
+          const slotInner = logo
+            ? `<img src="${logo}" alt="${attr(`Gráfica del ${program.title} ${edition.year || ''}`)}">`
+            : `${icon(program.icon, 26)}<span>${esc(edition.year || 'Edición')}</span>`;
+          const slot = gallery
+            ? `<a class="${slotClass}" href="${gallery}" aria-label="Ver fotos de esta edición${edition.year ? ` ${edition.year}` : ''}">${slotInner}</a>`
+            : `<div class="${slotClass}">${slotInner}</div>`;
 
           const place = edition.place
             ? `<span class="program-edition-place">${icon('map-pin', 14)}${esc(edition.place)}</span>`
             : '';
 
-          const links = edition.links?.length
-            ? `<div class="program-edition-links">
-                ${edition.links
-                  .map((link) =>
-                    link.to
-                      ? `<a class="program-edition-link" href="${link.to}">${esc(link.label)}</a>`
-                      : `<a class="program-edition-link" href="${link.url}" target="_blank" rel="noopener noreferrer">${esc(link.label)}${icon('arrow-up-right-from-square', 12)}</a>`,
-                  )
-                  .join('\n                ')}
+          const linkChips = (edition.links || [])
+            .map((link) =>
+              link.to
+                ? `<a class="program-edition-link" href="${link.to}">${esc(link.label)}</a>`
+                : `<a class="program-edition-link" href="${link.url}" target="_blank" rel="noopener noreferrer">${esc(link.label)}${icon('arrow-up-right-from-square', 12)}</a>`,
+            )
+            .join('\n                ');
+          const galleryChip = gallery
+            ? `<a class="program-edition-cta" href="${gallery}">Ver fotos de esta edición →</a>`
+            : '';
+          const links =
+            edition.links?.length || gallery
+              ? `<div class="program-edition-links">
+                ${[linkChips, galleryChip].filter(Boolean).join('\n                ')}
               </div>`
-            : `<p class="program-edition-placeholder">Documentos y enlaces de esta edición — espacio reservado.</p>`;
+              : `<p class="program-edition-placeholder">Documentos y enlaces de esta edición — espacio reservado.</p>`;
 
           return `<article class="program-edition">
               ${slot}
@@ -1232,6 +1291,42 @@ add_action( 'init', function () {
 	add_rewrite_rule( '^galeria/([0-9]{4})/?$', 'index.php?pagename=galeria/$matches[1]', 'top' );
 } );
 
+/* /galeria/<anio>/ se pinta desde la vista SIN que exista una pagina hija en la
+   base de datos (solo 2017-2019 la tienen; los anos del Premio Ruben Dario no
+   se crean paginas). Sin esto, la regla generica de paginas resuelve
+   /galeria/2025/ como la pagina "galeria" paginada y redirect_canonical lo manda
+   a /galeria/ con 301. Prioridad 0: gana a redirect_canonical y
+   wp_old_slug_redirect (prioridad 10). Ademas fijamos titulo y canonical aqui,
+   porque WP no tiene pagina de la cual calcularlos (rel_canonical solo actua en
+   consultas singulares). Verificado contra wp-includes/default-filters.php y
+   las fuentes de rel_canonical()/wp_get_document_title(). */
+add_action( 'template_redirect', function () {
+	$route = sireve_route();
+	if ( ! preg_match( '#^/galeria/[0-9]{4}/$#', $route ) ) {
+		return;
+	}
+	$views = sireve_views();
+	if ( ! isset( $views[ $route ] ) ) {
+		return; /* anio sin galeria generada: sigue el 404 normal de WordPress */
+	}
+	global $wp_query;
+	$wp_query->is_404 = false;
+	status_header( 200 );
+	add_filter( 'document_title_parts', function ( $parts ) use ( $route ) {
+		preg_match( '#^/galeria/([0-9]{4})/$#', $route, $m );
+		$parts['title'] = 'Galería ' . $m[1];
+		return $parts;
+	} );
+	remove_action( 'wp_head', 'rel_canonical' );
+	add_action( 'wp_head', function () use ( $route ) {
+		echo '<link rel="canonical" href="' . esc_url( home_url( $route ) ) . '" />' . "\n";
+	}, 5 );
+	get_header();
+	sireve_render();
+	get_footer();
+	exit;
+}, 0 );
+
 /* Un solo juego de assets para todo el sitio. La hoja va en prioridad 999 para
    cargar despues de cualquier CSS del tema y poder pisar lo que haga. */
 add_action( 'wp_enqueue_scripts', function () {
@@ -1257,22 +1352,11 @@ add_action( 'wp_enqueue_scripts', function () {
 }, 20 );
 `;
 
-const HEADER_PHP = `<?php
-/**
- * Apertura del documento. El header del SIREVE (barra, nav y redes) vive dentro
- * de cada vista, generado por build.mjs, para que el preview mida lo mismo que
- * se publica.
- */
-?>
-<!doctype html>
-<html <?php language_attributes(); ?>>
-<head>
-	<meta charset="<?php bloginfo( 'charset' ); ?>">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<?php wp_head(); ?>
-</head>
-<body <?php body_class(); ?>>
-`;
+/* header.php: SEO por ruta (descriptions, breadcrumbs, OG, JSON-LD). Vive como
+   archivo fuente aparte (header-src.php) porque lo pego/persisto desde el
+   servidor: build.mjs lo copia al tema tal cual. Si se edita en Theme File
+   Editor hay que backportearlo a header-src.php. */
+const HEADER_PHP = readFileSync(path.join(HERE, 'header-src.php'), 'utf8');
 
 const FOOTER_PHP = `<?php
 /**
@@ -1362,6 +1446,18 @@ const theme = emitTheme();
 console.log(`\ntema escrito en ${path.relative(ROOT, THEME)}`);
 console.log(`  - ${theme.views} vistas, ${theme.images} imagenes en assets/images/`);
 console.log(`  - base de imagenes: ${MEDIA_BASE}`);
+
+/* ZIP para subir desde wp-admin (Apariencia -> Temas -> Añadir -> Subir tema).
+   Lo arma `tar` (bsdtar) y no Compress-Archive de PowerShell 5.1: ese escribe
+   las rutas con barra invertida y WordPress no las descomprime bien en Linux. */
+const ZIP = path.join(HERE, 'sireve-theme.zip');
+try {
+  rmSync(ZIP, { force: true });
+  execFileSync('tar', ['-a', '-c', '-f', ZIP, '-C', HERE, 'sireve-theme'], { stdio: 'ignore' });
+  console.log(`  - zip: ${path.relative(ROOT, ZIP)} (${(statSync(ZIP).size / 1024).toFixed(0)} KB)`);
+} catch (err) {
+  console.warn(`  - AVISO: no se regenero sireve-theme.zip (${err.message}).`);
+}
 
 if (process.exitCode) {
   console.error('\nbuild incompleto: revisa los ids de clipPath de arriba');

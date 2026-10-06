@@ -393,6 +393,43 @@
   gap: 24px;
 }
 
+/* --- Secciones por programa en /galeria/:año ---
+   Cada categoria es un <section id="<slug>"> con titulo: la edicion del
+   programa enlaza /galeria/<año>/#<slug> y el scroll aterriza aqui.
+   scroll-margin-top compensa el header sticky (72px + filete 4px); sin eso
+   el titulo queda debajo de la barra. Filete igual que .timeline-title. */
+.galeria-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+}
+
+.galeria-category {
+  scroll-margin-top: 96px;
+}
+
+.galeria-category-title {
+  display: block;
+  font-weight: 300;
+  font-size: 24px;
+  color: var(--g-color-text-primary);
+  margin: 0;
+}
+
+.galeria-category-title::after {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 3px;
+  background: var(--sireve-primary);
+  margin: 12px 0 0;
+  border-radius: 0;
+}
+
+.galeria-category .galeria-grid {
+  margin-top: 20px;
+}
+
 .galeria-skeleton {
   border-radius: var(--sireve-radius);
   overflow: hidden;
@@ -411,6 +448,10 @@
   }
 
   .timeline-title {
+    font-size: 22px;
+  }
+
+  .galeria-category-title {
     font-size: 22px;
   }
 

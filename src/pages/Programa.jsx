@@ -11,6 +11,7 @@ import {
 } from '@gravity-ui/icons';
 import PageHeader from '../components/Layout/PageHeader';
 import { getProgram, programs } from '../data/programs';
+import { galleryByYear } from '../data/galleryData';
 import { handleImageError } from '../utils/imageFallback';
 import './Programa.css';
 
@@ -125,65 +126,96 @@ export default function Programa() {
             </div>
           ) : (
             <div className="program-editions-list">
-              {program.editions.map((edition) => (
-                <article key={edition.year || edition.title} className="program-edition">
-                  <div className={`program-edition-logo${edition.logo ? ' has-logo' : ''}`}>
-                    {edition.logo ? (
-                      <img
-                        src={edition.logo}
-                        alt={`Gráfica del ${program.title} ${edition.year || ''}`}
-                        onError={handleImageError}
-                      />
-                    ) : (
-                      <>
-                        <Icon data={program.icon} size={26} />
-                        <span>{edition.year || 'Edición'}</span>
-                      </>
-                    )}
-                  </div>
+              {program.editions.map((edition) => {
+                /* Si el ano tiene albums DE ESTE PROGRAMA (campo `program` en
+                   galleryData.json), la foto y el chip abren
+                   /galeria/<ano>/#<slug>: la pagina del ano agrupa sus albums
+                   por secciones y el ancla va a la de este programa. Mismo
+                   espejo en build.mjs. */
+                const galleryHref =
+                  edition.year &&
+                  (galleryByYear[String(edition.year)] || []).some(
+                    (album) => album.program === program.slug,
+                  )
+                    ? `/galeria/${edition.year}/#${program.slug}`
+                    : null;
+                const slotInner = edition.logo ? (
+                  <img
+                    src={edition.logo}
+                    alt={`Gráfica del ${program.title} ${edition.year || ''}`}
+                    onError={handleImageError}
+                  />
+                ) : (
+                  <>
+                    <Icon data={program.icon} size={26} />
+                    <span>{edition.year || 'Edición'}</span>
+                  </>
+                );
 
-                  <div className="program-edition-body">
-                    <div className="program-edition-head">
-                      <Text variant="header-2" as="h3" className="program-edition-title">
-                        {edition.title || `${program.title} ${edition.year || ''}`}
-                      </Text>
-                      {edition.place && (
-                        <span className="program-edition-place">
-                          <Icon data={MapPin} size={14} />
-                          {edition.place}
-                        </span>
+                return (
+                  <article key={edition.year || edition.title} className="program-edition">
+                    {galleryHref ? (
+                      <Link
+                        to={galleryHref}
+                        className={`program-edition-logo${edition.logo ? ' has-logo' : ''}`}
+                        aria-label={`Ver fotos de esta edición${edition.year ? ` ${edition.year}` : ''}`}
+                      >
+                        {slotInner}
+                      </Link>
+                    ) : (
+                      <div className={`program-edition-logo${edition.logo ? ' has-logo' : ''}`}>
+                        {slotInner}
+                      </div>
+                    )}
+
+                    <div className="program-edition-body">
+                      <div className="program-edition-head">
+                        <Text variant="header-2" as="h3" className="program-edition-title">
+                          {edition.title || `${program.title} ${edition.year || ''}`}
+                        </Text>
+                        {edition.place && (
+                          <span className="program-edition-place">
+                            <Icon data={MapPin} size={14} />
+                            {edition.place}
+                          </span>
+                        )}
+                      </div>
+
+                      {edition.links?.length > 0 || galleryHref ? (
+                        <div className="program-edition-links">
+                          {edition.links?.map((link) => (
+                            link.to ? (
+                              <Link key={link.label} to={link.to} className="program-edition-link">
+                                {link.label}
+                              </Link>
+                            ) : (
+                              <a
+                                key={link.label}
+                                href={link.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="program-edition-link"
+                              >
+                                {link.label}
+                                <Icon data={ArrowUpRightFromSquare} size={12} />
+                              </a>
+                            )
+                          ))}
+                          {galleryHref && (
+                            <Link to={galleryHref} className="program-edition-cta">
+                              Ver fotos de esta edición →
+                            </Link>
+                          )}
+                        </div>
+                      ) : (
+                        <p className="program-edition-placeholder">
+                          Documentos y enlaces de esta edición — espacio reservado.
+                        </p>
                       )}
                     </div>
-
-                    {edition.links?.length > 0 ? (
-                      <div className="program-edition-links">
-                        {edition.links.map((link) => (
-                          link.to ? (
-                            <Link key={link.label} to={link.to} className="program-edition-link">
-                              {link.label}
-                            </Link>
-                          ) : (
-                            <a
-                              key={link.label}
-                              href={link.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="program-edition-link"
-                            >
-                              {link.label}
-                              <Icon data={ArrowUpRightFromSquare} size={12} />
-                            </a>
-                          )
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="program-edition-placeholder">
-                        Documentos y enlaces de esta edición — espacio reservado.
-                      </p>
-                    )}
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
           )}
         </section>

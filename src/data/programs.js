@@ -9,11 +9,15 @@ import { MusicNote, Cup, Medal, HeartPulse, Person } from '@gravity-ui/icons';
       Va en public/images/programs/<slug>-about.jpg y es distinta de `image`
       para no repetir la foto del hero en la seccion "El programa".
    - tagline: linea corta bajo el titulo en la pagina del programa.
+   - galleryName: nombre corto del programa como seccion de /galeria/<ano>/
+      (titulo + ancla #slug de la categoria; si no se pone, se usa `title`).
+      Los albums llevan `program: <slug>` en galleryData.json.
    - resources: enlaces reales del programa (carpetas de Drive, galeria,
       reglamentos). Usan `url` (externo, se abre en pestana nueva) o `to`
       (ruta interna de este sitio).
-   - editions: historial de ediciones. **ACTUALMENTE VACIO**: todavia no hay
-     anos confirmados, asi que la pagina muestra un panel reservado.
+   - editions: historial de ediciones. Hoy lleno solo en `premio-ruben-dario`
+      (2025, 2024, 2023, 2020 — de mas reciente a mas antigua); el resto sigue
+      vacio y muestra el panel reservado.
 
    PARA LLENAR EL HISTORIAL MAS ADELANTE (no hace falta tocar componentes):
    1. Logo / mascota / flayer de la edicion:
@@ -51,6 +55,7 @@ export const programs = [
   {
     slug: 'ficcua',
     title: 'FICCUA',
+    galleryName: 'FICCUA',
     subtitle: 'Qué es FICCUA',
     excerpt: 'Festival bienal e itinerante de artistas estudiantiles universitarios de Centroamérica.',
     description:
@@ -69,6 +74,7 @@ export const programs = [
   {
     slug: 'juduca',
     title: 'JUDUCA',
+    galleryName: 'JUDUCA',
     subtitle: 'Qué es JUDUCA',
     excerpt: 'Juegos Deportivos Universitarios Centroamericanos para fortalecer la integración regional.',
     description:
@@ -87,6 +93,7 @@ export const programs = [
   {
     slug: 'premio-ruben-dario',
     title: 'Excelencia Académica',
+    galleryName: 'Premio Rubén Darío',
     subtitle: 'Premio Rubén Darío',
     excerpt: 'Reconocimiento a la excelencia académica de estudiantes destacados de la región.',
     description:
@@ -101,11 +108,33 @@ export const programs = [
       { icon: 'Picture', label: 'Galería SIREVE', desc: 'Fotos de eventos y actividades', to: '/galeria' },
       { icon: 'Book', label: 'Reglamento general', desc: 'Normativa vigente del sistema', to: '/reglamentos' },
     ],
-    editions: [],
+    editions: [
+      {
+        year: 2025,
+        title: 'XX Premio Regional a la Excelencia Académica — 2025',
+        logo: '/images/programs/editions/premio-ruben-dario-2025.jpg',
+      },
+      {
+        year: 2024,
+        title: 'XIX Premio Regional a la Excelencia Académica — 2024',
+        logo: '/images/programs/editions/premio-ruben-dario-2024.jpg',
+      },
+      {
+        year: 2023,
+        title: 'XVIII Premio a la Excelencia Académica — 2023',
+        logo: '/images/programs/editions/premio-ruben-dario-2023.jpg',
+      },
+      {
+        year: 2020,
+        title: 'XV Premio a la Excelencia Académica — 2020',
+        logo: '/images/programs/editions/premio-ruben-dario-2020.jpg',
+      },
+    ],
   },
   {
     slug: 'promotoras-salud',
     title: 'Promotoras de Salud',
+    galleryName: 'Promotoras de Salud',
     subtitle: 'Qué son los Promotores de Salud',
     excerpt: 'Red de universidades promotoras de la salud en Centroamérica y el Caribe.',
     description:
@@ -124,6 +153,7 @@ export const programs = [
   {
     slug: 'voluntariado',
     title: 'Voluntariado',
+    galleryName: 'Voluntariado',
     subtitle: 'Red UNIVOCES',
     excerpt: 'Compromiso social universitario a través del voluntariado en la región.',
     description:

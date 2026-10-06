@@ -13,6 +13,10 @@ const covers = {
   2017: '/images/gallery/1.jpg',
   2018: '/images/gallery/2.jpg',
   2019: '/images/gallery/3.jpg',
+  2020: '/images/gallery/premio/2020/afiche-01.jpg',
+  2023: '/images/gallery/premio/2023/afiche-02.jpg',
+  2024: '/images/gallery/premio/2024/ceremonia-01.jpg',
+  2025: '/images/gallery/premio/2025/ceremonia-01.jpg',
 };
 
 const years = Object.keys(galleryByYear)
