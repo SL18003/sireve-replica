@@ -90,6 +90,8 @@
 
 .header-nav-anchor {
   font-weight: 600;
+  line-height: inherit;
+  letter-spacing: inherit;
 }
 
 .header-divider {
@@ -114,6 +116,8 @@
   padding: 11px;
   min-width: 44px;
   min-height: 44px;
+  font-size: inherit;
+  font-family: inherit;
   align-items: center;
   justify-content: center;
 }

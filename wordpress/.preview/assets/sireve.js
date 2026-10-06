@@ -23,7 +23,7 @@
   var root = document.querySelector('.sireve');
   if (!root) return;
 
-  var PLACEHOLDER = 'https://sireve.csuca.org/wp-content/uploads/2026/10/placeholder.jpg';
+  var PLACEHOLDER = 'https://sireve.csuca.org/wp-content/themes/sireve-theme/assets/images/placeholder.jpg';
   var HEADER_OFFSET = 88; /* alto del header sticky (72) + margen de respiro */
   var CAROUSEL_MS = 6000;
 
@@ -34,11 +34,19 @@
   function watchImage(img) {
     if (!img || img.dataset.imgWatched) return;
     img.dataset.imgWatched = 'true';
-    img.addEventListener('error', function () {
+
+    function applyFallback() {
       if (img.dataset.fallbackApplied === 'true') return;
       img.dataset.fallbackApplied = 'true';
       img.src = PLACEHOLDER;
-    });
+    }
+
+    img.addEventListener('error', applyFallback);
+    /* Si la imagen ya fallo antes de que se conectara este manejador (error ya
+       cacheado, o src muerto en el HTML), el evento 'error' no vuelve a
+       dispararse: hay que comprobar el estado al momento. Sin esto, algunas
+       miniaturas de 2017/2018 se quedaban en blanco. */
+    if (img.complete && img.naturalWidth === 0) applyFallback();
   }
 
   function watchImages(scope) {
@@ -190,7 +198,7 @@
     if (!box) return;
 
     var slides = box.querySelectorAll('.carousel-slide');
-    var dots = box.querySelectorAll('.carousel-dot');
+    var dots = root.querySelectorAll('.carousel-dot');
     var prev = box.querySelector('.carousel-btn-left');
     var next = box.querySelector('.carousel-btn-right');
     if (slides.length < 2) return;
@@ -293,7 +301,7 @@
         var images;
         try {
           images = JSON.parse(el.getAttribute('data-images'));
-        } catch (error) {
+        } catch {
           images = [];
         }
         if (!images.length) return;
@@ -352,14 +360,21 @@
   }
 
   /* ------------------------------------------------- Formulario de contacto */
-  /* Demostracion: NO envia nada. Cuando haya destinatario real, poner el action
-     del <form> (FormSubmit.co o Formspree) y quitar este bloque. Ver LEEME.md. */
+  /* El envio se SIMULA: la validacion nativa del navegador (required +
+     type=email) impide el submit con campos vacios o correo invalido, y este
+     listener solo se dispara con datos validos: muestra el mensaje de
+     confirmacion y limpia el formulario. Cuando haya destinatario real, poner
+     el action del <form> (FormSubmit.co o Formspree) y quitar el
+     preventDefault. Ver LEEME.md. */
   function initForm() {
     var form = root.querySelector('.contacto-form');
     if (!form) return;
+    var success = form.querySelector('.contacto-form-success');
+    if (!success) return;
     form.addEventListener('submit', function (event) {
       event.preventDefault();
-      window.alert('Mensaje enviado (demostración). Configure Formspree para envío real.');
+      success.classList.add('show');
+      form.reset();
     });
   }
 

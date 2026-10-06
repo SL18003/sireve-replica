@@ -1,20 +1,28 @@
 /* ============================================================================
-   SIREVE · CSUCA — generador de los fragmentos HTML estaticos
+   SIREVE · CSUCA — generador del sitio estatico para WordPress
    ----------------------------------------------------------------------------
    Uso:  node wordpress/build.mjs        (desde la raiz del repo o desde wordpress/)
 
    Lee los datos reales del proyecto React (src/data/*) y los iconos de
-   @gravity-ui/icons, y escribe 13 fragmentos en wordpress/ listos para pegar en
-   paginas de WordPress. No hay que editar el HTML a mano: si se tocan
-   src/data/programs.js, galleryData.* o presidents.js, se vuelve a ejecutar y
-   los 13 archivos quedan actualizados.
+   @gravity-ui/icons, y escribe:
+
+     - 13 fragmentos en wordpress/*.html  (los usa el preview de verificacion)
+     - wordpress/sireve-theme/            (el tema que se sube a WordPress:
+       header.php, footer.php, plantillas, views/, assets/ y las imagenes)
+
+   No hay que editar el HTML a mano: los datos salen de src/data/* y la
+   estructura de cada pagina vive en las plantillas de este archivo. Ojo con lo
+   que NO se copia de src/: los estilos van en wordpress/sireve.css y el markup
+   de los .jsx de React esta replicado aqui en plantillas (React es el lado de
+   referencia y el harness -- css-diff / box-diff / interact -- contrasta los
+   dos lados). Si se cambia un .jsx hay que cambiar tambien su plantilla.
 
    NO se usa React para el HTML: los <svg> de los iconos se renderizan con
    react-dom/server en tiempo de compilacion y se guardan ya "planos" en el
    HTML, de modo que el sitio publicado no necesita React ni Gravity UI.
    ============================================================================ */
 
-import { readFileSync, writeFileSync, mkdirSync, rmSync, statSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, rmSync, statSync, copyFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -23,44 +31,44 @@ import { renderToStaticMarkup } from 'react-dom/server';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..');
 const TMP = path.join(HERE, '.tmp');
+const THEME = path.join(HERE, 'sireve-theme');
+const IMAGES = path.join(ROOT, 'public', 'images');
 
-const MEDIA_BASE = 'https://sireve.csuca.org/wp-content/uploads/2026/10/';
+/* Donde quedan las imagenes publicadas. Por defecto: dentro del propio tema,
+   asi el sitio es autocontenido y no depende de la biblioteca de medios.
+   Se puede sobre-escribir:  node build.mjs --media=https://otro-sitio/img/  */
+const mediaArg = process.argv.find((a) => a.startsWith('--media='));
+const MEDIA_BASE = mediaArg
+  ? mediaArg.slice('--media='.length).replace(/\/?$/, '/')
+  : 'https://sireve.csuca.org/wp-content/themes/sireve-theme/assets/images/';
 
-/* WordPress aplana las carpetas al subir: cada ruta local se mapea aqui al
-   nombre real que quedo en el servidor. Si se agrega una imagen nueva a
-   src/data, el generador avisa con un error claro en vez de publicar un 404. */
-const MEDIA_MAP = {
-  '/images/logo-csuca.png': 'logo-csuca.png',
-  '/images/placeholder.jpg': 'placeholder.jpg',
-  '/images/hero.jpg': null, // sin uso en la replica (el hero no lleva imagenes)
-  '/images/carousel/1.jpg': '1.jpg',
-  '/images/carousel/2.jpg': '2.jpg',
-  '/images/carousel/3.jpg': '3.jpg',
-  '/images/gallery/1.jpg': '1-1.jpg',
-  '/images/gallery/2.jpg': '2-1.jpg',
-  '/images/gallery/3.jpg': '3-1.jpg',
-  '/images/gallery/4.jpg': '4.jpg',
-  '/images/gallery/5.jpg': '5.jpg',
-  '/images/gallery/6.jpg': '6.jpg',
-  '/images/programs/excelencia.jpg': 'excelencia.jpg',
-  '/images/programs/ficcua.jpg': 'ficcua.jpg',
-  '/images/programs/juduca.jpg': 'juduca.jpg',
-  '/images/programs/salud.jpg': 'salud.jpg',
-  '/images/programs/sireve.jpg': 'sireve.jpg',
-  '/images/programs/voluntariado.jpg': 'voluntariado.png',
-  '/images/quick/actas.jpg': 'actas.jpg',
-  '/images/quick/galeria.jpg': 'galeria.jpg',
-  '/images/quick/reglamentos.jpg': 'reglamentos.jpg',
+/* Rutas locales que NO se publican (las que quedaron sin uso). Todo lo demas
+   se sirve conservando su estructura relativa a public/images/, de modo que
+   un archivo nuevo solo tiene que existir en disco. */
+const MEDIA_SKIP = new Set([
+  '/images/hero.jpg', // sin uso desde que el hero paso a foto lateral
+]);
+
+/* Rutas -> archivo real bajo public/images/ (excepciones puntuales). */
+const MEDIA_ALIAS = {
+  '/images/gallery/1.jpg': 'gallery/1.jpg',
 };
 
+const mediaUsed = new Set();
+
 function media(local) {
-  if (!(local in MEDIA_MAP)) {
-    throw new Error(`Sin mapeo en MEDIA_MAP para "${local}". Agregalo y vuelve a correr el generador.`);
+  if (MEDIA_SKIP.has(local)) {
+    throw new Error(`"${local}" esta marcado como sin uso; no se puede publicar.`);
   }
-  const file = MEDIA_MAP[local];
-  if (!file) throw new Error(`"${local}" esta marcado como sin uso; no se puede publicar.`);
-  return MEDIA_BASE + file;
+  const rel = MEDIA_ALIAS[local] ?? local.replace(/^\/images\//, '');
+  const file = path.join(IMAGES, rel);
+  if (!existsSync(file)) {
+    throw new Error(`Falta la imagen "${local}" (esperada en public/images/${rel}).`);
+  }
+  mediaUsed.add(rel);
+  return MEDIA_BASE + rel.split(path.sep).join('/');
 }
+
 
 const PLACEHOLDER = media('/images/placeholder.jpg');
 
@@ -413,6 +421,11 @@ function img(local, alt, cls = '') {
 }
 
 /* ----------------------------------------------------------- Fragmento */
+/* Cada pagina se genera una sola vez y se usa dos veces: como fragmento
+   (wordpress/*.html, que es lo que mide el preview) y como vista del tema
+   (sireve-theme/views/*.html, que es lo que se publica). */
+const VIEWS = [];
+
 function fragment({ file, title, url, body }) {
   const html = `<div class="sireve">
   ${header(url)}
@@ -426,12 +439,14 @@ ${body}
 `;
   const note = `<!--
   ${title}
-  Fragmento estatico generado por build.mjs. Pegar en una pagina de WordPress.
+  Generado por build.mjs: el fragmento alimenta el preview de verificacion y
+  la vista que usa el tema de WordPress.
   ${file} · ruta canonica: ${url}
   NO editar a mano: los cambios se pierden al recompilar.
 -->
-${html}`;
-  writeFileSync(path.join(HERE, file), uniqueClipIds(note), 'utf8');
+`;
+  writeFileSync(path.join(HERE, file), uniqueClipIds(note + html), 'utf8');
+  VIEWS.push({ file, url, html: uniqueClipIds(html) });
   return file;
 }
 
@@ -461,9 +476,9 @@ function assertClipIds(html, file) {
    ========================================================================== */
 
 const HERO_STATS = [
-  { value: '30+', label: 'Universidades miembros', icon: 'graduation-cap' },
-  { value: '5', label: 'Programas regionales', icon: 'book-open' },
-  { value: '8', label: 'Países de la región', icon: 'globe' },
+  { value: '30+', label: 'Universidades miembros' },
+  { value: '5', label: 'Programas regionales' },
+  { value: '8', label: 'Países de la región' },
 ];
 
 const QUICK_LINKS = [
@@ -506,7 +521,7 @@ const SIREVE_SECTION = {
 function landing() {
   const stats = HERO_STATS.map(
     (s) => `<div class="landing-hero-stat">
-              <span class="landing-hero-stat-icon">${icon(s.icon, 26)}</span>
+              <span class="landing-hero-stat-bar" aria-hidden="true"></span>
               <span class="landing-hero-stat-value">${s.value}</span>
               <span class="landing-hero-stat-label">${esc(s.label)}</span>
             </div>`,
@@ -520,7 +535,6 @@ function landing() {
     (q) => `<a class="quick-card" href="${q.path}">
                 <div class="quick-card-image">
                   ${img(q.image, q.title)}
-                  <div class="quick-card-image-overlay"></div>
                 </div>
                 <div class="quick-card-body">
                   <div class="quick-card-icon">${icon(q.icon, 20)}</div>
@@ -534,7 +548,6 @@ function landing() {
   const slides = CAROUSEL_IMAGES.map(
     (c, i) => `<div class="carousel-slide${i === 0 ? ' active' : ''}">
                   ${img(c.image, c.alt)}
-                  <div class="carousel-overlay"></div>
                 </div>`,
   ).join('\n                ');
 
@@ -568,21 +581,33 @@ function landing() {
   const body = `<div class="landing">
       <section class="landing-hero">
         <div class="landing-hero-content">
-          <h1 class="landing-hero-h1">
-            <span class="landing-hero-logo-plate landing-hero-animate landing-hero-animate--1">
+          <div class="landing-hero-brand landing-hero-animate landing-hero-animate--1">
+            <span class="landing-hero-logo-plate">
               ${img('/images/logo-csuca.png', 'SIREVE — Sistema Regional de Vida Estudiantil (CSUCA)', 'landing-hero-logo')}
             </span>
-          </h1>
-          <p class="landing-hero-sub landing-hero-animate landing-hero-animate--2">
-            Consejo Superior Universitario Centroamericano
-          </p>
-          <div class="landing-hero-stats landing-hero-animate landing-hero-animate--3">
-            ${stats}
+            <span class="landing-hero-brand-divider" aria-hidden="true"></span>
+            <span class="landing-hero-brand-text">CSUCA</span>
           </div>
-          <div class="landing-hero-actions landing-hero-animate landing-hero-animate--4">
+          <span class="landing-hero-eyebrow landing-hero-animate landing-hero-animate--1">Integración universitaria regional</span>
+          <h1 class="landing-hero-title landing-hero-animate landing-hero-animate--2">Consejo Superior Universitario Centroamericano</h1>
+          <span class="landing-hero-rule" aria-hidden="true"></span>
+          <div class="landing-hero-actions landing-hero-animate landing-hero-animate--3">
             <button type="button" class="landing-btn landing-btn-primary" data-target="#programas">Explorar programas</button>
             <a class="landing-btn landing-btn-secondary" href="/contacto/">Contacto</a>
           </div>
+          <div class="landing-hero-stats landing-hero-animate landing-hero-animate--4">
+            ${stats}
+          </div>
+        </div>
+        <div class="landing-hero-figure landing-hero-animate landing-hero-animate--2">
+          <span class="landing-hero-figure-frame" aria-hidden="true"></span>
+          <div class="landing-hero-photo-plate">
+            ${img('/images/hero-sicevaes.jpg', 'Participantes en una plenaria del encuentro estudiantil regional del CSUCA', 'landing-hero-photo')}
+          </div>
+          <span class="landing-hero-badge">
+            <span class="landing-hero-badge-dot" aria-hidden="true"></span>
+            Vida estudiantil · Centroamérica
+          </span>
         </div>
       </section>
 
@@ -627,9 +652,9 @@ function landing() {
               ${slides}
             </div>
             <button type="button" class="carousel-btn carousel-btn-right" aria-label="Siguiente">${icon('chevron-right', 22)}</button>
-            <div class="carousel-dots">
-              ${slideDots}
-            </div>
+          </div>
+          <div class="carousel-dots">
+            ${slideDots}
           </div>
         </section>
       </div>
@@ -801,20 +826,22 @@ function galeriaIndex() {
 }
 
 function albumCard(album) {
-  const images = album.images;
+  /* las fotos del fallback 2019 (y cualquier otra local) van al tema; las del
+     sitio oficial ya son URLs absolutas y se dejan como estan */
+  const images = album.images.map((src) => (src.startsWith('/images/') ? media(src) : src));
   const total = images.length;
   const multi = total > 1;
   const dots = images
     .map((_, i) => `<button type="button" class="gallery-album-dot${i === 0 ? ' active' : ''}" aria-label="Imagen ${i + 1}"></button>`)
-    .join('\n                  ');
+    .join('\n                ');
 
+  /* Los dots van FUERA de la foto (en .gallery-album-body): sobre la imagen
+     el punto activo desaparecia en las fotos claras. El contador y las flechas
+     siguen encima, donde ya eran chips solidos. */
   const controls = multi
     ? `<button type="button" class="gallery-album-nav gallery-album-nav--prev" aria-label="Anterior">${icon('chevron-left', 20)}</button>
               <button type="button" class="gallery-album-nav gallery-album-nav--next" aria-label="Siguiente">${icon('chevron-right', 20)}</button>
-              <span class="gallery-album-counter">1 / ${total}</span>
-              <div class="gallery-album-dots">
-                  ${dots}
-                </div>`
+              <span class="gallery-album-counter">1 / ${total}</span>`
     : '';
 
   const meta = multi
@@ -829,6 +856,9 @@ function albumCard(album) {
               ${controls}
             </div>
             <div class="gallery-album-body">
+              ${multi ? `<div class="gallery-album-dots">
+                ${dots}
+              </div>` : ''}
               <span class="gallery-album-title">${esc(album.title)}</span>
               ${meta}
             </div>
@@ -899,23 +929,29 @@ function contacto() {
         <div class="contacto-grid">
           <form class="contacto-form" method="post">
             <!-- Envio real: agregar action="https://formsubmit.co/sg@csuca.org"
-                 (o el endpoint de Formspree) y borrar el bloque initForm() de
-                 sireve.js. Mientras tanto el formulario es solo demostracion. -->
+                 (o el endpoint de Formspree) y quitar el preventDefault del
+                 listener initForm() de sireve.js. El envio se SIMULA: la
+                 validacion nativa (required + type=email) bloquea campos
+                 vacios y correos invalidos, y sireve.js muestra este mensaje
+                 de confirmacion y limpia los campos. -->
+            <div class="contacto-form-success" role="status">
+              <p class="contacto-form-success-text">¡Gracias por contactarnos! Nos pondremos en contacto con usted en breve.</p>
+            </div>
             <div class="contacto-field">
               <label class="contacto-label" for="nombre">Nombre Completo</label>
-              <input class="contacto-input" id="nombre" name="nombre" type="text" placeholder="Ingresa tu nombre">
+              <input class="contacto-input" id="nombre" name="nombre" type="text" placeholder="Ingresa tu nombre" required>
             </div>
             <div class="contacto-field">
               <label class="contacto-label" for="email">Correo Electrónico</label>
-              <input class="contacto-input" id="email" name="email" type="email" placeholder="tucorreo@ejemplo.com">
+              <input class="contacto-input" id="email" name="email" type="email" placeholder="tucorreo@ejemplo.com" required>
             </div>
             <div class="contacto-field">
               <label class="contacto-label" for="asunto">Asunto</label>
-              <input class="contacto-input" id="asunto" name="asunto" type="text" placeholder="¿De qué trata tu consulta?">
+              <input class="contacto-input" id="asunto" name="asunto" type="text" placeholder="¿De qué trata tu consulta?" required>
             </div>
             <div class="contacto-field">
               <label class="contacto-label" for="mensaje">Mensaje</label>
-              <textarea class="contacto-textarea" id="mensaje" name="mensaje" rows="5" placeholder="Escribe tu mensaje aquí..."></textarea>
+              <textarea class="contacto-textarea" id="mensaje" name="mensaje" rows="5" placeholder="Escribe tu mensaje aquí..." required></textarea>
             </div>
             <button type="submit" class="contacto-btn">Enviar Mensaje</button>
           </form>
@@ -964,8 +1000,8 @@ const PROGRAM_META = [
 function programa(program) {
   const meta = PROGRAM_META.map(
     (m) => `<div class="program-meta-item">
-              <span class="program-meta-icon">${icon(m.icon, 20)}</span>
-              <div>
+              <span class="program-meta-icon">${icon(m.icon, 18)}</span>
+              <div class="program-meta-body">
                 <span class="program-meta-label">${esc(m.label)}</span>
                 <span class="program-meta-value">${esc(m.value)}</span>
               </div>
@@ -973,7 +1009,8 @@ function programa(program) {
   ).join('\n            ');
 
   const editions = program.editions.length
-    ? program.editions
+    ? `<div class="program-editions-list">
+            ${program.editions
         .map((edition) => {
           const slot = edition.logo
             ? `<div class="program-edition-logo has-logo"><img src="${edition.logo}" alt="${attr(`Gráfica del ${program.title} ${edition.year || ''}`)}"></div>`
@@ -1006,11 +1043,14 @@ function programa(program) {
               </div>
             </article>`;
         })
-        .join('\n            ')
+        .join('\n            ')}
+          </div>`
     : `<div class="program-editions-empty">
             <span class="program-editions-empty-icon">${icon(program.icon, 26)}</span>
-            <h3 class="program-editions-empty-title">Espacio reservado para las ediciones</h3>
-            <p class="program-editions-empty-text">Aquí se publicarán la gráfica o mascota, la sede y los documentos de cada edición de ${esc(program.title)}.</p>
+            <div class="program-editions-empty-body">
+              <h3 class="program-editions-empty-title">Espacio reservado para las ediciones</h3>
+              <p class="program-editions-empty-text">Aquí se publicarán la gráfica o mascota, la sede y los documentos de cada edición de ${esc(program.title)}.</p>
+            </div>
           </div>`;
 
   const others = programs
@@ -1027,17 +1067,37 @@ function programa(program) {
     .join('\n            ');
 
   const body = `<div class="page-wrap">
-      ${pageHero({ title: program.title, subtitle: program.subtitle, icon: program.icon })}
       <div class="page-body">
-        <section class="program-meta">
-            ${meta}
+        <a class="program-back program-back--top" href="/#programas" data-target="#programas">
+          ${icon('arrow-left', 16)}
+          Volver a programas
+        </a>
+
+        <section class="program-hero">
+          <div class="program-hero-copy">
+            <span class="program-section-eyebrow">${esc(program.subtitle)}</span>
+            <h1 class="program-hero-title">${esc(program.title)}</h1>
+            <span class="program-rule" aria-hidden="true"></span>
+            <p class="program-hero-tagline">${esc(program.tagline)}</p>
+            <span class="program-hero-kind">Programa regional</span>
+
+            <div class="program-meta">
+              ${meta}
+            </div>
+          </div>
+
+          <figure class="program-hero-figure">
+            <span class="program-hero-frame" aria-hidden="true"></span>
+            ${img(program.featureImage, `Gráfica del ${program.title}`)}
+          </figure>
         </section>
 
         <section class="program-about">
           <div class="program-about-copy">
+            <span class="program-section-eyebrow">Sobre el programa</span>
             <h2 class="program-heading">El programa</h2>
             <span class="program-rule" aria-hidden="true"></span>
-            <span class="program-about-text">${esc(program.description)}</span>
+            <p class="program-about-text">${esc(program.description)}</p>
           </div>
           <figure class="program-about-figure">
             ${img(program.image, program.title)}
@@ -1045,6 +1105,7 @@ function programa(program) {
         </section>
 
         <section class="program-editions">
+          <span class="program-section-eyebrow">Archivo y documentos</span>
           <h2 class="program-heading">Historial de ediciones</h2>
           <span class="program-rule" aria-hidden="true"></span>
           ${editions}
@@ -1057,11 +1118,6 @@ function programa(program) {
             ${others}
           </div>
         </section>
-
-        <a class="program-back" href="/#programas" data-target="#programas">
-          ${icon('arrow-left', 16)}
-          Volver a programas
-        </a>
       </div>
     </div>`;
 
@@ -1071,6 +1127,216 @@ function programa(program) {
     url: `/programas/${program.slug}/`,
     body,
   });
+}
+
+/* ==========================================================================
+   TEMA DE WORDPRESS
+   Los PHP de aqui abajo son plantillas estaticas: build.mjs solo las copia y
+   les inyecta el mapa de vistas. No se editan a mano.
+   ========================================================================== */
+
+const THEME_STYLE = `/*
+Theme Name: SIREVE CSUCA
+Theme URI: https://sireve.csuca.org/
+Author: CSUCA
+Description: Sistema Regional de Vida Estudiantil (SIREVE) del CSUCA. Tema generado por wordpress/build.mjs; no editar a mano.
+Version: 1.0
+Requires at least: 6.0
+Requires PHP: 7.4
+Text Domain: sireve
+*/
+
+/* Los estilos reales estan en assets/sireve.css y se encolan en functions.php.
+   Este archivo solo lleva la cabecera que WordPress exige para activar el tema. */
+`;
+
+const FUNCTIONS_PHP = `<?php
+/**
+ * SIREVE · CSUCA — functions del tema.
+ * Generado por wordpress/build.mjs: no editar a mano (se sobreescribe al recompilar).
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+add_action( 'after_setup_theme', function () {
+	add_theme_support( 'title-tag' );
+} );
+
+/** Mapa ruta canonica => archivo de vista (lo escribe build.mjs). */
+function sireve_views() {
+	static $views = null;
+	if ( null === $views ) {
+		$file = get_template_directory() . '/views/index.php';
+		$views = file_exists( $file ) ? require $file : array();
+	}
+	return $views;
+}
+
+/** Ruta pedida por el navegador, normalizada con barra final: "/galeria/2017/". */
+function sireve_route() {
+	$uri  = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/';
+	$path = wp_parse_url( $uri, PHP_URL_PATH );
+	if ( ! $path ) {
+		$path = '/';
+	}
+	$home = wp_parse_url( home_url( '/' ), PHP_URL_PATH );
+	if ( $home && '/' !== $home && 0 === strpos( $path, $home ) ) {
+		$path = substr( $path, strlen( rtrim( $home, '/' ) ) );
+		if ( false === $path || '' === $path ) {
+			$path = '/';
+		}
+	}
+	$path = untrailingslashit( $path );
+	return '' === $path ? '/' : $path . '/';
+}
+
+/** true si la ruta pedida tiene vista generada. */
+function sireve_is_view() {
+	$views = sireve_views();
+	$route = sireve_route();
+	return isset( $views[ $route ] );
+}
+
+/** Pinta la vista de la ruta actual. Devuelve false si no hay vista. */
+function sireve_render() {
+	$views = sireve_views();
+	$route = sireve_route();
+	if ( ! isset( $views[ $route ] ) ) {
+		return false;
+	}
+	$file = basename( $views[ $route ] );
+	if ( ! preg_match( '/^[a-z0-9-]+\\.html$/', $file ) ) {
+		return false;
+	}
+	include get_template_directory() . '/views/' . $file;
+	return true;
+}
+
+/* Slugs numericos: WordPress renombra "2017" a "2017-2" al importar (los anos
+   de la galeria, sireve-pages.xml). Devolver algo distinto de null corta el
+   calculo de unicidad. El tema tiene que estar activo ANTES de importar. */
+add_filter( 'pre_wp_unique_post_slug', function ( $override, $slug, $post_id, $post_status, $post_type, $post_parent ) {
+	if ( 'page' === $post_type && in_array( $slug, array( '2017', '2018', '2019' ), true ) ) {
+		return $slug;
+	}
+	return $override;
+}, 10, 6 );
+
+/* /galeria/2017/ la captura la regla de paginacion de paginas
+   (pagename=galeria + page=2017) y redirect_canonical lo manda a /galeria/.
+   Esta regla ("top") resuelve la pagina hija antes que esa regla generica;
+   hace falta un flush de permalinks (Guardar enlaces permanentes) al activar. */
+add_action( 'init', function () {
+	add_rewrite_rule( '^galeria/([0-9]{4})/?$', 'index.php?pagename=galeria/$matches[1]', 'top' );
+} );
+
+/* Un solo juego de assets para todo el sitio. La hoja va en prioridad 999 para
+   cargar despues de cualquier CSS del tema y poder pisar lo que haga. */
+add_action( 'wp_enqueue_scripts', function () {
+	$uri = get_template_directory_uri();
+	wp_enqueue_style(
+		'sireve-fonts',
+		'https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;600;700&display=swap',
+		array(),
+		null
+	);
+	wp_enqueue_style( 'sireve', $uri . '/assets/sireve.css', array( 'sireve-fonts' ), '1.0', 'all' );
+	wp_enqueue_script( 'sireve', $uri . '/assets/sireve.js', array(), '1.0', true );
+}, 999 );
+
+/* En las vistas no hay contenido de bloques: sin el CSS global de WordPress su
+   tipografia (Manrope) no se come la nuestra. El resto del sitio no se toca. */
+add_action( 'wp_enqueue_scripts', function () {
+	if ( ! sireve_is_view() ) {
+		return;
+	}
+	wp_dequeue_style( 'global-styles' );
+	wp_dequeue_style( 'wp-block-library' );
+}, 20 );
+`;
+
+const HEADER_PHP = `<?php
+/**
+ * Apertura del documento. El header del SIREVE (barra, nav y redes) vive dentro
+ * de cada vista, generado por build.mjs, para que el preview mida lo mismo que
+ * se publica.
+ */
+?>
+<!doctype html>
+<html <?php language_attributes(); ?>>
+<head>
+	<meta charset="<?php bloginfo( 'charset' ); ?>">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<?php wp_head(); ?>
+</head>
+<body <?php body_class(); ?>>
+`;
+
+const FOOTER_PHP = `<?php
+/**
+ * Cierre del documento. El pie del SIREVE tambien vive en cada vista.
+ */
+?>
+<?php wp_footer(); ?>
+</body>
+</html>
+`;
+
+const TEMPLATE_PHP = `<?php
+/**
+ * Plantilla de las vistas SIREVE: si la ruta tiene vista generada se pinta esa
+ * vista; si no, se pinta lo que tenga la pagina en el editor.
+ * Generado por wordpress/build.mjs.
+ */
+get_header();
+
+if ( ! sireve_render() ) {
+	?>
+	<div class="page-wrap">
+		<div class="page-body">
+			<h1 class="page-hero-title"><?php the_title(); ?></h1>
+			<?php the_content(); ?>
+		</div>
+	</div>
+	<?php
+}
+
+get_footer();
+`;
+
+function emitTheme() {
+  rmSync(THEME, { recursive: true, force: true });
+  const put = (rel, data) => {
+    const target = path.join(THEME, rel);
+    mkdirSync(path.dirname(target), { recursive: true });
+    writeFileSync(target, data, 'utf8');
+  };
+
+  put('style.css', THEME_STYLE);
+  put('functions.php', FUNCTIONS_PHP);
+  put('header.php', HEADER_PHP);
+  put('footer.php', FOOTER_PHP);
+  put('page.php', TEMPLATE_PHP);
+  put('front-page.php', TEMPLATE_PHP);
+  put('index.php', TEMPLATE_PHP);
+
+  const map = VIEWS.map((v) => `  '${v.url}' => '${v.file}',`).join('\n');
+  put('views/index.php', `<?php\n/* Ruta canonica => vista. Generado por build.mjs: no editar. */\nreturn array(\n${map}\n);\n`);
+  for (const v of VIEWS) put(`views/${v.file}`, v.html);
+
+  mkdirSync(path.join(THEME, 'assets', 'images'), { recursive: true });
+  copyFileSync(path.join(HERE, 'sireve.css'), path.join(THEME, 'assets', 'sireve.css'));
+  copyFileSync(path.join(HERE, 'sireve.js'), path.join(THEME, 'assets', 'sireve.js'));
+
+  for (const rel of [...mediaUsed].sort()) {
+    const dst = path.join(THEME, 'assets', 'images', rel);
+    mkdirSync(path.dirname(dst), { recursive: true });
+    copyFileSync(path.join(IMAGES, rel), dst);
+  }
+
+  return { views: VIEWS.length, images: mediaUsed.size };
 }
 
 /* ------------------------------------------------------------------ Run */
@@ -1091,6 +1357,12 @@ for (const f of written) {
   console.log(`  - ${f} (${(size / 1024).toFixed(1)} KB)`);
   assertClipIds(readFileSync(path.join(HERE, f), 'utf8'), f);
 }
+
+const theme = emitTheme();
+console.log(`\ntema escrito en ${path.relative(ROOT, THEME)}`);
+console.log(`  - ${theme.views} vistas, ${theme.images} imagenes en assets/images/`);
+console.log(`  - base de imagenes: ${MEDIA_BASE}`);
+
 if (process.exitCode) {
   console.error('\nbuild incompleto: revisa los ids de clipPath de arriba');
 }

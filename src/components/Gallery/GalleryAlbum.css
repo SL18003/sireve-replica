@@ -128,6 +128,7 @@
 }
 
 .gallery-album-title {
+  font-size: 15px;
   font-weight: 600 !important;
   line-height: 1.5 !important;
   color: var(--g-color-text-primary) !important;
@@ -136,6 +137,9 @@
 
 .gallery-album-meta {
   display: block;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--g-color-text-secondary);
 }
 
 /* Lightbox */

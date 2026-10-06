@@ -29,6 +29,36 @@
   margin-top: 4px;
 }
 
+/* El Card ya no es el flex que separa los campos: el <form> interno lo es. */
+.contacto-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Mensaje de envio simulado: filete azul como las fichas de Programa (el
+   manual de identidad no permite verde en la UI, solo en el isologo). */
+.contacto-form-success {
+  display: none;
+  padding: 14px 16px;
+  border: 1px solid rgba(19, 102, 175, 0.28);
+  border-left: 4px solid var(--sireve-primary);
+  border-radius: var(--sireve-radius);
+  background: rgba(19, 102, 175, 0.06);
+}
+
+.contacto-form-success.show {
+  display: block;
+}
+
+.contacto-form-success-text {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 600;
+  color: var(--sireve-primary);
+}
+
 .contacto-info {
   padding: 28px !important;
   border-radius: var(--sireve-radius) !important;
@@ -149,4 +179,13 @@
 .g-root_theme_dark .contacto-form .g-text-input__control:hover,
 .g-root_theme_dark .contacto-form .g-text-area__control:hover {
   border-color: rgba(66, 154, 208, 0.45) !important;
+}
+
+.g-root_theme_dark .contacto-form-success {
+  background: rgba(66, 154, 208, 0.12);
+  border-color: rgba(66, 154, 208, 0.35);
+}
+
+.g-root_theme_dark .contacto-form-success-text {
+  color: var(--sireve-primary-light);
 }

@@ -17,25 +17,39 @@ const TYPES = {
   '.json': 'application/json',
 };
 
+/* Las fotos del tema viven en sireve-theme/assets y en el sitio real se piden a
+   https://sireve.csuca.org/wp-content/themes/sireve-theme/assets/... (aun sin
+   subir). Aquí se sirven desde disco para que la verificación mida los bytes
+   reales y no un 404 remoto. */
+const THEME_ASSETS = '/wp-content/themes/sireve-theme/assets/';
+const THEME_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'sireve-theme', 'assets');
+
 createServer((req, res) => {
   let pathname = decodeURIComponent(new URL(req.url, 'http://x').pathname);
   let file = path.join(ROOT, pathname);
 
-  if (!pathname.endsWith('/')) {
+  if (pathname.startsWith(THEME_ASSETS)) {
+    file = path.join(THEME_DIR, pathname.slice(THEME_ASSETS.length));
+  } else if (!pathname.endsWith('/')) {
     if (existsSync(file) && statSync(file).isDirectory()) file = path.join(file, 'index.html');
   } else {
     file = path.join(file, 'index.html');
   }
 
-  if (!file.startsWith(ROOT) || !existsSync(file)) {
+  const resolved = path.resolve(file);
+  if (
+    !(resolved.startsWith(ROOT) || resolved.startsWith(THEME_DIR)) ||
+    !existsSync(resolved) ||
+    statSync(resolved).isDirectory()
+  ) {
     res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
     res.end('404 ' + pathname);
     return;
   }
 
   res.writeHead(200, {
-    'content-type': TYPES[path.extname(file).toLowerCase()] || 'application/octet-stream',
+    'content-type': TYPES[path.extname(resolved).toLowerCase()] || 'application/octet-stream',
     'cache-control': 'no-store',
   });
-  res.end(readFileSync(file));
+  res.end(readFileSync(resolved));
 }).listen(PORT, () => console.log(`preview en http://localhost:${PORT}/`));

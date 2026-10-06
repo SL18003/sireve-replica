@@ -1,9 +1,21 @@
+import { useState } from 'react';
 import { Text, TextInput, TextArea, Button, Card, Icon } from '@gravity-ui/uikit';
 import { Envelope, Geo, Smartphone } from '@gravity-ui/icons';
 import PageHeader from '../components/Layout/PageHeader';
 import './Contacto.css';
 
 export default function Contacto() {
+  /* Envio simulado: la validacion nativa del <form> (required + type=email)
+     bloquea campos vacios y correos invalidos; el submit solo se dispara con
+     datos validos, y ahi se muestra el mensaje y se limpia el formulario. */
+  const [enviado, setEnviado] = useState(false);
+
+  const handleSend = (event) => {
+    event.preventDefault();
+    setEnviado(true);
+    event.currentTarget.reset();
+  };
+
   return (
     <div className="page-wrap">
       <PageHeader
@@ -14,31 +26,41 @@ export default function Contacto() {
       <div className="page-body">
         <div className="contacto-grid">
           <Card view="raised" className="contacto-form">
-            {/* action="https://formspree.io/f/XXXX" method="POST" — activar cuando se configure Formspree */}
-            <div className="contacto-field">
-              <Text variant="body-2" className="contacto-label">Nombre Completo</Text>
-              <TextInput size="l" placeholder="Ingresa tu nombre" name="nombre" />
-            </div>
-            <div className="contacto-field">
-              <Text variant="body-2" className="contacto-label">Correo Electrónico</Text>
-              <TextInput size="l" type="email" placeholder="tucorreo@ejemplo.com" name="email" />
-            </div>
-            <div className="contacto-field">
-              <Text variant="body-2" className="contacto-label">Asunto</Text>
-              <TextInput size="l" placeholder="¿De qué trata tu consulta?" name="asunto" />
-            </div>
-            <div className="contacto-field">
-              <Text variant="body-2" className="contacto-label">Mensaje</Text>
-              <TextArea size="l" minRows={5} placeholder="Escribe tu mensaje aquí..." name="mensaje" />
-            </div>
-            <Button
-              size="l"
-              view="action"
-              className="contacto-btn"
-              onClick={() => window.alert('Mensaje enviado (demostración). Configure Formspree para envío real.')}
+            <div
+              className={enviado ? 'contacto-form-success show' : 'contacto-form-success'}
+              role="status"
             >
-              Enviar Mensaje
-            </Button>
+              <p className="contacto-form-success-text">
+                ¡Gracias por contactarnos! Nos pondremos en contacto con usted en breve.
+              </p>
+            </div>
+            {/* action="https://formspree.io/f/XXXX" method="POST" — activar cuando se configure Formspree */}
+            <form onSubmit={handleSend}>
+              <div className="contacto-field">
+                <Text variant="body-2" className="contacto-label">Nombre Completo</Text>
+                <TextInput size="l" placeholder="Ingresa tu nombre" name="nombre" controlProps={{ required: true }} />
+              </div>
+              <div className="contacto-field">
+                <Text variant="body-2" className="contacto-label">Correo Electrónico</Text>
+                <TextInput size="l" type="email" placeholder="tucorreo@ejemplo.com" name="email" controlProps={{ required: true }} />
+              </div>
+              <div className="contacto-field">
+                <Text variant="body-2" className="contacto-label">Asunto</Text>
+                <TextInput size="l" placeholder="¿De qué trata tu consulta?" name="asunto" controlProps={{ required: true }} />
+              </div>
+              <div className="contacto-field">
+                <Text variant="body-2" className="contacto-label">Mensaje</Text>
+                <TextArea size="l" minRows={5} placeholder="Escribe tu mensaje aquí..." name="mensaje" controlProps={{ required: true }} />
+              </div>
+              <Button
+                type="submit"
+                size="l"
+                view="action"
+                className="contacto-btn"
+              >
+                Enviar Mensaje
+              </Button>
+            </form>
           </Card>
 
           <Card view="raised" className="contacto-info">

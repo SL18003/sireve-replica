@@ -78,6 +78,8 @@
 .timeline-empty-title {
   font-size: 18px;
   font-weight: 600;
+  line-height: 28px;
+  margin: 0.83em 0;
   color: var(--sireve-ink);
 }
 
@@ -85,6 +87,7 @@
   font-size: 14px;
   line-height: 1.7;
   max-width: 560px;
+  color: var(--g-color-text-secondary);
 }
 
 /* --- Lista vertical --- */
@@ -399,6 +402,7 @@
   grid-column: 1 / -1;
   text-align: center;
   padding: 48px 24px;
+  color: var(--g-color-text-secondary);
 }
 
 @media (max-width: 768px) {

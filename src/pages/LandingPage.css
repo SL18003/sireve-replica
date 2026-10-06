@@ -266,6 +266,8 @@
   border-radius: var(--sireve-radius);
   font-size: 15px;
   font-weight: 600;
+  line-height: inherit;
+  letter-spacing: inherit;
   cursor: pointer;
   border: none;
   font-family: inherit;
@@ -542,6 +544,8 @@
   height: 44px;
   border-radius: 50%;
   border: none;
+  padding: 0;
+  font-size: inherit;
   background: #fff;
   color: var(--sireve-primary);
   cursor: pointer;
@@ -579,6 +583,8 @@
   background: var(--sireve-grey);
   cursor: pointer;
   padding: 0;
+  font-size: inherit;
+  font-family: inherit;
   transition: all 0.3s;
 }
 

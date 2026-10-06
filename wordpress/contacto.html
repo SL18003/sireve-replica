@@ -1,6 +1,7 @@
 <!--
   Contacto
-  Fragmento estatico generado por build.mjs. Pegar en una pagina de WordPress.
+  Generado por build.mjs: el fragmento alimenta el preview de verificacion y
+  la vista que usa el tema de WordPress.
   contacto.html · ruta canonica: /contacto/
   NO editar a mano: los cambios se pierden al recompilar.
 -->
@@ -9,7 +10,7 @@
       <div class="header-inner">
         <a href="/" class="header-brand">
           <span class="header-brand-logo">
-            <img src="https://sireve.csuca.org/wp-content/uploads/2026/10/logo-csuca.png" alt="CSUCA" class="header-logo-img">
+            <img src="https://sireve.csuca.org/wp-content/themes/sireve-theme/assets/images/logo-csuca.png" alt="CSUCA" class="header-logo-img">
           </span>
           <span class="header-brand-text">
             <span class="header-brand-title">Consejo Superior Universitario<br>Centroamericano</span>
@@ -84,23 +85,29 @@
         <div class="contacto-grid">
           <form class="contacto-form" method="post">
             <!-- Envio real: agregar action="https://formsubmit.co/sg@csuca.org"
-                 (o el endpoint de Formspree) y borrar el bloque initForm() de
-                 sireve.js. Mientras tanto el formulario es solo demostracion. -->
+                 (o el endpoint de Formspree) y quitar el preventDefault del
+                 listener initForm() de sireve.js. El envio se SIMULA: la
+                 validacion nativa (required + type=email) bloquea campos
+                 vacios y correos invalidos, y sireve.js muestra este mensaje
+                 de confirmacion y limpia los campos. -->
+            <div class="contacto-form-success" role="status">
+              <p class="contacto-form-success-text">¡Gracias por contactarnos! Nos pondremos en contacto con usted en breve.</p>
+            </div>
             <div class="contacto-field">
               <label class="contacto-label" for="nombre">Nombre Completo</label>
-              <input class="contacto-input" id="nombre" name="nombre" type="text" placeholder="Ingresa tu nombre">
+              <input class="contacto-input" id="nombre" name="nombre" type="text" placeholder="Ingresa tu nombre" required>
             </div>
             <div class="contacto-field">
               <label class="contacto-label" for="email">Correo Electrónico</label>
-              <input class="contacto-input" id="email" name="email" type="email" placeholder="tucorreo@ejemplo.com">
+              <input class="contacto-input" id="email" name="email" type="email" placeholder="tucorreo@ejemplo.com" required>
             </div>
             <div class="contacto-field">
               <label class="contacto-label" for="asunto">Asunto</label>
-              <input class="contacto-input" id="asunto" name="asunto" type="text" placeholder="¿De qué trata tu consulta?">
+              <input class="contacto-input" id="asunto" name="asunto" type="text" placeholder="¿De qué trata tu consulta?" required>
             </div>
             <div class="contacto-field">
               <label class="contacto-label" for="mensaje">Mensaje</label>
-              <textarea class="contacto-textarea" id="mensaje" name="mensaje" rows="5" placeholder="Escribe tu mensaje aquí..."></textarea>
+              <textarea class="contacto-textarea" id="mensaje" name="mensaje" rows="5" placeholder="Escribe tu mensaje aquí..." required></textarea>
             </div>
             <button type="submit" class="contacto-btn">Enviar Mensaje</button>
           </form>
@@ -142,7 +149,7 @@
       <div class="footer-content">
         <div class="footer-col">
           <div class="footer-brand-row">
-            <img src="https://sireve.csuca.org/wp-content/uploads/2026/10/logo-csuca.png" alt="CSUCA" class="footer-logo-img">
+            <img src="https://sireve.csuca.org/wp-content/themes/sireve-theme/assets/images/logo-csuca.png" alt="CSUCA" class="footer-logo-img">
           </div>
           <span class="footer-csuca">Sistema Regional de Vida Estudiantil</span>
           <p class="footer-text">Consejo Superior Universitario Centroamericano. Coordinando la vida estudiantil en Centroamérica y el Caribe.</p>

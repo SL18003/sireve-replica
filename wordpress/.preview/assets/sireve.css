@@ -244,6 +244,35 @@
   display: block;
 }
 
+/* Botones con view="action" en src/index.css: en React Gravity pinta esos
+   botones, aqui solo dejamos el mismo color (background-color !important) para
+   que el CSS no se pelee con las reglas de cada pagina. */
+.sireve .g-button_view_action,
+.sireve .contacto-btn,
+.sireve .actas-card-btn,
+.sireve .reglamentos-item-btn {
+  --g-button-background-color: var(--sireve-primary) !important;
+  --g-button-background-color-hover: var(--sireve-primary-mid) !important;
+  --g-button-text-color: #ffffff !important;
+  background-color: var(--sireve-primary) !important;
+  color: #ffffff !important;
+}
+
+.sireve .g-button_view_action:hover,
+.sireve .contacto-btn:hover,
+.sireve .actas-card-btn:hover,
+.sireve .reglamentos-item-btn:hover {
+  background-color: var(--sireve-primary-mid) !important;
+  color: #ffffff !important;
+}
+
+.sireve .g-button_view_action .g-button__text,
+.sireve .contacto-btn .g-button__text,
+.sireve .actas-card-btn .g-button__text,
+.sireve .reglamentos-item-btn .g-button__text {
+  color: #ffffff !important;
+}
+
 /* ================================ 4. HEADER ============================== */
 /* Barra CAROLINA BLUE #429ad0 con texto blanco, igual que csuca.org.
    Hover y activo en chip GREEN BLUE #1366af (5.9:1). */
@@ -321,14 +350,12 @@
   }
 }
 
+/* src/components/Layout/Header.css */
+
 .sireve .header-nav-anchor {
-  font-weight: 700;
-  /* En React esta entrada es un <button> y el atajo `font` del user-agent de
-     Chrome deja letter-spacing y line-height en `normal`. Aqui es un <a>, para
-     que el salto a #sireve siga funcionando sin JS, asi que se replica a mano:
-     sin esto el texto mide 1.2px mas (6 caracteres x 0.2px de letter-spacing). */
-  letter-spacing: normal;
-  line-height: normal;
+  font-weight: 600;
+  line-height: inherit;
+  letter-spacing: inherit;
 }
 
 .sireve .header-divider {
@@ -352,6 +379,8 @@
   padding: 11px;              /* area tactil de 44px (icono 22px) */
   min-width: 44px;
   min-height: 44px;
+  font-size: inherit;
+  font-family: inherit;
   align-items: center;
   justify-content: center;
 }
@@ -495,9 +524,13 @@
   color: #fff;
 }
 
+/* src/components/Layout/SocialLinks.css */
+
 .sireve .social-links--header .social-links-item {
   background: transparent;
   color: #fff;
+  width: 40px;
+  height: 40px;
 }
 
 .sireve .social-links--header .social-links-item:hover {
@@ -517,12 +550,15 @@
   margin-top: auto;
 }
 
+/* src/components/Layout/Footer.css */
+
 .sireve .footer-content {
   max-width: 1200px;
-  margin: 0 auto 36px;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
   gap: 40px;
+  margin-bottom: 36px;
 }
 
 .sireve .footer-col {
@@ -584,13 +620,17 @@
   font-size: 14px;
 }
 
+/* src/components/Layout/Footer.css */
+
 .sireve .footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-/* inline-block + padding vertical: cada enlace pasa de ~24px a ~34px de alto */
 .sireve .footer-links a {
   display: inline-block;
   padding: 5px 0;
@@ -600,8 +640,6 @@
   transition: font-weight 0.15s;
 }
 
-/* GREEN BLUE sobre CAROLINA solo da 1.7:1, asi que el hover se marca con
-   subrayado y peso en lugar de cambiar de color */
 .sireve .footer-links a:hover {
   font-weight: 600;
   text-decoration: underline;
@@ -754,97 +792,165 @@
 }
 
 /* Hero sobre blanco puro, SIN imagenes: el logo ampliado hace de titulo
-   (como csuca.org/es/sireve), seguido del subtitulo, las stats y los CTAs. */
+/* src/pages/LandingPage.css */
+
 .sireve .landing-hero {
   position: relative;
-  max-width: 1280px;
+  max-width: 1360px;
   margin-inline: auto;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 56px;
   align-items: center;
   background: var(--sireve-bg);
-  text-align: center;
-  padding: 64px 32px 40px;
+  padding: 56px 24px 52px;
   overflow: hidden;
 }
 
 .sireve .landing-hero-content {
   position: relative;
   z-index: 1;
-  width: 100%;
-  max-width: 860px;
+  min-width: 0;
 }
 
-.sireve .landing-hero-h1 {
-  margin: 0;
-  font-weight: 300;
+.sireve .landing-hero-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
 }
 
-/* Placa blanca: el logo oficial es negro/azul y no admite filtro. Sobre blanco
-   necesita borde para que se lea el area de proteccion. */
 .sireve .landing-hero-logo-plate {
   display: inline-block;
   max-width: 100%;
   box-sizing: border-box;
   background: #fff;
-  padding: 18px 32px;
+  padding: 9px 16px;
   border-radius: var(--sireve-radius);
-  margin-bottom: 20px;
   border: 1px solid var(--sireve-border);
-  box-shadow: var(--sireve-shadow);
 }
 
 .sireve .landing-hero-logo {
-  height: 120px;
+  height: 40px;
   width: auto;
   max-width: 100%;
   display: block;
 }
 
+.sireve .landing-hero-brand-divider {
+  width: 1px;
+  height: 30px;
+  background: var(--sireve-border);
+}
+
+.sireve .landing-hero-brand-text {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sireve-primary);
+  line-height: 1;
+}
+
+.sireve .landing-hero-eyebrow {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sireve-primary);
+  margin-bottom: 16px;
+}
+
+.sireve .landing-hero-title {
+  margin: 0;
+  font-size: clamp(32px, 4.2vw, 54px);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  color: #000;
+  text-wrap: balance;
+}
+
+.sireve .landing-hero-rule {
+  display: block;
+  width: 64px;
+  height: 4px;
+  background: var(--sireve-primary);
+  border-radius: 2px;
+  margin: 26px 0 30px;
+}
+
 .sireve .landing-hero-animate {
   opacity: 0;
   transform: translateY(24px);
+  /* Los keyframes se renombraron a sireve-* para no chocar con los del tema de
+     WordPress: hay que usar el nombre renombrado, si no la animacion no existe
+     y el bloque se queda en opacity:0 (invisible). */
   animation: sireve-hero-fade-up 0.7s ease forwards;
 }
 
-.sireve .landing-hero-animate--1 { animation-delay: 0.1s; }
-.sireve .landing-hero-animate--2 { animation-delay: 0.25s; }
-.sireve .landing-hero-animate--3 { animation-delay: 0.4s; }
-.sireve .landing-hero-animate--4 { animation-delay: 0.55s; }
+.sireve .landing-hero-animate--1 {
+  animation-delay: 0.1s;
+}
 
-/* Stats: tres tarjetas independientes con icono GREEN BLUE, cifra y etiqueta */
+.sireve .landing-hero-animate--2 {
+  animation-delay: 0.25s;
+}
+
+.sireve .landing-hero-animate--3 {
+  animation-delay: 0.4s;
+}
+
+.sireve .landing-hero-animate--4 {
+  animation-delay: 0.55s;
+}
+
+.sireve .landing-hero-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
 .sireve .landing-hero-stats {
   display: flex;
-  justify-content: center;
-  gap: 16px;
-  width: fit-content;
+  margin-top: 44px;
+  width: 100%;
   max-width: 100%;
-  margin: 0 auto 32px;
 }
 
 .sireve .landing-hero-stat {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 6px;
+  align-items: flex-start;
   flex: 1;
-  min-width: 150px;
-  padding: 18px 24px;
-  background: var(--sireve-surface);
-  border: 1px solid var(--sireve-border);
-  border-radius: var(--sireve-radius);
+  min-width: 0;
+  padding: 0 26px;
+  border-left: 1px solid var(--sireve-border);
 }
 
-.sireve .landing-hero-stat-icon {
-  color: var(--sireve-primary);
-  margin-bottom: 2px;
+.sireve .landing-hero-stat:first-child {
+  padding-left: 0;
+  border-left: none;
+}
+
+.sireve .landing-hero-stat-bar {
+  display: block;
+  width: 32px;
+  height: 3px;
+  background: var(--sireve-primary);
+  border-radius: 2px;
+  margin-bottom: 14px;
 }
 
 .sireve .landing-hero-stat-value {
-  font-size: 36px;
-  font-weight: 300;
-  color: var(--sireve-primary);
+  font-size: clamp(34px, 3.4vw, 46px);
+  font-weight: 700;
+  color: #000;
   line-height: 1;
+  letter-spacing: -0.01em;
 }
 
 .sireve .landing-hero-stat-label {
@@ -853,41 +959,84 @@
   color: var(--sireve-muted);
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  line-height: 1.35;
+  margin-top: 9px;
+  max-width: 15ch;
 }
 
-.sireve .landing-hero-sub {
+.sireve .landing-hero-figure {
+  position: relative;
+  min-width: 0;
+}
+
+.sireve .landing-hero-figure-frame {
+  position: absolute;
+  top: -22px;
+  left: -22px;
+  width: 48%;
+  height: 70%;
+  background: var(--sireve-primary);
+  border-radius: var(--sireve-radius);
+  z-index: 0;
+}
+
+.sireve .landing-hero-photo-plate {
+  position: relative;
+  z-index: 1;
+  background: var(--sireve-surface);
+  border-radius: var(--sireve-radius);
+  overflow: hidden;
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.16);
+}
+
+.sireve .landing-hero-photo {
   display: block;
-  color: var(--sireve-muted);
-  font-size: 17px;
-  line-height: 1.7;
-  font-weight: 300;
-  margin-bottom: 32px;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center 30%;
 }
 
-.sireve .landing-hero-actions {
-  display: flex;
-  gap: 14px;
-  justify-content: center;
-  flex-wrap: wrap;
+.sireve .landing-hero-badge {
+  position: absolute;
+  left: 20px;
+  bottom: -20px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: #fff;
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius);
+  padding: 11px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sireve-muted);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.14);
+  max-width: calc(100% - 40px);
+}
+
+.sireve .landing-hero-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--sireve-primary);
+  flex: none;
 }
 
 .sireve .landing-btn {
-  /* SIN display propio: en React es un <button> y el user-agent le pone
-     inline-block. Dentro de .landing-hero-actions (flex) eso se blockifica solo,
-     pero el CTA de .sireve-copy se queda inline-block; con `display: block`
-     queda 1.6px mas ancho y cambia de modo de flujo. */
   padding: 13px 28px;
   border-radius: var(--sireve-radius);
   font-size: 15px;
   font-weight: 600;
+  line-height: inherit;
+  letter-spacing: inherit;
   cursor: pointer;
   border: none;
   font-family: inherit;
-  text-decoration: none;
   transition: all 0.2s ease;
 }
 
-/* Sobre fondo blanco el CTA primario va en GREEN BLUE con texto blanco (5.9:1) */
 .sireve .landing-btn-primary {
   background: var(--sireve-primary);
   color: #fff;
@@ -905,11 +1054,6 @@
   background: #fff;
   color: var(--sireve-primary);
   border: 2px solid var(--sireve-primary);
-  /* Aqui es un <a> para que el enlace a /contacto/ funcione sin JS, pero en React
-     es un <button>: el atajo `font` del user-agent deja letter-spacing y
-     line-height en `normal`, y sin replicarlo el texto mide 1.6px mas. */
-  letter-spacing: normal;
-  line-height: normal;
 }
 
 .sireve .landing-btn-secondary:hover {
@@ -1051,11 +1195,6 @@
   transform: scale(1.05);
 }
 
-.sireve .quick-card-image-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(19, 102, 175, 0.5), transparent);
-}
 
 .sireve .quick-card-body {
   padding: 24px;
@@ -1135,11 +1274,6 @@
   object-fit: cover;
 }
 
-.sireve .carousel-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(19, 102, 175, 0.55), transparent 50%);
-}
 
 .sireve .carousel-btn {
   position: absolute;
@@ -1150,6 +1284,8 @@
   height: 44px;
   border-radius: 50%;
   border: none;
+  padding: 0;
+  font-size: inherit;
   background: #fff;
   color: var(--sireve-primary);
   cursor: pointer;
@@ -1169,14 +1305,13 @@
 .sireve .carousel-btn-left { left: 16px; }
 .sireve .carousel-btn-right { right: 16px; }
 
+/* src/pages/LandingPage.css */
+
 .sireve .carousel-dots {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
-  gap: 8px;
-  z-index: 2;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 16px;
 }
 
 .sireve .carousel-dot {
@@ -1185,13 +1320,14 @@
   height: 8px;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--sireve-grey);
   cursor: pointer;
   padding: 0;
+  font-size: inherit;
+  font-family: inherit;
   transition: all 0.3s;
 }
 
-/* Area de toque real (~28px) sin cambiar el aspecto de 8px */
 .sireve .carousel-dot::after {
   content: '';
   position: absolute;
@@ -1199,17 +1335,13 @@
 }
 
 .sireve .carousel-dot.active {
-  background: #fff;
+  background: var(--sireve-primary);
   transform: scale(1.3);
 }
 
-/* --- Programas --- */
 .sireve .programs-section {
   padding: 72px 24px 88px;
   background: var(--sireve-surface);
-  /* El ancla "#programas" del header y de las paginas de programa debe quedar
-     debajo del header sticky, no tapada por el. */
-  scroll-margin-top: 88px;
 }
 
 .sireve .programs-grid {
@@ -1241,6 +1373,7 @@
 
 .sireve .program-card-image {
   position: relative;
+  isolation: isolate;
   height: 220px;
   overflow: hidden;
 }
@@ -1249,7 +1382,18 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: grayscale(1);
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sireve .program-card-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--sireve-primary);
+  mix-blend-mode: multiply;
+  pointer-events: none;
 }
 
 .sireve .program-card:hover .program-card-image img {
@@ -1259,7 +1403,7 @@
 .sireve .program-card-image-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(19, 102, 175, 0.9) 0%, rgba(19, 102, 175, 0.35) 55%, transparent 100%);
+  z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -1293,6 +1437,7 @@
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 3;
   height: 4px;
   background: #fff;
   transform: scaleX(0);
@@ -1320,7 +1465,7 @@
 
 .sireve .program-card-label {
   display: inline-block;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1338,7 +1483,6 @@
   margin: 0 0 18px;
 }
 
-/* CTA hacia la pagina del programa */
 .sireve .program-card-cta {
   display: inline-flex;
   align-items: center;
@@ -1360,7 +1504,6 @@
   background: var(--sireve-primary-mid);
   border-color: var(--sireve-primary-mid);
 }
-
 /* ================================ 9. ACTAS =============================== */
 
 .sireve .actas-grid {
@@ -1371,27 +1514,31 @@
   gap: 24px;
 }
 
+/* src/pages/Actas.css */
+
 .sireve .actas-card {
-  background: var(--sireve-float);
-  border: 1px solid var(--sireve-border);
-  border-radius: var(--sireve-radius);
-  box-shadow: var(--sireve-card-shadow);
-  padding: 0;
+  padding: 0 !important;
+  border-radius: var(--sireve-radius) !important;
   display: flex;
   flex-direction: column;
   min-height: 220px;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s, border-color 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border: 1px solid var(--sireve-border) !important;
   overflow: hidden;
   position: relative;
 }
 
 .sireve .actas-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
-  border-color: var(--sireve-primary-light);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12) !important;
+  border-color: var(--sireve-primary-light) !important;
 }
 
-/* Franja superior en rampa azul del manual, sin verde */
+.sireve .actas-card--skeleton {
+  pointer-events: none;
+  padding: 28px !important;
+}
+
 .sireve .actas-card-accent {
   position: absolute;
   top: 0;
@@ -1429,19 +1576,19 @@
 }
 
 .sireve .actas-card-title {
-  font-weight: 600;
-  font-size: 15px;
-  line-height: 1.35;
-  color: var(--sireve-text-primary);
-  margin: 0;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  line-height: 1.35 !important;
+  color: var(--sireve-text-primary) !important;
+  margin: 0 !important;
   padding-top: 4px;
 }
 
 .sireve .actas-card-desc {
-  line-height: 1.65;
-  font-size: 14px;
-  color: var(--sireve-text-secondary);
+  line-height: 1.65 !important;
+  font-size: 14px !important;
   padding: 12px 28px 0;
+  color: var(--sireve-text-secondary);
 }
 
 .sireve .actas-card-spacer {
@@ -1457,7 +1604,7 @@
   margin: 0 28px 28px;
   padding: 12px 24px;
   background: var(--sireve-primary);
-  color: #fff;
+  color: #fff !important;
   text-decoration: none;
   border-radius: var(--sireve-radius);
   font-size: 13px;
@@ -1472,17 +1619,17 @@
   background: var(--sireve-primary-mid);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(19, 102, 175, 0.3);
-  color: #fff;
+  color: #fff !important;
 }
 
 /* ============================ 10. GALERIA =============================== */
+/* src/pages/Galeria.css */
 
 .sireve .galeria-sections {
   display: flex;
   flex-direction: column;
 }
 
-/* Con la linea de tiempo vacia, el panel reservado pasa abajo de las galerias */
 .sireve .galeria-sections--timeline-last .timeline-section {
   order: 2;
   margin-top: 48px;
@@ -1490,6 +1637,10 @@
 
 .sireve .timeline-section {
   margin-bottom: 48px;
+}
+
+.sireve .galeria-sections--timeline-last .timeline-section:last-child {
+  margin-bottom: 0;
 }
 
 .sireve .timeline-title {
@@ -1500,8 +1651,6 @@
   margin: 0 0 8px;
 }
 
-/* Mismo filete GREEN BLUE que .section-title, pero a la izquierda porque dentro
-   de .page-body el texto va alineado a la izquierda */
 .sireve .timeline-title::after {
   content: '';
   display: block;
@@ -1546,19 +1695,235 @@
 
 .sireve .timeline-empty-title {
   font-size: 18px;
-  /* Gravity header-2 impone 28px y su margen de h2 (0.83em). El reset global
-     de sireve.css pondria 18px y margen 0, y el panel quedaria 34px mas bajo. */
+  font-weight: 600;
   line-height: 28px;
   margin: 0.83em 0;
-  font-weight: 600;
   color: var(--sireve-ink);
 }
 
 .sireve .timeline-empty-text {
   font-size: 14px;
   line-height: 1.7;
-  color: var(--sireve-text-secondary);
   max-width: 560px;
+  color: var(--sireve-text-secondary);
+}
+
+.sireve .timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sireve .timeline-item {
+  position: relative;
+  padding: 0 0 32px 34px;
+}
+
+.sireve .timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.sireve .timeline-item::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  bottom: -2px;
+  left: 7px;
+  width: 2px;
+  background: var(--sireve-border);
+}
+
+.sireve .timeline-item:last-child::before {
+  display: none;
+}
+
+.sireve .timeline-marker {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 4px solid var(--sireve-primary);
+}
+
+.sireve .timeline-body {
+  background: #fff;
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius);
+  box-shadow: var(--sireve-shadow);
+  padding: 20px 22px;
+}
+
+.sireve .timeline-term {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  padding: 3px 10px;
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius-sm);
+  background: var(--sireve-surface);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sireve-primary);
+}
+
+.sireve .timeline-term-icon {
+  color: var(--sireve-primary);
+}
+
+.sireve .timeline-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sireve .timeline-photo {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius);
+  background: var(--sireve-surface);
+  overflow: hidden;
+}
+
+.sireve .timeline-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.sireve .timeline-headings {
+  min-width: 0;
+}
+
+.sireve .timeline-name {
+  margin: 0 0 2px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--sireve-ink);
+}
+
+.sireve .timeline-org {
+  display: block;
+  font-size: 14px;
+  color: var(--sireve-muted);
+}
+
+.sireve .timeline-session,
+.sireve .timeline-note {
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--sireve-muted);
+}
+
+.sireve .timeline-years {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.sireve .timeline-year {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 8px 16px;
+  border: 1px solid var(--sireve-primary);
+  border-radius: var(--sireve-radius-sm);
+  background: #fff;
+  color: var(--sireve-primary);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.sireve .timeline-year:hover {
+  background: var(--sireve-primary);
+  color: #fff;
+}
+
+.sireve .timeline-year-tag {
+  padding: 2px 6px;
+  border-radius: var(--sireve-radius-sm);
+  background: var(--sireve-surface);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--sireve-muted);
+}
+
+.sireve .timeline-year:hover .timeline-year-tag {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.sireve .timeline-noyears {
+  display: block;
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--sireve-muted);
+}
+
+.sireve .galeria-context {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  background: var(--sireve-surface);
+  border: 1px solid var(--sireve-border);
+  border-left: 4px solid var(--sireve-primary);
+  border-radius: var(--sireve-radius);
+}
+
+.sireve .galeria-context-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  background: #fff;
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius);
+  color: var(--sireve-primary);
+}
+
+.sireve .galeria-context-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--sireve-ink);
+}
+
+.sireve .galeria-context-term {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 8px;
+  padding: 2px 8px;
+  background: #fff;
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--sireve-muted);
+}
+
+.sireve .galeria-context-term-icon {
+  color: var(--sireve-primary);
 }
 
 .sireve .galeria-years-section {
@@ -1616,37 +1981,35 @@
   margin: 0 0 16px;
 }
 
-/* --- Albumes: carrusel + lightbox --- */
 .sireve .galeria-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
   gap: 24px;
 }
 
+.sireve .galeria-skeleton {
+  border-radius: var(--sireve-radius);
+  overflow: hidden;
+}
+
 .sireve .galeria-empty {
   grid-column: 1 / -1;
   text-align: center;
   padding: 48px 24px;
-  font-size: 15px;
-  line-height: 20px;
   color: var(--sireve-text-secondary);
 }
 
+/* src/components/Gallery/GalleryAlbum.css */
+
 .sireve .gallery-album {
-  /* Gravity <Card view="raised">: fondo blanco, sombra raised y SIN borde.
-     Anadir un borde de 1px aqui encogia el contenido 2px y alarga la tarjeta. */
-  background: var(--sireve-float);
-  border: 0;
-  border-radius: var(--sireve-radius);
-  box-shadow: var(--sireve-card-shadow);
-  padding: 0;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s;
+  overflow: hidden !important;
+  border-radius: var(--sireve-radius) !important;
+  transition: all 0.3s ease !important;
 }
 
 .sireve .gallery-album:hover {
   transform: translateY(-4px);
-  box-shadow: var(--sireve-shadow-hover);
+  box-shadow: var(--sireve-shadow-hover) !important;
 }
 
 .sireve .gallery-album-carousel {
@@ -1709,8 +2072,13 @@
   color: #fff;
 }
 
-.sireve .gallery-album-nav--prev { left: 10px; }
-.sireve .gallery-album-nav--next { right: 10px; }
+.sireve .gallery-album-nav--prev {
+  left: 10px;
+}
+
+.sireve .gallery-album-nav--next {
+  right: 10px;
+}
 
 .sireve .gallery-album-counter {
   position: absolute;
@@ -1719,21 +2087,17 @@
   z-index: 2;
   padding: 6px 10px;
   border-radius: var(--sireve-radius-sm);
-  background: rgba(19, 102, 175, 0.75);
+  background: var(--sireve-primary);
   color: #fff;
   font-size: 12px;
-  line-height: 16px;
   font-weight: 600;
 }
 
 .sireve .gallery-album-dots {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
+  justify-content: center;
   gap: 5px;
-  z-index: 2;
+  margin: 0 0 12px;
 }
 
 .sireve .gallery-album-dot {
@@ -1743,13 +2107,11 @@
   border-radius: 50%;
   border: none;
   padding: 0;
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--sireve-grey);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-/* Los dots son de 7px y los albunes llegan a 22 fotos: ::after agranda el area
-   tocable a ~25px sin cambiar el aspecto */
 .sireve .gallery-album-dot::after {
   content: '';
   position: absolute;
@@ -1757,7 +2119,7 @@
 }
 
 .sireve .gallery-album-dot.active {
-  background: #fff;
+  background: var(--sireve-primary);
   transform: scale(1.25);
 }
 
@@ -1765,16 +2127,12 @@
   padding: 16px 18px 20px;
 }
 
-/* El titulo era un <span> en linea (Gravity Text) y el meta un bloque: asi se
-   conserva exactamente el mismo interlineado. */
 .sireve .gallery-album-title {
-  /* Gravity renderiza <Text> como span en linea: se conserva para que el
-     ancho del titulo sea el del texto y no el de la tarjeta. */
   font-size: 15px;
-  font-weight: 600;
-  line-height: 1.5;
-  color: var(--sireve-text-primary);
-  margin-bottom: 4px;
+  font-weight: 600 !important;
+  line-height: 1.5 !important;
+  color: var(--sireve-text-primary) !important;
+  margin-bottom: 4px !important;
 }
 
 .sireve .gallery-album-meta {
@@ -1784,17 +2142,15 @@
   color: var(--sireve-text-secondary);
 }
 
-/* --- Lightbox --- */
 .sireve .gallery-lightbox {
   position: fixed;
   inset: 0;
   z-index: 2000;
-  background: rgba(0, 12, 28, 0.92);
+  background: rgba(0, 0, 0, 0.92);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
-  /* En pantallas bajas (landscape de celular) imagen + pie no cabian */
   overflow-y: auto;
   animation: sireve-fade-in 0.2s ease;
 }
@@ -1812,7 +2168,7 @@
   max-width: 100%;
   max-height: calc(90vh - 80px);
   object-fit: contain;
-  border-radius: 8px;
+  border-radius: var(--sireve-radius);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 }
 
@@ -1858,8 +2214,13 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
-.sireve .gallery-lightbox-nav--prev { left: -64px; }
-.sireve .gallery-lightbox-nav--next { right: -64px; }
+.sireve .gallery-lightbox-nav--prev {
+  left: -64px;
+}
+
+.sireve .gallery-lightbox-nav--next {
+  right: -64px;
+}
 
 .sireve .gallery-lightbox-footer {
   display: flex;
@@ -1884,87 +2245,159 @@
   color: rgba(255, 255, 255, 0.7);
   flex-shrink: 0;
 }
-
-/* Sin hover no hay forma de descubrir las flechas: en tactil se ven siempre */
-@media (hover: none) {
-  .sireve .gallery-album-nav {
-    opacity: 1;
-    width: 44px;
-    height: 44px;
-  }
-}
-
-/* Las flechas del lightbox vivian en left/right: -64px y el cerrar en
-   top: -48px, o sea fuera de la pantalla entre 769 y 1100px (iPad, Kindle). */
-@media (max-width: 1100px) {
-  .sireve .gallery-lightbox-nav--prev { left: 8px; }
-  .sireve .gallery-lightbox-nav--next { right: 8px; }
-
-  .sireve .gallery-lightbox-close {
-    top: 8px;
-    right: 8px;
-    position: fixed;
-  }
-}
-
 /* ============================ 11. PROGRAMA =============================== */
-/* Contenido sobre blanco, azul como acento (titulo, filete, botones),
-   radios 4/3px, superficies Battleship con alpha. */
+/* src/pages/Programa.css */
+
+.sireve .program-section-eyebrow {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sireve-muted);
+  margin-bottom: 6px;
+}
+
+.sireve .program-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 34px;
+  align-items: center;
+  margin-top: 26px;
+  margin-bottom: 52px;
+}
+
+.sireve .program-hero-copy {
+  min-width: 0;
+}
+
+.sireve .program-hero-title {
+  font-size: clamp(30px, 3.2vw, 40px);
+  font-weight: 300;
+  line-height: 1.12;
+  color: var(--sireve-ink);
+  margin: 0;
+}
+
+.sireve .program-hero-tagline {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--sireve-text-secondary);
+  margin: 0 0 16px;
+  max-width: 46ch;
+}
+
+.sireve .program-hero-kind {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sireve-primary);
+  background: #fff;
+  border: 1px solid rgba(19, 102, 175, 0.28);
+  border-radius: var(--sireve-radius);
+  padding: 7px 12px;
+}
+
+.sireve .program-hero-figure {
+  position: relative;
+  margin: 0 auto;
+  max-width: 460px;
+  min-width: 0;
+}
+
+.sireve .program-hero-frame {
+  position: absolute;
+  top: -18px;
+  left: -18px;
+  width: 46%;
+  height: 64%;
+  background: var(--sireve-primary);
+  border-radius: var(--sireve-radius);
+  z-index: 0;
+}
+
+.sireve .program-hero-figure img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #fff;
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius);
+  box-shadow: var(--sireve-shadow);
+}
+
+.sireve .program-about {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  align-items: start;
+  margin-bottom: 52px;
+}
 
 .sireve .program-meta {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 28px;
 }
 
 .sireve .program-meta-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 18px;
-  background: var(--sireve-surface);
-  border: 1px solid var(--sireve-border);
+  gap: 14px;
+  padding: 11px 16px;
+  background: #fff;
+  border: 1px solid rgba(19, 102, 175, 0.22);
+  border-left: 4px solid var(--sireve-primary);
   border-radius: var(--sireve-radius);
+  box-shadow: 0 2px 10px rgba(19, 102, 175, 0.07);
 }
 
 .sireve .program-meta-icon {
-  color: var(--sireve-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  background: var(--sireve-primary);
+  color: #fff;
+  border-radius: var(--sireve-radius-sm);
+}
+
+.sireve .program-meta-body {
+  min-width: 0;
 }
 
 .sireve .program-meta-label {
   display: block;
   font-size: 11px;
-  line-height: 1.3;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--sireve-muted);
+  color: var(--sireve-primary);
+  line-height: 1.3;
 }
 
 .sireve .program-meta-value {
   display: block;
   font-size: 14.5px;
-  line-height: 1.35;
   font-weight: 600;
   color: var(--sireve-ink);
-}
-
-.sireve .program-about {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
-  gap: 36px;
-  align-items: start;
-  margin-bottom: 52px;
+  line-height: 1.35;
 }
 
 .sireve .program-heading {
   font-size: 24px;
-  line-height: 1.25;
   font-weight: 300;
   color: var(--sireve-primary);
   margin: 0;
+  line-height: 1.25;
 }
 
 .sireve .program-rule {
@@ -1980,17 +2413,19 @@
   font-size: 15.5px;
   line-height: 1.85;
   color: var(--sireve-text-secondary);
+  margin: 0;
 }
 
 .sireve .program-about-figure {
   margin: 0;
+  min-width: 0;
 }
 
 .sireve .program-about-figure img {
   width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+  height: auto;
   display: block;
+  background: #fff;
   border: 1px solid var(--sireve-border);
   border-radius: var(--sireve-radius);
   box-shadow: var(--sireve-shadow);
@@ -2000,14 +2435,13 @@
   margin-bottom: 16px;
 }
 
-/* Sin ediciones cargadas: panel reservado (nada de anos inventados) */
 .sireve .program-editions-empty {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   align-items: center;
-  text-align: center;
-  gap: 10px;
-  padding: 44px 28px;
+  gap: 8px 20px;
+  text-align: left;
+  padding: 24px 28px;
   background: var(--sireve-surface);
   border: 1px dashed var(--sireve-border);
   border-radius: var(--sireve-radius);
@@ -2017,32 +2451,35 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
-  margin-bottom: 4px;
+  flex: 0 0 auto;
+  width: 60px;
+  height: 60px;
   background: #fff;
   color: var(--sireve-primary);
   border: 1px solid var(--sireve-border);
   border-radius: var(--sireve-radius);
 }
 
+.sireve .program-editions-empty-body {
+  flex: 1 1 240px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .sireve .program-editions-empty-title {
   font-size: 18px;
-  /* Gravity header-2 impone 28px; la base de sireve.css pondria 18px. */
-  line-height: 28px;
   font-weight: 600;
+  line-height: 28px;
+  margin: 18px 0;
   color: var(--sireve-ink);
-  /* Es un <h3> y en React conserva el margin por defecto del navegador
-     (1em 0 = 18px arriba y abajo); el reset global de sireve.css lo pondria
-     en 0 y el panel mediria 40px menos. */
-  margin: 1em 0;
 }
 
 .sireve .program-editions-empty-text {
   font-size: 14px;
   line-height: 1.7;
   color: var(--sireve-text-secondary);
-  max-width: 520px;
 }
 
 .sireve .program-others {
@@ -2097,9 +2534,9 @@
   align-items: center;
   gap: 6px;
   font-size: 14px;
-  line-height: 1.3;
   font-weight: 600;
   color: var(--sireve-primary);
+  line-height: 1.3;
 }
 
 .sireve .program-other-sub {
@@ -2110,6 +2547,126 @@
   line-height: 1.35;
   color: var(--sireve-muted);
   overflow: hidden;
+}
+
+.sireve .program-editions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sireve .program-edition {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+  padding: 20px;
+  background: var(--sireve-surface);
+  border: 1px solid var(--sireve-border);
+  border-radius: var(--sireve-radius);
+  transition: border-color 0.25s ease;
+}
+
+.sireve .program-edition:hover {
+  border-color: var(--sireve-primary-light);
+}
+
+.sireve .program-edition-logo {
+  flex: 0 0 140px;
+  width: 140px;
+  height: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px;
+  text-align: center;
+  background: var(--sireve-bg);
+  border: 1px dashed var(--sireve-border);
+  border-radius: var(--sireve-radius);
+  color: var(--sireve-primary);
+  overflow: hidden;
+}
+
+.sireve .program-edition-logo span {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--sireve-muted);
+}
+
+.sireve .program-edition-logo.has-logo {
+  border-style: solid;
+}
+
+.sireve .program-edition-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.sireve .program-edition-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.sireve .program-edition-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 16px;
+}
+
+.sireve .program-edition-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--sireve-ink);
+  margin: 0;
+}
+
+.sireve .program-edition-place {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: var(--sireve-muted);
+}
+
+.sireve .program-edition-placeholder {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--sireve-muted);
+  margin: 12px 0 0;
+  padding-left: 12px;
+  border-left: 3px solid var(--sireve-border);
+}
+
+.sireve .program-edition-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.sireve .program-edition-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  border: 1px solid var(--sireve-primary);
+  border-radius: var(--sireve-radius-sm);
+  color: var(--sireve-primary);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.sireve .program-edition-link:hover {
+  background: var(--sireve-primary);
+  color: #fff;
 }
 
 .sireve .program-back {
@@ -2132,6 +2689,11 @@
   color: #fff;
 }
 
+.sireve .program-back.program-back--top {
+  margin-top: 0;
+  margin-bottom: 4px;
+}
+
 .sireve .program-notfound {
   display: flex;
   justify-content: center;
@@ -2140,7 +2702,6 @@
 .sireve .program-notfound .program-back {
   margin-top: 0;
 }
-
 /* =========================== 12. REGLAMENTOS ============================ */
 
 .sireve .reglamentos-list {
@@ -2190,15 +2751,17 @@
   color: var(--sireve-text-primary);
 }
 
+/* src/pages/Reglamentos.css */
+
 .sireve .reglamentos-item-btn {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 11px 20px;          /* ~44px de alto, comodo para el dedo */
+  padding: 11px 20px;
   min-height: 44px;
   background: var(--sireve-primary);
-  color: #fff;
+  color: #fff !important;
   text-decoration: none;
   border-radius: var(--sireve-radius);
   font-size: 13px;
@@ -2209,9 +2772,9 @@
 }
 
 .sireve .reglamentos-item-btn:hover {
-  background: var(--sireve-primary-mid);
+  background: var(--sireve-primary-dark);
   transform: translateY(-1px);
-  color: #fff;
+  color: #fff !important;
 }
 
 /* ============================= 13. CONTACTO ============================= */
@@ -2237,6 +2800,36 @@
 .sireve .contacto-form {
   padding: 32px;
   gap: 20px;
+}
+
+/* En React el <form> interno del Card es el flex que separa los campos; en el
+   estatico ese papel lo hace el propio <form class="contacto-form"> (arriba). */
+.sireve .contacto-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Mensaje de envio simulado (sireve.js lo muestra al confirmar el submit). */
+.sireve .contacto-form-success {
+  display: none;
+  padding: 14px 16px;
+  border: 1px solid rgba(19, 102, 175, 0.28);
+  border-left: 4px solid var(--sireve-primary);
+  border-radius: var(--sireve-radius);
+  background: rgba(19, 102, 175, 0.06);
+}
+
+.sireve .contacto-form-success.show {
+  display: block;
+}
+
+.sireve .contacto-form-success-text {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 600;
+  color: var(--sireve-primary);
 }
 
 .sireve .contacto-field {
@@ -2298,7 +2891,9 @@
   opacity: 1;
 }
 
-/* Reproduce Gravity Button size="l" view="action" */
+/* El botón de Contacto en React es un <Button view="action"> de Gravity: aquí
+   Gravity no existe, así que el aspecto (relleno, alto y radio) vive en esta
+   regla; los !important de la sección 3 solo aseguran el color. */
 .sireve .contacto-btn {
   display: inline-flex;
   align-items: center;
@@ -2307,7 +2902,7 @@
   padding: 0 16px;
   border-radius: var(--sireve-radius-input);
   background: var(--sireve-primary);
-  color: #fff;
+  color: #ffffff;
   border: 0;
   font-family: var(--sireve-font);
   font-size: 13px;
@@ -2324,7 +2919,7 @@
 
 .sireve .contacto-btn:hover {
   background: var(--sireve-primary-mid);
-  color: #fff;
+  color: #ffffff;
 }
 
 .sireve .contacto-info {
@@ -2437,195 +3032,129 @@
 }
 
 /* ============================= 15. RESPONSIVE ============================ */
+/* src/index.css  @media (max-width: 768px) */
 
-@media (max-width: 900px) {
-  .sireve .quick-grid,
-  .sireve .programs-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 768px) {
+  .sireve .page-hero {
+    padding: 40px 20px;
   }
-
-  .sireve .sireve-grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
+  .sireve .page-body {
+    padding: 32px 20px;
   }
-
-  .sireve .sireve-mosaic {
-    grid-auto-rows: 100px;
+  .sireve .page-hero-title {
+    font-size: clamp(22px, 6vw, 30px) !important;
   }
-
-  .sireve .landing-hero {
-    padding: 48px 20px 36px;
-  }
-
-  .sireve .landing-hero-logo {
-    height: 88px;
-  }
-
-  .sireve .landing-hero-logo-plate {
-    padding: 14px 22px;
-  }
-
-  .sireve .landing-hero-stats {
-    gap: 10px;
-  }
-
-  .sireve .landing-hero-stat {
-    min-width: 0;
-    padding: 12px 10px;
-  }
-
-  .sireve .landing-hero-stat-icon {
-    width: 22px;
-    height: 22px;
-  }
-
-  .sireve .landing-hero-stat-value {
-    font-size: 22px;
-  }
-
-  .sireve .landing-hero-stat-label {
-    font-size: 10px;
-    letter-spacing: 0.04em;
-  }
-
-  .sireve .carousel-container {
-    height: 280px;
-  }
-
-  .sireve .program-meta,
-  .sireve .program-others-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .sireve .footer-content {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .sireve .footer-col-title {
-    margin-bottom: 12px;
-  }
-
-  .sireve .footer-links {
-    gap: 4px;
+  .sireve .page-hero-icon {
+    margin-bottom: 8px !important;
   }
 }
 
-@media (max-width: 768px) {
-  .sireve .page-hero { padding: 40px 20px; }
-  .sireve .page-body { padding: 32px 20px; }
-
-  /* Titulos largos del page-header ("Excelencia Academica") en movil */
-  .sireve .page-hero-title {
-    font-size: clamp(22px, 6vw, 30px);
-    /* Sin line-height propio: en React la variante header-2 de Gravity la
-       mantiene en 40px tambien en movil. Con 1.25 el titulo mide 12px menos y
-       el page-hero entero se desplaza. */
+@media (max-width: 380px) {
+  .sireve .page-hero {
+    padding: 32px 16px;
   }
-
-  .sireve .page-hero-icon {
-    margin-bottom: 8px;
+  .sireve .page-body {
+    padding: 24px 16px;
   }
+}
 
-  .sireve .quick-section,
-  .sireve .programs-section {
-    padding: 48px 20px;
+/* src/components/Layout/Header.css  @media (max-width: 1300px) */
+
+@media (max-width: 1300px) {
+  .sireve .header-brand-text {
+    display: none;
   }
+}
 
-  /* Mismo criterio que en desktop: el hueco SIREVE -> Acceso rapido baja de
-     96px a 72px */
-  .sireve .quick-section {
-    padding-top: 36px;
+@media (max-width: 960px) {
+  .sireve .header-logo-img {
+    height: 30px;
   }
-
-  .sireve .sireve-section {
-    padding: 48px 20px 36px;
+  .sireve .header-brand-logo {
+    padding: 5px 8px;
   }
-
-  .sireve .sireve-mosaic {
-    grid-template-columns: repeat(2, 1fr);
+  .sireve .header-social {
+    margin-left: 0;
   }
-
-  .sireve .carousel-section {
-    padding: 0 20px 48px;
+  .sireve .header-mobile-toggle {
+    display: flex;
   }
-
-  .sireve .contacto-grid {
-    grid-template-columns: 1fr;
-  }
-
-  /* Con 32px/28px fijos el input util en un celular de 375px quedaba en 256px */
-  .sireve .contacto-form {
-    padding: 20px;
-    gap: 16px;
-  }
-
-  .sireve .contacto-info {
-    padding: 20px;
-  }
-
-  /* Correo y telefono: area tactil comoda */
-  .sireve .contacto-info-link {
-    padding: 7px 0;
-  }
-
-  .sireve .program-meta,
-  .sireve .program-others-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .sireve .program-about {
-    grid-template-columns: 1fr;
-    gap: 24px;
-    margin-bottom: 40px;
-  }
-
-  .sireve .program-heading {
-    font-size: 21px;
-  }
-
-  .sireve .program-editions-empty {
-    padding: 32px 20px;
-  }
-
-  .sireve .galeria-years-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .sireve .timeline-title {
-    font-size: 22px;
-    /* Igual que en escritorio: React solo cambia el font-size y deja el
-       line-height heredado (18px). Con 30px cada titulo mide 12px mas. */
-  }
-
-  /* La guia se corre a la izquierda para que el texto no quede en un carril
-     estrecho; el padding del item se ajusta para mantener el margen */
-  .sireve .timeline-item {
-    padding-left: 26px;
-    padding-bottom: 24px;
-  }
-
-  .sireve .timeline-item::before {
-    left: 5px;
-  }
-
-  .sireve .timeline-body {
+  .sireve .header-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    background: #fff;
+    border-bottom: 1px solid var(--sireve-border);
     padding: 16px;
+    gap: 4px;
+    box-shadow: var(--sireve-shadow);
+    max-height: calc(100vh - 72px);
+    max-height: calc(100dvh - 72px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
-
-  .sireve .timeline-empty {
-    padding: 32px 18px;
+  .sireve .header-nav.open {
+    display: flex;
   }
-
-  .sireve .timeline-empty-text {
-    font-size: 13px;
+  .sireve .header-link {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 14px;
+    color: #000;
   }
-
-  .sireve .gallery-album-nav {
-    opacity: 1;
+  .sireve .header-link:hover,
+  .sireve .header-link.active {
+    background: var(--sireve-primary);
+    color: #fff;
   }
+  .sireve .header-link--cta {
+    margin-left: 0;
+    justify-content: center;
+    background: var(--sireve-primary);
+    color: #fff !important;
+  }
+  .sireve .header-link--cta:hover,
+  .sireve .header-link--cta.active {
+    background: var(--sireve-primary);
+    color: #fff !important;
+  }
+  .sireve .header-divider {
+    width: 100%;
+    height: 1px;
+    margin: 4px 0;
+    background: rgba(19, 102, 175, 0.35);
+  }
+  .sireve .header-dropdown {
+    width: 100%;
+  }
+  .sireve .header-dropdown-toggle {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .sireve .header-dropdown-menu {
+    position: static;
+    box-shadow: none;
+    border: none;
+    padding: 0 0 0 12px;
+    margin-top: 4px;
+  }
+}
 
-  .sireve .gallery-lightbox {
-    padding: 12px;
+/* src/components/Layout/Footer.css  @media (max-width: 900px) */
+
+@media (max-width: 900px) {
+  .sireve .footer-content {
+    grid-template-columns: 1fr 1fr;
+  }
+  .sireve .footer-col-title {
+    margin-bottom: 12px !important;
+  }
+  .sireve .footer-links {
+    gap: 4px;
   }
 }
 
@@ -2634,110 +3163,235 @@
     grid-template-columns: 1fr;
     gap: 28px;
   }
-
   .sireve .footer-container {
     padding: 40px 20px 0;
   }
-
   .sireve .footer-bottom {
     padding: 18px 20px;
   }
+}
 
-  .sireve .reglamentos-item {
-    flex-wrap: wrap;
-    gap: 12px;
-  }
+/* src/components/Layout/SocialLinks.css  @media (max-width: 960px) */
 
-  .sireve .reglamentos-item-btn {
-    width: 100%;
+@media (max-width: 960px) {
+  .sireve .social-links--header .social-links-item {
+    color: #000;
   }
 }
 
-/* Celulares angostos (360-430px): el logo del hero y las tres tarjetas de stats
-   necesitan bajar de tamano o se salen de la pantalla */
+/* src/pages/LandingPage.css  @media (max-width: 1080px) */
+
+@media (max-width: 1080px) {
+  .sireve .landing-hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    padding: 48px 24px 56px;
+  }
+  .sireve .landing-hero-figure {
+    max-width: 720px;
+    width: 100%;
+  }
+  .sireve .landing-hero-title {
+    font-size: clamp(30px, 5vw, 44px);
+  }
+}
+
+@media (max-width: 900px) {
+  .sireve .quick-grid,
+  .sireve .programs-grid {
+    grid-template-columns: 1fr;
+  }
+  .sireve .sireve-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .sireve .sireve-mosaic {
+    grid-auto-rows: 100px;
+  }
+  .sireve .landing-hero {
+    padding: 44px 20px 56px;
+    gap: 44px;
+  }
+  .sireve .landing-hero-logo {
+    height: 44px;
+  }
+  .sireve .landing-hero-logo-plate {
+    padding: 10px 18px;
+  }
+  .sireve .landing-hero-stat {
+    padding: 0 18px;
+  }
+  .sireve .landing-hero-stat-value {
+    font-size: 34px;
+  }
+  .sireve .landing-hero-stat-label {
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+  .sireve .landing-hero-badge {
+    left: 16px;
+    bottom: -18px;
+  }
+  .sireve .carousel-container {
+    height: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sireve .quick-section,
+  .sireve .programs-section {
+    padding: 48px 20px;
+  }
+  .sireve .quick-section {
+    padding-top: 36px;
+  }
+  .sireve .sireve-section {
+    padding: 48px 20px 36px;
+  }
+  .sireve .sireve-mosaic {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .sireve .carousel-section {
+    padding: 0 20px 48px;
+  }
+}
+
 @media (max-width: 480px) {
   .sireve .landing-hero {
-    padding: 36px 16px 28px;
+    padding: 32px 16px 52px;
+    gap: 36px;
   }
-
-  /* 88px de alto = 316px de ancho + padding; con 21vw el logo entra siempre
-     dentro del ancho disponible (375px -> 79px, 320px -> 67px) */
+  .sireve .landing-hero-brand {
+    gap: 10px;
+    margin-bottom: 20px;
+  }
   .sireve .landing-hero-logo {
-    height: min(88px, 21vw);
+    height: 38px;
   }
-
   .sireve .landing-hero-logo-plate {
-    padding: 12px 16px;
-    margin-bottom: 16px;
+    padding: 8px 14px;
   }
-
-  .sireve .landing-hero-sub {
-    margin-bottom: 24px;
+  .sireve .landing-hero-brand-divider {
+    height: 24px;
   }
-
+  .sireve .landing-hero-brand-text {
+    font-size: 13px;
+    letter-spacing: 0.1em;
+  }
+  .sireve .landing-hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin-bottom: 13px;
+  }
+  .sireve .landing-hero-title {
+    font-size: clamp(28px, 7.4vw, 34px);
+  }
+  .sireve .landing-hero-rule {
+    width: 56px;
+    margin: 20px 0 24px;
+  }
   .sireve .landing-hero-stats {
-    gap: 8px;
-    margin-bottom: 28px;
+    margin-top: 34px;
   }
-
   .sireve .landing-hero-stat {
-    padding: 12px 6px;
+    padding: 0 8px;
   }
-
-  .sireve .landing-hero-stat-icon {
-    width: 20px;
-    height: 20px;
+  .sireve .landing-hero-stat-bar {
+    width: 24px;
+    margin-bottom: 10px;
   }
-
   .sireve .landing-hero-stat-value {
-    font-size: 20px;
+    font-size: clamp(26px, 8vw, 32px);
   }
-
   .sireve .landing-hero-stat-label {
     font-size: 10px;
     letter-spacing: 0.02em;
     line-height: 1.25;
-    text-align: center;
+    margin-top: 7px;
+    hyphens: auto;
+    overflow-wrap: break-word;
   }
-
+  .sireve .landing-hero-figure-frame {
+    top: -14px;
+    left: -14px;
+    width: 44%;
+    height: 66%;
+  }
+  .sireve .landing-hero-badge {
+    left: 12px;
+    bottom: -16px;
+    padding: 9px 14px;
+    font-size: 12px;
+    gap: 7px;
+    max-width: calc(100% - 24px);
+  }
   .sireve .landing-hero-actions {
     gap: 10px;
     width: 100%;
   }
-
   .sireve .landing-hero-actions .landing-btn {
     flex: 1 1 auto;
     min-height: 46px;
     padding: 13px 20px;
   }
-
   .sireve .quick-card-image {
     height: 150px;
   }
-
   .sireve .program-card-image {
     height: 180px;
   }
-
   .sireve .carousel-container {
     height: 200px;
   }
-
-  /* Botones "Ver programa" con area tactil de 44px */
   .sireve .program-card-cta {
     min-height: 44px;
     padding: 11px 16px;
   }
+}
 
+/* src/pages/Galeria.css  @media (max-width: 768px) */
+
+@media (max-width: 768px) {
+  .sireve .galeria-years-grid {
+    grid-template-columns: 1fr;
+  }
+  .sireve .timeline-title {
+    font-size: 22px;
+  }
+  .sireve .timeline-item {
+    padding-left: 26px;
+    padding-bottom: 24px;
+  }
+  .sireve .timeline-item::before {
+    left: 5px;
+  }
+  .sireve .timeline-body {
+    padding: 16px;
+  }
+  .sireve .timeline-empty {
+    padding: 32px 18px;
+  }
+  .sireve .timeline-empty-text {
+    font-size: 13px;
+  }
+  .sireve .galeria-context {
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+  }
+  .sireve .galeria-context-term {
+    margin-left: 0;
+    margin-top: 6px;
+  }
+}
+
+@media (max-width: 480px) {
   .sireve .timeline-name {
     font-size: 17px;
   }
-
-  /* Un chip por fila: dos chips de ano a 375px apenas entran */
   .sireve .timeline-years {
     gap: 8px;
   }
-
   .sireve .timeline-year {
     flex: 1 1 auto;
     justify-content: center;
@@ -2745,14 +3399,171 @@
   }
 }
 
-/* Pantallas muy angostas (iPhone SE 320px y similares) */
-@media (max-width: 380px) {
-  .sireve .page-hero { padding: 32px 16px; }
-  .sireve .page-body { padding: 24px 16px; }
-  .sireve .contacto-form,
-  .sireve .contacto-info { padding: 16px; }
+/* src/pages/Programa.css  @media (min-width: 900px) */
+
+@media (min-width: 900px) {
+  .sireve .program-hero {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    gap: 48px;
+  }
+  .sireve .program-hero-figure {
+    max-width: none;
+    margin: 0;
+  }
+  .sireve .program-hero-figure img {
+    width: auto;
+    max-width: 100%;
+    max-height: 400px;
+    margin-left: auto;
+  }
+  .sireve .program-hero-frame {
+    left: auto;
+    right: -18px;
+  }
 }
 
+@media (min-width: 769px) {
+  .sireve .program-about {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: 44px;
+  }
+  .sireve .program-about-figure {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .sireve .program-about-copy {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+@media (max-width: 900px) {
+  .sireve .program-others-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .sireve .program-others-grid {
+    grid-template-columns: 1fr;
+  }
+  .sireve .program-about {
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .sireve .program-hero {
+    gap: 26px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+  }
+  .sireve .program-hero-figure {
+    max-width: 380px;
+  }
+  .sireve .program-meta {
+    margin-top: 24px;
+    gap: 10px;
+  }
+  .sireve .program-hero-tagline {
+    font-size: 15.5px;
+  }
+  .sireve .program-heading {
+    font-size: 21px;
+  }
+  .sireve .program-editions-empty {
+    padding: 18px;
+    gap: 6px 16px;
+  }
+  .sireve .program-editions-empty-icon {
+    width: 52px;
+    height: 52px;
+  }
+  .sireve .program-edition {
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px;
+  }
+  .sireve .program-edition-logo {
+    flex-basis: auto;
+    width: 120px;
+    height: 88px;
+  }
+  .sireve .program-edition-head {
+    justify-content: flex-start;
+  }
+  .sireve .program-edition-title {
+    font-size: 16px;
+  }
+}
+
+/* src/pages/Reglamentos.css  @media (max-width: 600px) */
+
+@media (max-width: 600px) {
+  .sireve .reglamentos-item {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .sireve .reglamentos-item-btn {
+    width: 100%;
+  }
+}
+
+/* src/pages/Contacto.css  @media (max-width: 768px) */
+
+@media (max-width: 768px) {
+  .sireve .contacto-grid {
+    grid-template-columns: 1fr;
+  }
+  .sireve .contacto-form {
+    padding: 20px !important;
+    gap: 16px;
+  }
+  .sireve .contacto-info {
+    padding: 20px !important;
+  }
+  .sireve .contacto-info-link {
+    padding: 7px 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .sireve .contacto-form,
+  .sireve .contacto-info {
+    padding: 16px !important;
+  }
+}
+
+/* src/components/Gallery/GalleryAlbum.css  @media (hover: none) */
+
+@media (hover: none) {
+  .sireve .gallery-album-nav {
+    opacity: 1;
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .sireve .gallery-lightbox-nav--prev {
+    left: 8px;
+  }
+  .sireve .gallery-lightbox-nav--next {
+    right: 8px;
+  }
+  .sireve .gallery-lightbox-close {
+    top: 8px;
+    right: 8px;
+    position: fixed;
+  }
+}
+
+@media (max-width: 768px) {
+  .sireve .gallery-album-nav {
+    opacity: 1;
+  }
+  .sireve .gallery-lightbox {
+    padding: 12px;
+  }
+}
 /* ===================== 16. NAVEGACION MOVIL (960px) ====================== */
 /* El nav de escritorio se sustituye por un panel blanco desplegable.
    Este bloque va AL FINAL a proposito: necesita ganar a las reglas base de
@@ -2804,7 +3615,7 @@
      padding 14px = area tactil de ~46px por enlace */
   .sireve .header-link {
     width: 100%;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 14px;
     color: #000;
     text-align: left;
@@ -2866,8 +3677,17 @@
 
 /* =================== 17. DEFENSA CONTRA EL TEMA ======================== */
 /* Muchos temas ponen `overflow-x: hidden` en <body>, y eso desactiva el
-   `position: sticky` del header. Esta regla solo existe si el markup de SIREVE
+   `position: sticky` del header.    Esta regla solo existe si el markup de SIREVE
    esta presente en la pagina, asi que no toca el resto del sitio. */
 body:has(.sireve) {
   overflow-x: clip;
+  /* Base tipografica de React (Gravity la fija en body.g-root sobre los
+     16px/1.7 de index.css): los elementos que heredan sin declarar tamaño
+     deben medir igual que en el lado 5/10. La pila se escribe literal porque
+     --sireve-font vive dentro de .sireve y no esta visible desde <body>. */
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0.2px;
 }

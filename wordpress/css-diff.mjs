@@ -1,5 +1,5 @@
-/* ============================================================================
-   SIREVE · CSUCA — comparacion de declaraciones CSS: fuente React vs sireve.css
+﻿/* ============================================================================
+   SIREVE Â· CSUCA â€” comparacion de declaraciones CSS: fuente React vs sireve.css
    ----------------------------------------------------------------------------
    Uso:  node wordpress/css-diff.mjs [selector...]
 
@@ -37,6 +37,12 @@ const SOURCES = [
 /* Quita comentarios y @media anidados, conservando el contexto del media. */
 function stripComments(css) {
   return css.replace(/\/\*[\s\S]*?\*\//g, '');
+}
+
+/* Los keyframes se comparan aparte (sireve.js los renombra a sireve-*): sus
+   selectores internos `from`/`to` no son reglas y solo ensucian el contraste. */
+function stripKeyframes(css) {
+  return css.replace(/@keyframes[^{]*\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/g, '');
 }
 
 /* Parsea CSS plano -> Map<clave, {props, media}> */
@@ -120,13 +126,70 @@ const norm = (v) =>
     .replace(/\(\s*/g, '(')
     .replace(/\s*\)/g, ')')
     .trim()
-    .toLowerCase();
+    .toLowerCase()
+    /* #abc == #aabbcc: misma identidad, otra notacion */
+    .replace(/#([0-9a-f])\1([0-9a-f])\2\b/g, '#$1$1$2$2');
 
 /* Propiedades donde el prefijo de proveedor o el orden no significan nada. */
 const SKIP = new Set([
   '-webkit-text-size-adjust', '-webkit-font-smoothing', 'box-sizing',
   'color-scheme', 'accent-color', 'caret-color', 'scroll-margin',
 ]);
+
+/* ------------------------- keyframes: canon y autoconsistencia ------------- */
+/* sireve.css renombra los @keyframes a sireve-* para no chocar con los del
+   tema de WordPress, asi que la paridad no puede depender del nombre literal:
+   cada identificador de animacion se canoniza (minusculas, sin guiones y sin
+   el prefijo "sireve") -> heroFadeUp y sireve-hero-fade-up son "herofadeup". */
+const keyframeNames = (css) =>
+  [...stripComments(css).matchAll(/@keyframes\s+([\w-]+)/g)].map((m) => m[1]);
+const canonAnim = (n) => n.toLowerCase().replace(/-/g, '').replace(/^sireve/, '');
+
+const srcKeyframes = new Set();
+for (const rel of SOURCES) {
+  for (const n of keyframeNames(readFileSync(path.join(ROOT, rel), 'utf8'))) srcKeyframes.add(n);
+}
+const tgtKeyframes = new Set(keyframeNames(readFileSync(path.join(HERE, 'sireve.css'), 'utf8')));
+const canonSet = new Set([...srcKeyframes, ...tgtKeyframes].map(canonAnim));
+
+const isAnimProp = (p) => p === 'animation' || p === 'animation-name';
+const canonAnimValue = (v) =>
+  v.replace(/(^|[\s,(])(-?[a-zA-Z][\w-]*)(?=$|[\s,)])/g, (m, pre, word) =>
+    canonSet.has(canonAnim(word)) ? pre + canonAnim(word) : m,
+  );
+
+/* Un animation-name sin @keyframes equivalente no falla: la declaracion se
+   ignora en silencio y manda el estado base (p. ej. opacity:0 del hero, que
+   dejo el titular de la portada invisible en la replica). Cada nombre tiene
+   que existir en el MISMO archivo donde se usa. */
+const ANIM_KEYWORDS = new Set([
+  'none', 'normal', 'reverse', 'alternate', 'alternatereverse', 'infinite',
+  'forwards', 'backwards', 'both', 'ease', 'easein', 'easeout', 'easeinout',
+  'linear', 'paused', 'running', 'steps', 'stepstart', 'stepend', 'start',
+  'end', 'jumpstart', 'jumpend', 'jumpnone', 'jumpboth',
+]);
+const animNamesIn = (value) => {
+  const clean = String(value)
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/var\([^)]*\)/g, ' ')
+    .replace(/\([^)]*\)/g, ' ')
+    .replace(/[\d.]+[a-z%]*/g, ' ');
+  return (clean.match(/[a-zA-Z][\w-]*/g) || []).filter((t) => {
+    const k = t.toLowerCase();
+    return !ANIM_KEYWORDS.has(k) && !ANIM_KEYWORDS.has(k.replace(/-/g, ''));
+  });
+};
+const brokenAnim = [];
+const checkKeyframes = (map, defined, label) => {
+  for (const [sel, props] of map) {
+    for (const [prop, value] of Object.entries(props)) {
+      if (!isAnimProp(prop)) continue;
+      for (const name of animNamesIn(value)) {
+        if (!defined.has(name)) brokenAnim.push(`${label}  ${sel}  ->  "${name}"`);
+      }
+    }
+  }
+};
 
 const indexCss = readFileSync(path.join(ROOT, 'src/index.css'), 'utf8');
 const tokens = tokenMap(indexCss);
@@ -167,25 +230,71 @@ const INTENTIONAL = new Map([
 ]);
 const SHORTHAND_OK = new Set(['background', 'background-color']);
 
+/* En React el aspecto de estos elementos lo pone Gravity (Text, Card, Button) y
+   el CSS propio solo lo ajusta: en el tema Gravity no existe, asi que la regla
+   escribe a mano el mismo font-size/padding/background que Gravity dibujaria.
+   Se permiten esas propiedades de mas; el resto del contraste sigue estricto. */
+const ALLOW_EXTRA = new Set([
+  '.page-hero-title', '.page-hero-sub', '.section-title',
+  '.contacto-btn', '.contacto-btn:hover',
+  '.actas-card-btn', '.actas-card-btn:hover',
+  '.reglamentos-item-btn', '.reglamentos-item-btn:hover',
+  '.footer-col-title', '.footer-copy', '.quick-card', '.reglamentos-item-title',
+  '.contacto-form', '.contacto-label', '.contacto-info', '.contacto-info-heading',
+  '.contacto-info-label',
+]);
+
+/* Selectores de la fuente que no viajan al tema de WordPress, por decision y no
+   por descuido:
+   - el sitio es SOLO tema claro: no se publican las ~62 reglas .g-root_theme_dark;
+   - html/body/:root/#root/.g-root_* se sustituyen por el bloque .sireve (el tema
+     no puede tocar el body de WordPress);
+   - Sidebar.css, el boton de tema y .desktop-only/.mobile-only son codigo muerto
+     desde que el layout activo usa Header horizontal y se elimino el modo oscuro;
+   - .fade-section.visible vive aqui como .sireve.reveal-ready .fade-section.visible
+     (sireve.js lo activa al hacer scroll). */
+const MISSING_IGNORE = [
+  /^\.g-root_theme_dark/,
+  /^\.g-root_theme_light/,
+  /^:root$/,
+  /^html$/,
+  /^body$/,
+  /^#root$/,
+  /^\.fade-section\.visible$/,
+  /\.header-theme-btn/,
+  /\.theme-toggle-btn/,
+  /\.desktop-only/,
+  /\.mobile-only/,
+  /^\.sidebar/,
+  /^\.nav-(link|group|sub)/,
+  /^\.social-links--default/,
+];
+const isIgnoredMissing = (sel) => MISSING_IGNORE.some((re) => re.test(sel));
+
 const source = new Map();
 for (const rel of SOURCES) {
-  const parsed = parse(stripComments(readFileSync(path.join(ROOT, rel), 'utf8')));
+  const parsed = parse(stripKeyframes(stripComments(readFileSync(path.join(ROOT, rel), 'utf8'))));
   for (const [sel, props] of parsed) {
-    /* el archivo de la replica gana si dos (mismos selectores) */
-    if (!source.has(sel)) source.set(sel, props);
+    /* Los archivos se importan en este orden, asi que la cascada real gana por
+       ultima declaracion: se acumulan y manda el archivo mas reciente. */
+    if (!source.has(sel)) source.set(sel, {});
+    Object.assign(source.get(sel), props);
   }
 }
 
 /* sireve.css escribe todos los selectores con el prefijo de aislamiento
    ".sireve ". Para comparar se quita ese prefijo (salvo cuando el selector ya
    es de la clase bloque, ".sireve" a secas). */
-const parsedTarget = parse(stripComments(readFileSync(path.join(HERE, 'sireve.css'), 'utf8')));
+const parsedTarget = parse(stripKeyframes(stripComments(readFileSync(path.join(HERE, 'sireve.css'), 'utf8'))));
 const target = new Map();
 for (const [sel, props] of parsedTarget) {
   const bare = sel.replace(/\.sireve\s+/g, '').trim();
   const key = bare === '.sireve' ? sel : bare;
   if (!target.has(key)) target.set(key, props);
 }
+
+checkKeyframes(source, srcKeyframes, 'src    ');
+checkKeyframes(target, tgtKeyframes, 'estatico');
 
 const only = process.argv.slice(2);
 const wants = (sel) => !only.length || only.some((o) => sel.includes(o));
@@ -208,7 +317,7 @@ for (const [sel, srcProps] of source) {
 
   const tgtProps = target.get(sel);
   if (!tgtProps) {
-    missing.push(sel);
+    if (!isIgnoredMissing(sel)) missing.push(sel);
     continue;
   }
 
@@ -224,13 +333,18 @@ for (const [sel, srcProps] of source) {
     }
     const a = norm(resolve(value, tokens));
     const b = norm(resolve(tgtProps[prop], tokens));
-    if (a !== b) problems.push(`${prop}: React "${a}"  vs  estatico "${b}"`);
+    const ca = isAnimProp(prop) ? canonAnimValue(a) : a;
+    const cb = isAnimProp(prop) ? canonAnimValue(b) : b;
+    if (ca !== cb) problems.push(`${prop}: React "${a}"  vs  estatico "${b}"`);
   }
 
   /* props que sireve.css agrega y la fuente no tiene */
   for (const prop of Object.keys(tgtProps)) {
     if (SKIP.has(prop) || ignore.has(prop)) continue;
-    if (!(prop in srcProps)) problems.push(`extra  ${prop}: ${tgtProps[prop]}`);
+    if (!(prop in srcProps)) {
+      if (ALLOW_EXTRA.has(sel)) continue;
+      problems.push(`extra  ${prop}: ${tgtProps[prop]}`);
+    }
   }
 
   if (problems.length) {
@@ -241,8 +355,37 @@ for (const [sel, srcProps] of source) {
 }
 
 console.log(`\n${diffs} selectores con diferencias; ${missing.length} selectores de la fuente ausentes en sireve.css`);
+if (brokenAnim.length) {
+  console.log(`\n!!! ${brokenAnim.length} usos de animation sin @keyframes (la declaracion se ignora y manda el estado base):`);
+  for (const line of brokenAnim) console.log(`  ${line}`);
+  process.exitCode = 1;
+} else {
+  console.log('(0 usos de animation sin @keyframes en src/ ni en sireve.css)');
+}
 if (missing.length) {
   console.log('\n--- ausentes (revisar si aplican) ---');
   for (const sel of missing) console.log(`  ${sel}`);
+}
+
+/* Selectores que existen solo en sireve.css: son legitimos (reset del wrapper
+   .sireve, inputs propios donde Gravity no existe, estados de iconos, defensa
+   contra temas) pero conviene verlos para no acumular basura. */
+const TARGET_ONLY_IGNORE = [
+  /^\.sireve$/,
+  /^(\*|[a-z]+)(::[a-z-]+)?$/,
+  /^\[hidden\]$/,
+  /\.(t-body-|t-secondary|main-content|ico-|header-mobile-summary|contacto-input|contacto-textarea|contacto-info-text)/,
+  /reveal-ready/,
+  /^body:has\(/,
+  /header-link\[aria-expanded/,
+  /header-link--external/,
+  /prefers-reduced-motion/,
+];
+const targetOnly = [...target.keys()].filter(
+  (sel) => !source.has(sel) && !TARGET_ONLY_IGNORE.some((re) => re.test(sel)),
+);
+console.log(`\n(${targetOnly.length} selectores propios de sireve.css)`);
+if (targetOnly.length && process.argv.includes('--target-only')) {
+  for (const sel of targetOnly) console.log(`  ${sel}`);
 }
 console.log(`\n(${mediaOnly.length} reglas de @media omitidas del contraste)`);

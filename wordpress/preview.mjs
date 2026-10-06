@@ -70,7 +70,15 @@ const titles = [];
 for (const [route, file] of Object.entries(ROUTES)) {
   const raw = readFileSync(path.join(HERE, file), 'utf8');
   /* se quita el comentario de cabecera que agrega el generador */
-  const body = raw.replace(/^<!--[\s\S]*?-->\n/, '');
+  /* Las fotos del tema se piden a https://sireve.csuca.org/.../sireve-theme/
+     (aun no subido). En el preview se rebajan a ruta relativa para que las
+     sirva el servidor local y la verificacion mide los bytes reales. */
+  const body = raw
+    .replace(/^<!--[\s\S]*?-->\n/, '')
+    .replaceAll(
+      'https://sireve.csuca.org/wp-content/themes/sireve-theme/assets/',
+      '/wp-content/themes/sireve-theme/assets/',
+    );
 
   const titleMatch = /<h1 class="page-hero-title">([^<]+)<\/h1>/.exec(body);
   const title = titleMatch ? titleMatch[1] : 'Portada';

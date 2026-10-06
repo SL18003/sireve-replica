@@ -11,7 +11,7 @@ Documento para agentes de IA y desarrolladores. Léelo **antes** de explorar el 
 
 Réplica frontend del **Sistema Regional de Vida Estudiantil (SIREVE)** del **CSUCA** (Consejo Superior Universitario Centroamericano). Es una SPA en React que refleja el contenido y la navegación del sitio oficial, con un rediseño más moderno pero identidad institucional (azul + dorado).
 
-No hay backend. El formulario de contacto está preparado para Formspree en el futuro (comentario en el código), pero hoy solo muestra feedback de demostración.
+No hay backend. El formulario de contacto **simula** el envío: valida en el front (campos obligatorios + correo con `type="email"`, validación nativa del navegador) y, si todo está bien, muestra un mensaje de confirmación y limpia los campos. Para envío real solo falta poner el `action` del `<form>` (comentario en el código).
 
 ---
 
@@ -34,6 +34,9 @@ Estilos: tokens en `src/index.css` + CSS por página. Gravity UI aporta controle
 - Trabajo reciente en rama tipo `David-main` (puede variar).
 - Otras ramas del repo (`main`, `richard`, etc.) pueden tener diseños distintos (p. ej. teal/slate). **No copiar paletas de otras ramas** sin pedirlo.
 - Deploy histórico: `richard` → GitHub Pages; `main` / Netlify con `npm run build` y publish `dist`.
+- **Producción (2026-10): `https://sireve.csuca.org/`** sirve la réplica como **tema estático de WordPress** (`sireve-theme`), generado por `node wordpress/build.mjs` desde `src/` + `wordpress/build.mjs`. El usuario lo sube por wp-admin; orden y estado en `wordpress/LEEME.md` §4/§7. **`functions.php` lleva 2 parches que hay que conservar** (slugs numéricos `2017/2018/2019` + rewrite de `/galeria/<año>/`); ya viven en el template de `build.mjs`.
+- **Pendiente de producción:** las **205 fotos de las galerías 2017/2018** apuntan a `sireve.csuca.org/cache/widgetkit/...` (muertas tras el cambio de WordPress) y Wayback casi no las tiene (31, de otras carpetas); se muestran con `placeholder.jpg` (fallback ya aplicado en vivo). Recuperación real de las fotos = pedir originales/backup al usuario.
+- **SEO (2026-10-06):** todo por wp-admin, sin cambios locales — *Ajustes → Generales* (título `SIREVE` + tagline) y **`header.php` reescrito a mano** en Theme File Editor con descriptions/breadcrumbs por ruta, Open Graph, Twitter card y JSON-LD (Organization/WebSite/BreadcrumbList). **Ese `header.php` NO vive en `build.mjs`**: si se recompila y re-sube el tema, se pisa y hay que volver a pegarlo (ver `wordpress/LEEME.md` §7). Estado y verificación HTTP en `wordpress/LEEME.md` §7.
 
 Comandos habituales:
 
@@ -343,9 +346,9 @@ Referencia: https://sireve.csuca.org/index.php/2017
 
 ### Contacto
 
-- Formulario + tarjeta de información. **El formulario NO envía nada**: es demostración (el botón solo dispara un `alert("Mensaje enviado (demostración)...")`) y no hay backend. El usuario lo dejó así a propósito (2026-10); cuando quiera envío real: **FormSubmit.co** (`action="https://formsubmit.co/<correo>"`, sin cuenta) o **Formspree** (requiere cuenta + ID). Ya hay un comentario en `Contacto.jsx` con la línea a activar.
+- Formulario + tarjeta de información. **Envío simulado** (decisión del usuario, 2026-10): los 4 campos llevan `required` y el correo `type="email"`, así que la **validación nativa del navegador** bloquea el envío con vacíos o correo inválido (burbujas en español, sin JS extra). Si pasa, se muestra el banner `.contacto-form-success` —**"¡Gracias por contactarnos! Nos pondremos en contacto con usted en breve."**— al inicio de la tarjeta y se limpian los campos (se puede reenviar). Sin `alert()`, sin texto "demostración". El banner es **azul del manual** (`border-left: 4px #1366af`, fondo `rgba(19,102,175,.06)`, texto `#1366af`), no verde: el manual prohíbe el verde en la UI (solo el isologo) y así lo decidió el usuario. Ambos lados idénticos: React usa `<form onSubmit>` dentro del Card (el Card no es form), `controlProps={{required:true}}` y `Button type="submit"` (Gravity por defecto es `button`); el estático lo resuelve `sireve.js` (`initForm` → `classList.add('show')` + `reset()`), que solo se dispara si la validación pasó. Verificado en los dos orígenes con sonda temporal: `required=4`, bloquea vacío y correo inválido, exito+limpio al validar. Para envío real: **FormSubmit.co** (`action="https://formsubmit.co/<correo>"`, sin cuenta) o **Formspree** (requiere cuenta + ID) y quitar el `preventDefault`; hay comentarios en `Contacto.jsx` y en el template de `build.mjs`.
 - **Datos reales de la Secretaría General del CSUCA** (verificados en `csuca.org/es`, footer "¡Encuéntranos aquí!"): Av. Las Américas 1-03, Zona 14, interior Club Deportivo Los Arcos, Ciudad de Guatemala, Guatemala · **+(502) 2502-7500** · **sg@csuca.org**. `info@sireve.csuca.org` y `+503 2222-2222` eran inventados y se eliminaron. Correo y teléfono son enlaces `mailto:` / `tel:` (`.contacto-info-link`, `.footer-link-inline`).
-- Nota: `sireve.csuca.org` hoy es un WordPress de ejemplo (sin datos de contacto); el SIREVE se comunica por el CSUCA, de ahí que la página apunte a la Secretaría General.
+- Nota: desde 2026-10 **`sireve.csuca.org` sirve esta réplica** (tema WordPress `sireve-theme`, ver `wordpress/LEEME.md` §4 y §7); antes era un WordPress de ejemplo sin datos de contacto. El SIREVE se comunica por el CSUCA, de ahí que la página apunte a la Secretaría General.
 
 ---
 

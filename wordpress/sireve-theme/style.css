@@ -1,0 +1,13 @@
+/*
+Theme Name: SIREVE CSUCA
+Theme URI: https://sireve.csuca.org/
+Author: CSUCA
+Description: Sistema Regional de Vida Estudiantil (SIREVE) del CSUCA. Tema generado por wordpress/build.mjs; no editar a mano.
+Version: 1.0
+Requires at least: 6.0
+Requires PHP: 7.4
+Text Domain: sireve
+*/
+
+/* Los estilos reales estan en assets/sireve.css y se encolan en functions.php.
+   Este archivo solo lleva la cabecera que WordPress exige para activar el tema. */

@@ -173,8 +173,9 @@ f.addEventListener('load', async () => {
     out.lightbox = lb;
   }
 
-  /* 6. Formulario: debe responder en local y sin recargar. No aplica en paginas
-     sin formulario (null, no fallo). */
+  /* 6. Formulario: la validacion nativa debe bloquear el envio vacio y, con
+     datos validos, mostrarse el mensaje de confirmacion sin recargar. No
+     aplica en paginas sin formulario (null, no fallo). */
   const form = q('form');
   if (!form) {
     out.formulario = null;
@@ -185,12 +186,31 @@ f.addEventListener('load', async () => {
     frm.campos = form.querySelectorAll('input, textarea').length;
     frm.method = (form.getAttribute('method') || 'get').toLowerCase();
     frm.action = form.getAttribute('action') || '';
+    const success = form.querySelector('.contacto-form-success');
+    const visto = () => !!success && success.classList.contains('show');
     const btn = q('.contacto-btn') || form.querySelector('button');
     if (btn) {
+      /* 1) con todo vacio la validacion nativa ni siquiera dispara el submit */
       click(btn);
       await pause(300);
+      frm.bloqueaVacio = !visto() && !recargo;
+      /* 2) con datos validos: mensaje visible y campos limpios */
+      const rellenar = (sel, valor) => {
+        const el = form.querySelector(sel);
+        if (el) el.value = valor;
+      };
+      rellenar('input[name="nombre"]', 'Prueba SIREVE');
+      rellenar('input[name="email"]', 'prueba@csuca.org');
+      rellenar('input[name="asunto"]', 'Consulta de prueba');
+      rellenar('textarea[name="mensaje"]', 'Mensaje de prueba para la verificacion.');
+      click(btn);
+      await pause(300);
+      frm.exitoVisible = visto() && /gracias por contactarnos/i.test(d.body.textContent);
+      frm.camposLimpios = ['nombre', 'email', 'asunto', 'mensaje'].every((n) => {
+        const el = form.querySelector('[name="' + n + '"]');
+        return el && el.value === '';
+      });
       frm.noRecarga = !recargo;
-      frm.avisoVisible = /demostraci/i.test(d.body.textContent);
     }
     out.formulario = frm;
   }
