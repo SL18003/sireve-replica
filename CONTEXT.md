@@ -242,7 +242,7 @@ Alcance acordado con el usuario (2026-10): **celular + tablet + táctil, solo CS
 - **Espaciado compacto entre secciones:** hueco hero → "¿Qué es SIREVE?" = **100px** (`.landing-hero` `padding: 56px 24px 52px` + `.sireve-section` `padding-top: 48px`). **Ojo, esto es un drift:** en el diseño anterior era **88px** (`padding-bottom: 40px`) tras la corrección del usuario ("demasiado espacio entre los botones y Qué es SIREVE", cuando era 152px + `min-height`); el hero a dos columnas metió 52px y ahora son 100px. Si el usuario lo reporta otra vez, basta bajar ese `padding-bottom` a `40px`. `.sireve-section` = `48px 24px 40px`, `.quick-section` = `40px 24px 72px` → **80px** entre SIREVE y Acceso rápido; móvil 72px. Filete de títulos `.section-title::after` en `#1366af` (un solo azul de acento, igual que `.sireve-rule`), en CAROLINA sobre dark.
 - **SIREVE es el programa marco**: sección propia `id="sireve"` (fondo blanco, título/regla/CTA en `#1366af`, mosaico de 5 fotos de programas). Va antes de Acceso rápido.
 - Acceso rápido: Actas, Galería, Reglamentos. Las 3 fotos van **crudas** (se quitó el `.quick-card-image-overlay` con degradado azul).
-- Carrusel “Vida estudiantil”: **3 fotos reales** del media de csuca.org (tabla abajo), recortadas a **1400×600**, con alts descriptivos en español. **Sin overlay**: se eliminó `.carousel-overlay` (degradado azul) y los **dots bajaron fuera del recuadro**, sobre blanco — ver "Lenguaje fotográfico (manual)".
+- Carrusel “Vida estudiantil”: **3 fotos** — `1.jpg` y `2.jpg` **aportadas por el usuario** (2026-10) y `3.jpg` del media de csuca.org (tabla abajo), con alts genéricos y precisos en español. **Sin overlay**: se eliminó `.carousel-overlay` (degradado azul) y los **dots bajaron fuera del recuadro**, sobre blanco — ver "Lenguaje fotográfico (manual)". **Encuadre por slide** (2026-10): además de `object-fit: cover`, `.carousel-slide:nth-child(1) img { object-position: center 40% }` y `:nth-child(2) … center 6%` (reglas espejo en `LandingPage.css` y `sireve.css`), elegidas con simulaciones de recorte a la banda de escritorio (contenedor fijo **1152×400** = banda de 356px de fuente): con el default `center 50%` se cortaba el pelo del hombre de la derecha (slide 1) y las **pantallas de videoconferencia** por arriba (slide 2). El slide 3 se queda en el default. En móvil la banda casi no recorta (foto casi completa), así que las mismas reglas no perjudican allí.
 - Programas: **5 cards** (FICCUA, JUDUCA, Excelencia Académica/Premio Rubén Darío, Promotoras de Salud, Voluntariado) — SIREVE ya **no** es una card. Cada card muestra solo el `excerpt` y un botón **"Ver programa →"** (`.program-card-cta`, relleno `#1366af`) que **navega a `/programas/<slug>`**. Se eliminó el expand "Leer más/Leer menos" (el texto completo vive en la página del programa). Las cards se pintan desde `src/data/programs.js` (mismo origen que las páginas).
 - Sin acento por color: todas las cards comparten la misma rampa azul.
 - Fotos de programas son **reales del media de csuca.org** (ver abajo); `onError` → placeholder.
@@ -296,15 +296,15 @@ Se descargaron del media de csuca.org para el hero de `/programas/:slug` y van e
 
 ### Fotos del carrusel (origen verificado)
 
-`public/images/carousel/1–3.jpg` son **fotos reales** descargadas del media de csuca.org (método que con `programs/`), recortadas a 1400×600:
+`public/images/carousel/1–3.jpg` — **`1.jpg` y `2.jpg` son fotos aportadas por el usuario** (2026-10: PNG extraídos del chat → JPEG q88, **1024×682**, sin recorte previo — el encuadre lo da el CSS con `object-position`, ver la sección Landing); **`3.jpg`** sigue siendo la foto descargada del media de csuca.org recortada a 1400×600:
 
-| Archivo | URL original | Contenido |
+| Archivo | Origen | Contenido |
 |---|---|---|
-| `carousel/1.jpg` | `2026/08/IMG_0618.JPG-scaled.jpeg` (2560×1707) | Autoridades con las banderas centroamericanas |
-| `carousel/2.jpg` | `2026/10/SIREICU1.jpeg` (1500×1000) | Plenaria del 5.º SICEVAES (UNED Costa Rica) |
-| `carousel/3.jpg` | `2026/09/SICEVAES4.jpeg` (1600×921) | Comité frente al Auditorio Cora Ferro Calabrese (UNA) |
+| `carousel/1.jpg` | usuario (2026-10), 1024×682 | Tres autoridades en una mesa de trabajo con las banderas de los países centroamericanos |
+| `carousel/2.jpg` | usuario (2026-10), 1024×682 | Sala de sesiones con banderas centroamericanas y participación por videoconferencia en las pantallas |
+| `carousel/3.jpg` | `2026/09/SICEVAES4.jpeg` del media de csuca.org (1600×921), recortada 1400×600 | Comité frente al Auditorio Cora Ferro Calabrese (UNA) |
 
-**Ojo:** los nombres de archivo del media **no describen el contenido** (`SIREICU1` es la plenaria SICEVAES y `SICEVAES4` es la foto de la UNA) y `wp/v2/media?search=...` devuelve el primer homónimo, que puede ser de otro mes. Verificar siempre el contenido visual antes de instalar.
+**Ojo (histórico):** las versiones previas de `1.jpg`/`2.jpg` venían del media de csuca.org (`2026/08/IMG_0618.JPG-scaled.jpeg` y `2026/10/SIREICU1.jpeg`) y fueron **reemplazadas** por las del usuario (los originales quedaron en backup temporal solo hasta la entrega). Los nombres de archivo del media **no describen el contenido** y `wp/v2/media?search=...` devuelve el primer homónimo, que puede ser de otro mes: verificar siempre el contenido visual antes de instalar.
 
 ### Actas
 
@@ -384,7 +384,7 @@ Referencia: https://sireve.csuca.org/index.php/2017
 ```
 public/images/
   logo-csuca.png   (logo oficial CSUCA, único logo del sitio; 675×188 recortado)
-  hero-sicevaes.jpg (foto del hero, 1600×1067, media de csuca.org 2026/09/SICEVAES-3.jpeg; alts pendiente de que el usuario confirme el contenido)
+  hero-sicevaes.jpg (foto del hero: **foto grupal del usuario en escalera**, 1024×682 JPEG q88, 2026-10 — reemplazó a la de csuca.org `2026/09/SICEVAES-3.jpeg`; alt "Foto grupal de participantes en un encuentro regional del CSUCA"; **el nombre del archivo se conserva** porque lo referencian el og:image de `header-src.php`, `sync-check.mjs` y el build)
   hero.jpg         (sin uso desde que se quitó la franja del hero; conservar)
   placeholder.jpg
   programs/   (sireve SIN USO, ficcua, juduca, excelencia, salud, voluntariado)

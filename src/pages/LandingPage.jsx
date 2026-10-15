@@ -10,8 +10,8 @@ import './LandingPage.css';
 
 
 const carouselImages = [
-  { url: '/images/carousel/1.jpg', alt: 'Autoridades de la CSUCA con las banderas de los países centroamericanos' },
-  { url: '/images/carousel/2.jpg', alt: 'Plenaria del 5.º SICEVAES en la UNED de Costa Rica' },
+  { url: '/images/carousel/1.jpg', alt: 'Autoridades en una mesa de trabajo con las banderas de los países centroamericanos' },
+  { url: '/images/carousel/2.jpg', alt: 'Sesión de trabajo en sala de conferencias con participación por videoconferencia' },
   { url: '/images/carousel/3.jpg', alt: 'Comité del SIREVE en el Auditorio Cora Ferro Calabrese de la UNA' },
 ];
 
@@ -133,7 +133,7 @@ export default function LandingPage() {
           <div className="landing-hero-photo-plate">
             <img
               src="/images/hero-sicevaes.jpg"
-              alt="Participantes en una plenaria del encuentro estudiantil regional del CSUCA"
+              alt="Foto grupal de participantes en un encuentro regional del CSUCA"
               className="landing-hero-photo"
               onError={handleImageError}
             />

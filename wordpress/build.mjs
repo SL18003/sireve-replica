@@ -511,8 +511,8 @@ const QUICK_LINKS = [
 ];
 
 const CAROUSEL_IMAGES = [
-  { image: '/images/carousel/1.jpg', alt: 'Autoridades de la CSUCA con las banderas de los países centroamericanos' },
-  { image: '/images/carousel/2.jpg', alt: 'Plenaria del 5.º SICEVAES en la UNED de Costa Rica' },
+  { image: '/images/carousel/1.jpg', alt: 'Autoridades en una mesa de trabajo con las banderas de los países centroamericanos' },
+  { image: '/images/carousel/2.jpg', alt: 'Sesión de trabajo en sala de conferencias con participación por videoconferencia' },
   { image: '/images/carousel/3.jpg', alt: 'Comité del SIREVE en el Auditorio Cora Ferro Calabrese de la UNA' },
 ];
 
@@ -607,7 +607,7 @@ function landing() {
         <div class="landing-hero-figure landing-hero-animate landing-hero-animate--2">
           <span class="landing-hero-figure-frame" aria-hidden="true"></span>
           <div class="landing-hero-photo-plate">
-            ${img('/images/hero-sicevaes.jpg', 'Participantes en una plenaria del encuentro estudiantil regional del CSUCA', 'landing-hero-photo')}
+            ${img('/images/hero-sicevaes.jpg', 'Foto grupal de participantes en un encuentro regional del CSUCA', 'landing-hero-photo')}
           </div>
           <span class="landing-hero-badge">
             <span class="landing-hero-badge-dot" aria-hidden="true"></span>

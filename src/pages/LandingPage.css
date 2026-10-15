@@ -535,6 +535,14 @@
   object-fit: cover;
 }
 
+.carousel-slide:nth-child(1) img {
+  object-position: center 40%;
+}
+
+.carousel-slide:nth-child(2) img {
+  object-position: center 6%;
+}
+
 .carousel-btn {
   position: absolute;
   top: 50%;

@@ -1274,6 +1274,14 @@
   object-fit: cover;
 }
 
+.sireve .carousel-slide:nth-child(1) img {
+  object-position: center 40%;
+}
+
+.sireve .carousel-slide:nth-child(2) img {
+  object-position: center 6%;
+}
+
 
 .sireve .carousel-btn {
   position: absolute;
