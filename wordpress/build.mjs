@@ -226,13 +226,14 @@ const HEADER_PROGRAM_ITEMS = [
 const YEARS = Object.keys(galleryByYear).sort();
 
 const YEAR_COVERS = {
-  2017: '/images/gallery/1.jpg',
+  2017: '/images/gallery/covers/2017-ficcua.jpg',
   2018: '/images/gallery/2.jpg',
   2019: '/images/gallery/3.jpg',
   2020: '/images/gallery/premio/2020/afiche-01.jpg',
   2023: '/images/gallery/premio/2023/afiche-02.jpg',
   2024: '/images/gallery/premio/2024/ceremonia-01.jpg',
   2025: '/images/gallery/premio/2025/ceremonia-01.jpg',
+  2026: '/images/gallery/premio/2026/ceremonia-26.jpg',
 };
 
 /* --------------------------------------------------------------- Header */
@@ -290,11 +291,6 @@ function header(activePath) {
     return `<a class="${classes}" href="${href}"${nav ? ` data-nav="${nav}"` : ''}>${esc(label)}</a>`;
   };
 
-  const galeriaItems = [
-    { label: 'Todas las galerías', to: '/galeria/' },
-    ...YEARS.map((y) => ({ label: y, to: `/galeria/${y}/` })),
-  ];
-
   return `<header class="site-header">
       <div class="header-inner">
         <a href="/" class="header-brand">
@@ -321,7 +317,7 @@ function header(activePath) {
 
           ${link('/actas/', 'Actas', { nav: '/actas' })}
 
-          ${dropdown('Galería', galeriaItems, activePath)}
+          ${link('/galeria/', 'Galería', { nav: '/galeria' })}
 
           ${link('/reglamentos/', 'Reglamentos', { nav: '/reglamentos' })}
 
@@ -794,8 +790,6 @@ function timelineBlock() {
 }
 
 function galeriaIndex() {
-  const timelineLast = timeline.length === 0;
-
   const yearCards = YEARS.map((year) => {
     const local = YEAR_COVERS[year] ?? '/images/placeholder.jpg';
     return `<a class="galeria-year-card" href="/galeria/${year}/">
@@ -810,12 +804,12 @@ function galeriaIndex() {
   const body = `<div class="page-wrap">
       ${pageHero({ title: 'Galería', subtitle: 'Eventos y actividades del SIREVE por año', icon: 'picture' })}
       <div class="page-body">
-        <div class="galeria-sections${timelineLast ? ' galeria-sections--timeline-last' : ''}">
-          <section class="timeline-section">
+        <div class="galeria-sections">
+          ${timeline.length === 0 ? '' : `<section class="timeline-section">
             <h2 class="timeline-title">Presidentes del CONREVE</h2>
             <p class="timeline-lead">Línea de tiempo de los mandatos. Cada presidente aparece una vez por mandato, con los años de galería que le corresponden.</p>
             ${timelineBlock()}
-          </section>
+          </section>`}
 
           <section class="galeria-years-section">
             <h2 class="timeline-title">Galerías por año</h2>

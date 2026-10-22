@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Text, Icon } from '@gravity-ui/uikit';
-import { Calendar, Picture, Person } from '@gravity-ui/icons';
+import { Icon } from '@gravity-ui/uikit';
+import { Calendar, Picture } from '@gravity-ui/icons';
 import PageHeader from '../components/Layout/PageHeader';
 import { handleImageError } from '../utils/imageFallback';
 import { galleryByYear } from '../data/galleryData';
@@ -10,13 +10,14 @@ import './Galeria.css';
 /* Portadas por ano. La lista de anos sale de galleryByYear para que no haya dos
    fuentes de verdad: si se agrega un ano a la galeria aparece solo. */
 const covers = {
-  2017: '/images/gallery/1.jpg',
+  2017: '/images/gallery/covers/2017-ficcua.jpg',
   2018: '/images/gallery/2.jpg',
   2019: '/images/gallery/3.jpg',
   2020: '/images/gallery/premio/2020/afiche-01.jpg',
   2023: '/images/gallery/premio/2023/afiche-02.jpg',
   2024: '/images/gallery/premio/2024/ceremonia-01.jpg',
   2025: '/images/gallery/premio/2025/ceremonia-01.jpg',
+  2026: '/images/gallery/premio/2026/ceremonia-26.jpg',
 };
 
 const years = Object.keys(galleryByYear)
@@ -24,25 +25,6 @@ const years = Object.keys(galleryByYear)
   .map((year) => ({ year, image: covers[year] ?? '/images/placeholder.jpg' }));
 
 function Timeline() {
-  /* Sin datos todavia: mismo patron que "Espacio reservado para las ediciones"
-     de los programas. Se llena en src/data/presidents.js */
-  if (timeline.length === 0) {
-    return (
-      <div className="timeline-empty">
-        <span className="timeline-empty-icon">
-          <Icon data={Person} size={26} />
-        </span>
-        <Text variant="header-2" as="h2" className="timeline-empty-title">
-          Espacio reservado para la línea de tiempo de presidentes
-        </Text>
-        <Text variant="body-2" color="secondary" className="timeline-empty-text">
-          Aquí se publicarán los presidentes del CONREVE con su periodo de mandato y los años de
-          galería que les corresponden.
-        </Text>
-      </div>
-    );
-  }
-
   return (
     <ol className="timeline">
       {timeline.map((item) => (
@@ -92,11 +74,11 @@ function Timeline() {
 }
 
 export default function GaleriaIndex() {
-  /* Mientras la linea de tiempo este vacia el panel reservado va DESPUES de las
-     galerias: si va arriba empuja las tarjetas de ano hacia abajo y en celular
-     hay que hacer scroll para verlas. Con datos, la linea de tiempo va primero
-     porque es el eje de lectura. */
-  const timelineLast = timeline.length === 0;
+  /* Con datos, la linea de tiempo va primero porque es el eje de lectura.
+     Sin datos no se pinta nada (decision 2026-10): el panel "espacio reservado"
+     no aportaba y empujaba las tarjetas de ano. Si se llena presidents.js en
+     src/data/presidents.js, la seccion reaparece sola. */
+  const showTimeline = timeline.length > 0;
 
   return (
     <div className="page-wrap">
@@ -107,15 +89,17 @@ export default function GaleriaIndex() {
       />
 
       <div className="page-body">
-        <div className={`galeria-sections${timelineLast ? ' galeria-sections--timeline-last' : ''}`}>
-          <section className="timeline-section">
-            <h2 className="timeline-title">Presidentes del CONREVE</h2>
-            <p className="timeline-lead">
-              Línea de tiempo de los mandatos. Cada presidente aparece una vez por mandato, con los
-              años de galería que le corresponden.
-            </p>
-            <Timeline />
-          </section>
+        <div className="galeria-sections">
+          {showTimeline && (
+            <section className="timeline-section">
+              <h2 className="timeline-title">Presidentes del CONREVE</h2>
+              <p className="timeline-lead">
+                Línea de tiempo de los mandatos. Cada presidente aparece una vez por mandato, con
+                los años de galería que le corresponden.
+              </p>
+              <Timeline />
+            </section>
+          )}
 
           <section className="galeria-years-section">
             <h2 className="timeline-title">Galerías por año</h2>

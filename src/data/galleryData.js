@@ -35,4 +35,6 @@ export const galleryByYear = {
   '2023': getYearAlbums('2023') ?? [],
   '2024': getYearAlbums('2024') ?? [],
   '2025': getYearAlbums('2025') ?? [],
+  /* Ano del XIII FICCUA (UNAH, Honduras, julio 2026; fotos de csuca.org). */
+  '2026': getYearAlbums('2026') ?? [],
 };

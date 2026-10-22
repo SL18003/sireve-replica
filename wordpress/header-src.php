@@ -85,6 +85,14 @@ $sireve_seo = array(
 			array( '2025', '/galeria/2025/' ),
 		),
 	),
+	'/galeria/2026/' => array(
+		'description' => 'Fotografías de 2026: XIII FICCUA en Honduras y XXI Premio Regional a la Excelencia Académica Rubén Darío en la Universidad de El Salvador: gráfica, ceremonia y galardonados.',
+		'crumbs'      => array(
+			array( 'Inicio', '/' ),
+			array( 'Galería', '/galeria/' ),
+			array( '2026', '/galeria/2026/' ),
+		),
+	),
 	'/reglamentos/' => array(
 		'description' => 'Reglamento General del Sistema Regional de Vida Estudiantil (SIREVE) del CSUCA. Consulta el documento oficial vigente en línea.',
 		'crumbs'      => array(

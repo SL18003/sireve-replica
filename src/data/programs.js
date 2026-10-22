@@ -15,9 +15,10 @@ import { MusicNote, Cup, Medal, HeartPulse, Person } from '@gravity-ui/icons';
    - resources: enlaces reales del programa (carpetas de Drive, galeria,
       reglamentos). Usan `url` (externo, se abre en pestana nueva) o `to`
       (ruta interna de este sitio).
-   - editions: historial de ediciones. Hoy lleno solo en `premio-ruben-dario`
-      (2025, 2024, 2023, 2020 — de mas reciente a mas antigua); el resto sigue
-      vacio y muestra el panel reservado.
+   - editions: historial de ediciones. Hoy lleno en `premio-ruben-dario`
+     (2025, 2024, 2023, 2020), `ficcua` (2024), `juduca` (2023),
+     `promotoras-salud` (2023) y `voluntariado` (2020); los años sin
+     fotos confirmadas no se inventan.
 
    PARA LLENAR EL HISTORIAL MAS ADELANTE (no hace falta tocar componentes):
    1. Logo / mascota / flayer de la edicion:
@@ -69,7 +70,20 @@ export const programs = [
       { icon: 'Picture', label: 'Galería SIREVE', desc: 'Fotos de eventos y actividades', to: '/galeria' },
       { icon: 'Book', label: 'Reglamento general', desc: 'Normativa vigente del sistema', to: '/reglamentos' },
     ],
-    editions: [],
+    editions: [
+      {
+        year: 2026,
+        title: 'XIII FICCUA — 2026',
+        logo: '/images/programs/editions/ficcua-2026.jpg',
+        place: 'Honduras (UNAH)',
+      },
+      {
+        year: 2024,
+        title: 'XII FICCUA — 2024',
+        logo: '/images/programs/editions/ficcua-2024.jpg',
+        place: 'Ciudad de Panamá, Panamá (UTP)',
+      },
+    ],
   },
   {
     slug: 'juduca',
@@ -88,7 +102,14 @@ export const programs = [
       { icon: 'Picture', label: 'Galería SIREVE', desc: 'Fotos de eventos y actividades', to: '/galeria' },
       { icon: 'Book', label: 'Reglamento general', desc: 'Normativa vigente del sistema', to: '/reglamentos' },
     ],
-    editions: [],
+    editions: [
+      {
+        year: 2023,
+        title: 'VIII JUDUCA — 2023',
+        logo: '/images/programs/editions/juduca-2023.jpg',
+        place: 'El Salvador (UES)',
+      },
+    ],
   },
   {
     slug: 'premio-ruben-dario',
@@ -109,6 +130,12 @@ export const programs = [
       { icon: 'Book', label: 'Reglamento general', desc: 'Normativa vigente del sistema', to: '/reglamentos' },
     ],
     editions: [
+      {
+        year: 2026,
+        title: 'XXI Premio Regional a la Excelencia Académica — 2026',
+        place: 'Universidad de El Salvador',
+        logo: '/images/programs/editions/premio-ruben-dario-2026.jpg',
+      },
       {
         year: 2025,
         title: 'XX Premio Regional a la Excelencia Académica — 2025',
@@ -148,7 +175,14 @@ export const programs = [
       { icon: 'Picture', label: 'Galería SIREVE', desc: 'Fotos de eventos y actividades', to: '/galeria' },
       { icon: 'Book', label: 'Reglamento general', desc: 'Normativa vigente del sistema', to: '/reglamentos' },
     ],
-    editions: [],
+    editions: [
+      {
+        year: 2023,
+        title: 'V Encuentro REDCCUPS — 2023',
+        logo: '/images/programs/editions/promotoras-salud-2023.jpg',
+        place: 'El Salvador (UES)',
+      },
+    ],
   },
   {
     slug: 'voluntariado',
@@ -167,7 +201,14 @@ export const programs = [
       { icon: 'Picture', label: 'Galería SIREVE', desc: 'Fotos de eventos y actividades', to: '/galeria' },
       { icon: 'Book', label: 'Reglamento general', desc: 'Normativa vigente del sistema', to: '/reglamentos' },
     ],
-    editions: [],
+    editions: [
+      {
+        year: 2020,
+        title: 'IV Encuentro Centroamericano y Caribeño de Voluntariado — 2020',
+        logo: '/images/programs/editions/voluntariado-2020.jpg',
+        place: 'El Salvador (UES, virtual)',
+      },
+    ],
   },
 ];
 

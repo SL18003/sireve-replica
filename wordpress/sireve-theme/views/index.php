@@ -11,6 +11,7 @@ return array(
   '/galeria/2023/' => 'galeria-2023.html',
   '/galeria/2024/' => 'galeria-2024.html',
   '/galeria/2025/' => 'galeria-2025.html',
+  '/galeria/2026/' => 'galeria-2026.html',
   '/reglamentos/' => 'reglamentos.html',
   '/contacto/' => 'contacto.html',
   '/programas/ficcua/' => 'programa-ficcua.html',

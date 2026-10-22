@@ -1,4 +1,4 @@
-﻿{
+{
     "2017": [
         {
             "images": [
@@ -434,6 +434,14 @@
                 "/images/gallery/premio/2020/galardonado-21.jpg"
             ],
             "program": "premio-ruben-dario"
+        },
+        {
+            "id": "v2020-afiche",
+            "title": "IV Encuentro Centroamericano y Caribeño de Voluntariado 2020",
+            "images": [
+                "/images/gallery/voluntariado/2020/01-afiche.jpg"
+            ],
+            "program": "voluntariado"
         }
     ],
     "2023": [
@@ -476,6 +484,67 @@
                 "/images/gallery/premio/2023/galardonado-23.jpg"
             ],
             "program": "premio-ruben-dario"
+        },
+        {
+            "id": "j2023-grafica",
+            "title": "Gráfica oficial — VIII JUDUCA El Salvador 2023",
+            "images": [
+                "/images/gallery/juduca/2023/01-grafica.jpg"
+            ],
+            "program": "juduca"
+        },
+        {
+            "id": "j2023-inauguracion",
+            "title": "Ceremonia inaugural — VIII JUDUCA El Salvador 2023",
+            "images": [
+                "/images/gallery/juduca/2023/02-mesa-directiva.jpg",
+                "/images/gallery/juduca/2023/03-participacion-virtual.jpg",
+                "/images/gallery/juduca/2023/04-autoridades.jpg",
+                "/images/gallery/juduca/2023/05-ceremonia.jpg",
+                "/images/gallery/juduca/2023/06-entrega-antorcha.jpg",
+                "/images/gallery/juduca/2023/07-encendido-antorcha.jpg",
+                "/images/gallery/juduca/2023/08-discurso.jpg"
+            ],
+            "program": "juduca"
+        },
+        {
+            "id": "j2023-premiacion",
+            "title": "Premiación — Medallero VIII JUDUCA 2023",
+            "images": [
+                "/images/gallery/juduca/2023/09-medallero.jpg"
+            ],
+            "program": "juduca"
+        },
+        {
+            "id": "m2023-afiche",
+            "title": "Afiche oficial — V Encuentro REDCCUPS 2023",
+            "images": [
+                "/images/gallery/promotoras/2023/01-afiche.jpg"
+            ],
+            "program": "promotoras-salud"
+        },
+        {
+            "id": "m2023-sesiones",
+            "title": "Sesiones — V Encuentro de Universidades Promotoras de la Salud 2023",
+            "images": [
+                "/images/gallery/promotoras/2023/02-expositor.jpg",
+                "/images/gallery/promotoras/2023/03-expositor-2.jpg",
+                "/images/gallery/promotoras/2023/04-audiencia-01.jpg",
+                "/images/gallery/promotoras/2023/05-audiencia-02.jpg",
+                "/images/gallery/promotoras/2023/06-audiencia-03.jpg",
+                "/images/gallery/promotoras/2023/07-audiencia-04.jpg",
+                "/images/gallery/promotoras/2023/08-entrevista.jpg"
+            ],
+            "program": "promotoras-salud"
+        },
+        {
+            "id": "m2023-salud",
+            "title": "Acciones de promoción de la salud — V Encuentro REDCCUPS 2023",
+            "images": [
+                "/images/gallery/promotoras/2023/09-toma-presion.jpg",
+                "/images/gallery/promotoras/2023/10-atencion-salud.jpg"
+            ],
+            "program": "promotoras-salud"
         }
     ],
     "2024": [
@@ -515,6 +584,45 @@
                 "/images/gallery/premio/2024/galardonado-22.jpg"
             ],
             "program": "premio-ruben-dario"
+        },
+        {
+            "id": "f2024-inauguracion",
+            "title": "Inauguración — XII FICCUA Panamá 2024",
+            "images": [
+                "/images/gallery/ficcua/2024/01-escenario.jpg",
+                "/images/gallery/ficcua/2024/02-danza-folklorica.jpg",
+                "/images/gallery/ficcua/2024/03-autoridades.jpg",
+                "/images/gallery/ficcua/2024/04-discurso-sg-csuca.jpg",
+                "/images/gallery/ficcua/2024/05-grupal-utp.jpg"
+            ],
+            "program": "ficcua"
+        },
+        {
+            "id": "f2024-pasacalles",
+            "title": "Pasacalles y delegaciones — XII FICCUA Panamá 2024",
+            "images": [
+                "/images/gallery/ficcua/2024/06-delegaciones-01.jpg",
+                "/images/gallery/ficcua/2024/07-delegaciones-02.jpg",
+                "/images/gallery/ficcua/2024/08-delegaciones-03.jpg",
+                "/images/gallery/ficcua/2024/09-delegaciones-04.jpg",
+                "/images/gallery/ficcua/2024/10-delegaciones-05.jpg",
+                "/images/gallery/ficcua/2024/11-parque-omar.jpg",
+                "/images/gallery/ficcua/2024/12-pasacalles.jpg",
+                "/images/gallery/ficcua/2024/13-puente-las-americas.png"
+            ],
+            "program": "ficcua"
+        },
+        {
+            "id": "f2024-muestras",
+            "title": "Muestras artísticas — XII FICCUA Panamá 2024",
+            "images": [
+                "/images/gallery/ficcua/2024/14-huellas.jpg",
+                "/images/gallery/ficcua/2024/15-manos-pintura.jpg",
+                "/images/gallery/ficcua/2024/16-danza-grupal.jpg",
+                "/images/gallery/ficcua/2024/17-grupo-el-salvador.jpg",
+                "/images/gallery/ficcua/2024/18-bailarinas.jpg"
+            ],
+            "program": "ficcua"
         }
     ],
     "2025": [
@@ -556,6 +664,114 @@
                 "/images/gallery/premio/2025/galardonado-16.jpg",
                 "/images/gallery/premio/2025/galardonado-17.jpg",
                 "/images/gallery/premio/2025/galardonado-18.jpg"
+            ],
+            "program": "premio-ruben-dario"
+        }
+    ],
+    "2026": [
+        {
+            "id": "f2026-afiche",
+            "title": "Gráfica oficial — XIII FICCUA 2026 Honduras",
+            "images": [
+                "/images/gallery/ficcua/2026/afiche-oficial.png"
+            ],
+            "program": "ficcua"
+        },
+        {
+            "id": "f2026-festival",
+            "title": "XIII FICCUA 2026 — Honduras (UNAH)",
+            "images": [
+                "/images/gallery/ficcua/2026/estudiantes-01.jpg",
+                "/images/gallery/ficcua/2026/talleres-01.jpg",
+                "/images/gallery/ficcua/2026/presentaciones-01.jpg",
+                "/images/gallery/ficcua/2026/presentaciones-02.jpg",
+                "/images/gallery/ficcua/2026/publico-01.jpg",
+                "/images/gallery/ficcua/2026/ambiente-01.jpg"
+            ],
+            "program": "ficcua"
+        },
+        {
+            "id": "p2026-afiche",
+            "title": "Gráfica oficial — XXI Premio Regional a la Excelencia Académica 2026",
+            "images": [
+                "/images/gallery/premio/2026/afiche-oficial.jpg"
+            ],
+            "program": "premio-ruben-dario"
+        },
+        {
+            "id": "p2026-gira",
+            "title": "Recorrido cultural por el campus UES — XXI Premio Rubén Darío 2026",
+            "images": [
+                "/images/gallery/premio/2026/gira-01.jpg",
+                "/images/gallery/premio/2026/gira-02.jpg",
+                "/images/gallery/premio/2026/gira-03.jpg",
+                "/images/gallery/premio/2026/gira-04.jpg",
+                "/images/gallery/premio/2026/gira-05.jpg",
+                "/images/gallery/premio/2026/gira-06.jpg",
+                "/images/gallery/premio/2026/gira-07.jpg",
+                "/images/gallery/premio/2026/gira-08.jpg",
+                "/images/gallery/premio/2026/gira-09.jpg",
+                "/images/gallery/premio/2026/gira-10.jpg",
+                "/images/gallery/premio/2026/gira-11.jpg",
+                "/images/gallery/premio/2026/gira-12.jpg",
+                "/images/gallery/premio/2026/gira-13.jpg",
+                "/images/gallery/premio/2026/gira-14.jpg",
+                "/images/gallery/premio/2026/gira-15.jpg"
+            ],
+            "program": "premio-ruben-dario"
+        },
+        {
+            "id": "p2026-ceremonia",
+            "title": "Ceremonia de entrega de premios — XXI Premio Rubén Darío 2026",
+            "images": [
+                "/images/gallery/premio/2026/ceremonia-01.jpg",
+                "/images/gallery/premio/2026/ceremonia-02.jpg",
+                "/images/gallery/premio/2026/ceremonia-03.jpg",
+                "/images/gallery/premio/2026/ceremonia-04.jpg",
+                "/images/gallery/premio/2026/ceremonia-05.jpg",
+                "/images/gallery/premio/2026/ceremonia-06.jpg",
+                "/images/gallery/premio/2026/ceremonia-07.jpg",
+                "/images/gallery/premio/2026/ceremonia-08.jpg",
+                "/images/gallery/premio/2026/ceremonia-09.jpg",
+                "/images/gallery/premio/2026/ceremonia-10.jpg",
+                "/images/gallery/premio/2026/ceremonia-11.jpg",
+                "/images/gallery/premio/2026/ceremonia-12.jpg",
+                "/images/gallery/premio/2026/ceremonia-13.jpg",
+                "/images/gallery/premio/2026/ceremonia-14.jpg",
+                "/images/gallery/premio/2026/ceremonia-15.jpg",
+                "/images/gallery/premio/2026/ceremonia-16.jpg",
+                "/images/gallery/premio/2026/ceremonia-17.jpg",
+                "/images/gallery/premio/2026/ceremonia-18.jpg",
+                "/images/gallery/premio/2026/ceremonia-19.jpg",
+                "/images/gallery/premio/2026/ceremonia-20.jpg",
+                "/images/gallery/premio/2026/ceremonia-21.jpg",
+                "/images/gallery/premio/2026/ceremonia-22.jpg",
+                "/images/gallery/premio/2026/ceremonia-23.jpg",
+                "/images/gallery/premio/2026/ceremonia-24.jpg",
+                "/images/gallery/premio/2026/ceremonia-25.jpg",
+                "/images/gallery/premio/2026/ceremonia-26.jpg"
+            ],
+            "program": "premio-ruben-dario"
+        },
+        {
+            "id": "p2026-galardonados",
+            "title": "Estudiantes galardonados — XXI Premio Regional a la Excelencia Académica 2026",
+            "images": [
+                "/images/gallery/premio/2026/galardonado-01.jpg",
+                "/images/gallery/premio/2026/galardonado-02.jpg",
+                "/images/gallery/premio/2026/galardonado-03.jpg",
+                "/images/gallery/premio/2026/galardonado-04.jpg",
+                "/images/gallery/premio/2026/galardonado-05.jpg",
+                "/images/gallery/premio/2026/galardonado-06.jpg",
+                "/images/gallery/premio/2026/galardonado-07.jpg",
+                "/images/gallery/premio/2026/galardonado-08.jpg",
+                "/images/gallery/premio/2026/galardonado-09.jpg",
+                "/images/gallery/premio/2026/galardonado-10.jpg",
+                "/images/gallery/premio/2026/galardonado-11.jpg",
+                "/images/gallery/premio/2026/galardonado-12.jpg",
+                "/images/gallery/premio/2026/galardonado-13.jpg",
+                "/images/gallery/premio/2026/galardonado-14.jpg",
+                "/images/gallery/premio/2026/galardonado-15.jpg"
             ],
             "program": "premio-ruben-dario"
         }

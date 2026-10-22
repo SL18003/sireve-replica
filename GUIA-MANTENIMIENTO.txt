@@ -1,0 +1,152 @@
+# Cómo mantener el sitio SIREVE
+
+Estas notas son para quien se quede a cargo del sitio `sireve.csuca.org`. No hace falta saber programación, solo tener cuidado con algunos archivos y seguir los pasos.
+
+---
+
+## Primero, lo más importante
+
+Todo lo que se ve en el sitio (los textos, las fotos, los enlaces) está guardado dentro de los archivos del tema de WordPress, que se llama `sireve-theme`. No está en las "Páginas" de wp-admin.
+
+Si entrás a *Páginas* y ves todo vacío, no es un error: el editor de páginas está vacío a propósito. El contenido de verdad vive en los archivos del tema.
+
+Entonces, para cambiar algo del sitio, hay que:
+
+1. Descargar el ZIP del tema (está en la Biblioteca de Medios de wp-admin).
+2. Editar los archivos con un editor de texto como VS Code.
+3. Volver a comprimir todo en un ZIP.
+4. Subirlo de nuevo a WordPress desde Apariencia → Temas.
+
+Abajo está explicado paso a paso cada una de esas cosas.
+
+---
+
+## Los archivos del tema y qué hace cada uno
+
+Cuando extraen el ZIP, van a ver algo así:
+
+- **`views/`** — esta es la carpeta que más les va a interesar. Dentro hay un archivo `.html` por cada página del sitio:
+
+  - `inicio.html` → la portada
+  - `actas.html` → la página de actas
+  - `galeria.html` → la página de galería donde salen las tarjetas de cada año
+  - `galeria-2017.html`, `galeria-2018.html`, `galeria-2026.html`… → una por cada año de galería
+  - `reglamentos.html`, `contacto.html` → esas páginas
+  - `programa-ficcua.html`, `programa-juduca.html`, `programa-premio-ruben-dario.html`, `programa-promotoras-salud.html`, `programa-voluntariado.html` → las cinco páginas de programas
+
+  Si quieren cambiar un texto, este es el lugar: abren el archivo que corresponda con VS Code, buscan la frase con Ctrl+F, la cambian y guardan.
+
+- **`assets/images/`** — acá están todas las fotos del sitio, ordenadas por carpetas (carpeta `programs`, `gallery`, `carousel`, etc.).
+
+- **`assets/sireve.css`** — los colores y tamaños de todo el sitio. Se puede tocar, pero con cuidado: si borran una llave o un punto y coma de más, se puede romper el diseño completo.
+
+- **`assets/sireve.js`** — los menús, el carrusel de fotos de la portada y las ventanas de imagen de la galería. Idealmente no tocar.
+
+- **`header.php`** — es el que le dice a Google qué descripción mostrar de cada página. Si alguna vez necesitan cambiar una descripción, se puede, pero con cuidado.
+
+- **`functions.php`, `style.css`, `index.php`, `page.php`, `front-page.php`** — estos no se tocan. `functions.php` en especial tiene lógica de WordPress adentro; si se modifica mal, el sitio entero deja de funcionar y hay que subir el ZIP original de nuevo.
+
+---
+
+## Cómo cambiar un texto
+
+1. Descarguen el `sireve-theme.zip` desde la Biblioteca de Medios.
+2. Extraigan el ZIP en una carpeta.
+3. Abren con VS Code el archivo `.html` de la página que quieren editar (está todo en la carpeta `views`).
+4. Buscan la frase con Ctrl+F, la cambian y guardan el archivo.
+5. Vuelven a comprimir (paso explicado más abajo) y suben el tema nuevo.
+
+Al editar, solo cambien el texto que está entre las etiquetas HTML. O sea, si la línea dice:
+
+```html
+<p>Nuestra dirección es Av. Las Américas 1-03, Zona 14</p>
+```
+
+Solo cambien lo que está entre `<p>` y `</p>`. No toquen las etiquetas.
+
+---
+
+## Cómo agregar una foto a la galería
+
+1. Copian la foto que quieren agregar dentro de `assets/images/`, en la carpeta del año correspondiente. Por ejemplo: `assets/images/gallery/premio/2026/foto-nueva.jpg`.
+
+2. Abren con VS Code el `views/galeria-2026.html`.
+
+3. Buscan una foto que ya esté y copian su bloque completo. Algo así:
+
+```html
+<img src="https://sireve.csuca.org/wp-content/themes/sireve-theme/assets/images/gallery/premio/2026/ceremonia-01.jpg" alt="Ceremonia de entrega 2026">
+```
+
+4. Pegan ese bloque en la posición donde quieren la foto nueva, y cambian dos cosas: el nombre del archivo en el `src` (por el de su foto) y la descripción en el `alt`.
+
+5. Guardan.
+
+Ojo con esto: la dirección de la foto **tiene que empezar con** `https://sireve.csuca.org/wp-content/themes/sireve-theme/assets/images/`. Si ponen algo corto como `foto-nueva.jpg`, la imagen no se va a cargar. Siempre copien el bloque de una foto que ya esté funcionando y solo cambien el nombre del archivo al final.
+
+---
+
+## Cómo volver a comprimir el tema
+
+Después de editar, hay que armar el ZIP de nuevo. Acá es donde más gente se equivoca:
+
+1. Entran a la carpeta `sireve-theme` (la que extrajeron).
+2. Dentro de esa carpeta, seleccionan todo (Ctrl+A). O sea, deben estar seleccionados `style.css`, `views`, `assets`, `functions.php`, etc. **No** seleccionen la carpeta `sireve-theme` desde afuera.
+3. Clic derecho → "Comprimir en ZIP" (o "Enviar a → Carpeta comprimida").
+4. Renombran el archivo a `sireve-theme.zip`.
+
+**Para comprobar que quedó bien:** abren el ZIP y fíjense que `style.css` se vea directamente, sin tener que entrar a ninguna carpeta. Si tienen que entrar a `sireve-theme/` para encontrar `style.css`, el ZIP quedó mal y WordPress no lo va a querer instalar.
+
+---
+
+## Cómo subir el tema a WordPress
+
+1. Entran a wp-admin → **Apariencia → Temas**.
+2. Activan cualquier otro tema (el Twenty Twenty-Five que viene por defecto sirve).
+3. Con el otro tema activo, se muestra el tema SIREVE: le pasan el mouse encima y dan **Eliminar**.
+4. **Añadir nuevo → Subir tema** → eligen su `sireve-theme.zip` → **Instalar ahora** → **Activar**.
+5. Ir a **Ajustes → Enlaces permanentes** y dar **Guardar** sin cambiar nada. Este paso hace que WordPress reconozca las direcciones del sitio; si lo olvidan, todas las páginas van a dar error.
+
+Después de eso, abren el sitio en el navegador y revisan que la portada cargue y que se vean las fotos.
+
+---
+
+## Lo que sí se puede hacer desde wp-admin
+
+Estas cosas no necesitan tocar archivos:
+
+- **Título del sitio:** Ajustes → Generales.
+- **Descripción del sitio:** Apariencia → Personalizar → Identidad del sitio. Esta descripción es la que a veces aparece en Google.
+- **Subir fotos a la Biblioteca de Medios** desde Medios → Añadir nuevo.
+
+Una cosa que hay que tener en cuenta: las fotos que suban desde la Biblioteca de Medios **no se van a ver en el sitio automáticamente**. La Biblioteca de Medios sirve más que nada para tener los archivos a mano. Para que una foto aparezca en el sitio, hay que copiarla al tema y referenciarla en el HTML, como está explicado arriba.
+
+---
+
+## Si algo se rompe
+
+Puede pasar que al editar se rompa algo: una página se ve rara, no cargan las fotos, o el sitio directamente no abre. En ese caso:
+
+1. Vayan a wp-admin → Apariencia → Temas y activen cualquier otro tema (el sitio va a verse básico pero va a funcionar).
+2. El `sireve-theme.zip` original sigue en la Biblioteca de Medios, siempre. Bájenlo de ahí, súbanlo de nuevo desde Añadir nuevo → Subir tema, actívenlo.
+3. Recuerden guardar los Enlaces permanentes después de activar.
+
+Mientras el ZIP original esté en la Biblioteca de Medios, siempre se puede volver atrás. Por eso no conviene borrarlo nunca de ahí.
+
+---
+
+## Sobre Google (SEO)
+
+El sitio ya viene configurado para Google: cada página tiene su descripción, y cuando se comparte el sitio en redes se muestra con título e imagen. Eso está en el `header.php` y no necesita mantenimiento.
+
+Si en algún momento quieren ver qué tan bien le va en Google, pueden usar Google Search Console (es gratis, de Google):
+
+1. Entran a search.google.com/search-console y con una cuenta de Google agregan la propiedad `sireve.csuca.org`.
+2. Lo más fácil para verificar es por DNS (depende de dónde esté el dominio) o subiendo un archivo HTML.
+3. Una vez dentro, pueden enviar el sitemap del sitio: `https://sireve.csuca.org/wp-sitemap.xml`.
+
+Ojo con las expectativas: que el sitio aparezca primero en Google lleva semanas o meses, no es inmediato. Lo que sí es rápido es que quede *indexado*, o sea que si alguien escribe `site:sireve.csuca.org` en Google, aparezcan las páginas.
+
+---
+
+Si surge algo que no esté acá, o si tienen dudas con algún archivo `.php`, lo mejor es consultar con el equipo que dejó el sitio armado antes de hacer cambios.

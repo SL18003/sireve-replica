@@ -30,7 +30,7 @@ son `src/` (React) y `wordpress/build.mjs`.
 ## 2. Regenerar
 
 ```bash
-node wordpress/build.mjs     # fragmentos + tema (17 vistas, 119 imágenes) + ZIP (~14 MB)
+node wordpress/build.mjs     # fragmentos + tema (18 vistas, 227 imágenes) + ZIP (~32 MB)
 node wordpress/preview.mjs   # reconstruye wordpress/.preview/
 ```
 
@@ -295,7 +295,7 @@ Theme File Editor **solo edita `.php`/`.css`/`.js`**; las vistas son `.html`
 node wordpress/sync-check.mjs    # sale con código 1 si hay divergencia
 ```
 
-Comprueba: (1) SHA-1 de los 139 archivos públicos del tema (vistas, CSS, JS,
+Comprueba: (1) SHA-1 de los ~180 archivos públicos del tema (vistas, CSS, JS,
 imágenes) local vs vivo; (2) SEO renderizado en las 18 rutas (description exacta
 de `header-src.php`, OG, Twitter, canonical, 3 JSON-LD); (3) comportamiento
 (`/galeria/2017/` y `/galeria/2025/` sin 301 — esta última es la prueba del

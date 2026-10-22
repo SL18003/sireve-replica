@@ -13,19 +13,15 @@ const programLinks = [
   { label: 'Voluntariado', to: '/programas/voluntariado' },
 ];
 
-const galeriaYears = ['2017', '2018', '2019'];
-
 export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [programsOpen, setProgramsOpen] = useState(false);
-  const [galeriaOpen, setGaleriaOpen] = useState(false);
 
   useEffect(() => {
     setMobileOpen(false);
     setProgramsOpen(false);
-    setGaleriaOpen(false);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -93,7 +89,7 @@ export default function Header() {
             <button
               type="button"
               className={`header-link header-dropdown-toggle${programsOpen ? ' open' : ''}`}
-              onClick={() => { setProgramsOpen(!programsOpen); setGaleriaOpen(false); }}
+              onClick={() => setProgramsOpen(!programsOpen)}
             >
               Programas
               <Icon data={programsOpen ? ChevronUp : ChevronDown} size={14} />
@@ -118,28 +114,9 @@ export default function Header() {
             Actas
           </Link>
 
-          <div className="header-dropdown">
-            <button
-              type="button"
-              className={`header-link header-dropdown-toggle${isActive('/galeria') || galeriaOpen ? ' active' : ''}`}
-              onClick={() => { setGaleriaOpen(!galeriaOpen); setProgramsOpen(false); }}
-            >
-              Galería
-              <Icon data={galeriaOpen ? ChevronUp : ChevronDown} size={14} />
-            </button>
-            {galeriaOpen && (
-              <div className="header-dropdown-menu">
-                <Link to="/galeria" className="header-dropdown-item" onClick={() => setMobileOpen(false)}>
-                  Todas las galerías
-                </Link>
-                {galeriaYears.map((year) => (
-                  <Link key={year} to={`/galeria/${year}`} className="header-dropdown-item" onClick={() => setMobileOpen(false)}>
-                    {year}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
+          <Link to="/galeria" className={`header-link${isActive('/galeria') ? ' active' : ''}`}>
+            Galería
+          </Link>
 
           <Link to="/reglamentos" className={`header-link${isActive('/reglamentos') ? ' active' : ''}`}>
             Reglamentos
